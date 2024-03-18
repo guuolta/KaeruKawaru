@@ -13,6 +13,12 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     [Header("お題の列数")]
     [SerializeField]
     private int _columnCount = 2;
+    [Header("お題パネルの親オブジェクト")]
+    [SerializeField]
+    private Transform _questionPanelParent;
+    [Header("お題パネル")]
+    [SerializeField]
+    private QuestionPanelPresenter _questionPanelBase;
 
     private List<Question> _questionList = new List<Question>();
     /// <summary>
@@ -27,20 +33,38 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         for (int i = 0; i < _questionCount; i++)
         {
             _questionList.Add(CreateQuestion(_rowCount, _columnCount));
+            var questionPanel = Instantiate(_questionPanelBase, _questionPanelParent);
+            questionPanel.CreateQuestionPanel(_questionList[i].TroutList);
             Debug.Log("point:"+_questionList[i].Point);
         }
     }
 
+    /// <summary>
+    /// お題を作成
+    /// </summary>
+    /// <param name="rowCount"> 行数 </param>
+    /// <param name="columnCount"> 列数 </param>
+    /// <returns></returns>
     public Question CreateQuestion(int rowCount, int columnCount)
     {
         EvolutionaryType[][] trouts = new EvolutionaryType[rowCount][];
 
-        for(int i=0; i<rowCount; i++)
+        for(int i= 0; i < rowCount; i++)
         {
             trouts[i] = new EvolutionaryType[columnCount];
+        }
+
+        int randomRow = Random.Range(0, rowCount);
+        int randomColumn = Random.Range(0, columnCount);
+        trouts[randomRow][randomColumn] = ((EvolutionaryType)Random.Range(1, 4));
+
+        for(int i=0; i<rowCount; i++)
+        {
             for (int j=0; j<columnCount; j++)
             {
-                trouts[i][j] = ((EvolutionaryType)Random.Range(0, 3));
+                if(i == randomRow && j == randomColumn)
+                    continue;
+                trouts[i][j] = ((EvolutionaryType)Random.Range(0, 4));
             }
         }
 
