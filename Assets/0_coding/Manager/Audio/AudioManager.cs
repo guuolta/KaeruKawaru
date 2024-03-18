@@ -72,16 +72,6 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     }
 
     /// <summary>
-    /// オーディオソースに設定する音量
-    /// </summary>
-    /// <param name="volume"> 音量 </param>
-    /// <returns></returns>
-    private float GetAudioSourceVolume(float volume)
-    {
-        return volume * _volumes[(int)AudioType.Master] / 100;
-    }
-
-    /// <summary>
     /// メインBGM再生
     /// </summary>
     public void PlayMainBGM()
