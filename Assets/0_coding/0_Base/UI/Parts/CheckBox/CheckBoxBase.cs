@@ -24,7 +24,7 @@ public class CheckBoxBase : AnimationPartBase
         OnClickCallback += () =>
         {
             _isCheck.Value = !_isCheck.Value;
-            //AudioManager.Instance.PlayOneShotSE(_isCheck.Value ? SEType.Posi : SEType.Nega);
+            AudioManager.Instance.PlayOneShotSE(_isCheck.Value ? SEType.Posi : SEType.Nega);
         };
     }
 

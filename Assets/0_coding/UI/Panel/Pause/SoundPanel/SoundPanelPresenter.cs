@@ -18,46 +18,37 @@ public class SoundPanelPresenter : PanelPresenterBase<SoundPanelView>
 
     private void SetValue()
     {
-        ////float[] volumes = AudioManager.Instance.GetSoundVolumes();
+        float[] volumes = AudioManager.Instance.GetSoundVolumes();
 
-        ////View.MasterValueUIPart.SetValue(volumes[(int)AudioType.Master]);
-        ////View.BGMValueUIPart.SetValue(volumes[(int)AudioType.BGM]);
-        ////View.SEValueUIPart.SetValue(volumes[(int)AudioType.SE]);
-        ////View.MovieValueUIPart.SetValue(volumes[(int)AudioType.Video]);
+        View.MasterValueUIPart.SetValue(volumes[(int)AudioType.Master]);
+        View.BGMValueUIPart.SetValue(volumes[(int)AudioType.BGM]);
+        View.SEValueUIPart.SetValue(volumes[(int)AudioType.SE]);
     }
 
     private void SetEventValueUIPart()
     {
-        //View.MasterValueUIPart.Value
-        //    .TakeUntilDestroy(this)
-        //    .DistinctUntilChanged()
-        //    .Subscribe(value =>
-        //    {
-        //        AudioManager.Instance.SetVolume(AudioType.Master, value);
-        //    });
+        View.MasterValueUIPart.Value
+            .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
+            .Subscribe(value =>
+            {
+                AudioManager.Instance.SetVolume(AudioType.Master, value);
+            });
 
-        //View.BGMValueUIPart.Value
-        //    .TakeUntilDestroy(this)
-        //    .DistinctUntilChanged()
-        //    .Subscribe(value =>
-        //    {
-        //        AudioManager.Instance.SetVolume(AudioType.BGM, value);
-        //    });
+        View.BGMValueUIPart.Value
+            .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
+            .Subscribe(value =>
+            {
+                AudioManager.Instance.SetVolume(AudioType.BGM, value);
+            });
 
-        //View.SEValueUIPart.Value
-        //    .TakeUntilDestroy(this)
-        //    .DistinctUntilChanged()
-        //    .Subscribe(value =>
-        //    {
-        //        AudioManager.Instance.SetVolume(AudioType.SE, value);
-        //    });
-
-        //View.MovieValueUIPart.Value
-        //    .TakeUntilDestroy(this)
-        //    .DistinctUntilChanged()
-        //    .Subscribe(value =>
-        //    {
-        //        AudioManager.Instance.SetVolume(AudioType.Video, value);
-        //    });
+        View.SEValueUIPart.Value
+            .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
+            .Subscribe(value =>
+            {
+                AudioManager.Instance.SetVolume(AudioType.SE, value);
+            });
     }
 }

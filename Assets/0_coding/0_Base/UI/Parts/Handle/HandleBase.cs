@@ -12,7 +12,7 @@ public class HandleBase : AnimationPartBase
         base.OnPointerDown(eventData);
         if (_isPlaySe)
         {
-            //AudioManager.Instance.PlayOneShotSE(SEType.Posi);
+            AudioManager.Instance.PlayOneShotSE(SEType.Posi);
         }
     }
 
