@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ButtonBase : AnimationPartBase
 {
-    //[Header("SE")]
-    //[SerializeField]
-    //private SEType _seType = SEType.Posi;
+    [Header("SE")]
+    [SerializeField]
+    private SEType _seType = SEType.Posi;
 
     protected override void Init()
     {
@@ -23,13 +23,13 @@ public class ButtonBase : AnimationPartBase
     /// </summary>
     protected void SetEventPlaySe()
     {
-        //if(_seType == SEType.None)
-        //    return;
+        if (_seType == SEType.None)
+            return;
 
-        //OnClickCallback += () =>
-        //{
-        //    AudioManager.Instance.PlayOneShotSE(_seType);
-        //};
+        OnClickCallback += () =>
+        {
+            AudioManager.Instance.PlayOneShotSE(_seType);
+        };
     }
 
     /// <summary>
