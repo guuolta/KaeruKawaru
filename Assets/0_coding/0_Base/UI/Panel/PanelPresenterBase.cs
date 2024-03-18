@@ -1,6 +1,3 @@
-using Cysharp.Threading.Tasks;
-using UnityEngine;
-
 /// <summary>
 /// パネルのプレゼンター
 /// </summary>

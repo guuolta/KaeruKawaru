@@ -36,7 +36,6 @@ public class ObjectBase : MonoBehaviour
 
     private void OnDestroy()
     {
-        FirstDestroy();
         Destroy();
     }
 
@@ -60,14 +59,6 @@ public class ObjectBase : MonoBehaviour
     /// イベントの発行
     /// </summary>
     protected virtual void SetEvent()
-    {
-
-    }
-
-    /// <summary>
-    /// インスタンス破壊時に最初にする処理
-    /// </summary>
-    protected virtual void FirstDestroy()
     {
 
     }

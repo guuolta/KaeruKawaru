@@ -17,7 +17,7 @@ public class UIBase : GameObjectBase,
     [Header("押せないときの透明度")]
     [Range(0f, 1f)]
     [SerializeField]
-    private float _disInteractiveColor = 0.8f;
+    private float _disInteractiveAlpha = 0.8f;
     /// <summary>
     /// アニメーションの時間
     /// </summary>
@@ -118,7 +118,7 @@ public class UIBase : GameObjectBase,
         }
         else
         {
-            CanvasGroup.alpha = _disInteractiveColor;
+            CanvasGroup.alpha = _disInteractiveAlpha;
         }
     }
 
@@ -163,7 +163,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// 画像を表示する
+    /// 画像をアニメーションで表示
     /// </summary>
     /// <param name="image">画像</param>
     /// <param name="ct"></param>
@@ -182,7 +182,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// UIをフェードで表示
+    /// UIをアニメーショで表示
     /// </summary>
     /// <param name="canvasGroup"></param>
     /// <param name="ct"></param>
@@ -202,7 +202,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// 画像を消す
+    /// 画像をアニメーショで消す
     /// </summary>
     /// <param name="image"> 画像 </param>
     /// <param name="ct"></param>
@@ -221,7 +221,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// UIを消す
+    /// UIをアニメーショで消す
     /// </summary>
     /// <param name="canvasGroup"></param>
     /// <param name="ct"></param>
