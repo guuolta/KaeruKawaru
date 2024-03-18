@@ -42,6 +42,9 @@ public class ValueInputFieldBase : AnimationPartBase
         SetEventClick();
     }
 
+    /// <summary>
+    /// クリックしたときのイベント設定
+    /// </summary>
     private void SetEventClick()
     {
         OnClickCallback += () =>

@@ -50,16 +50,9 @@ public static class GameStateManager
 public enum MuseumState
 {
     None,
+    Title,
+    Start,
     Play,
     Pause,
-    Target,
-    Record,
-    Video
+    Result
 }
-
-//[System.Serializable]
-//public class MuseumStateReactiveProperty : ReactiveProperty<MuseumState>
-//{
-//    public MuseumStateReactiveProperty() { }
-//    public MuseumStateReactiveProperty(MuseumState initialValue) : base(initialValue) { }
-//}

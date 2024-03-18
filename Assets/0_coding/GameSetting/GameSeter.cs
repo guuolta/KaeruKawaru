@@ -16,6 +16,6 @@ public class GameSeter : ObjectBase
 
     protected override void Destroy()
     {
-       
+       SaveManager.Save();
     }
 }
