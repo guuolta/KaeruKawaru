@@ -11,7 +11,7 @@ public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
     /// お題パネルを作成
     /// </summary>
     /// <param name="trouts"> お題 </param>
-    public void CreateQuestionPanel(EvolutionaryType[][] trouts)
+    public void CreateQuestionPanel(int[][] trouts)
     {
         var layoutGroup = GetComponent<GridLayoutGroup>();
         int rowCount = trouts.Length;
@@ -25,7 +25,7 @@ public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
             for (int j = 0; j < columnCount; j++)
             {
                 var cell = Instantiate(_cell, transform);
-                View.SetIcon(cell, trouts[i][j]);
+                View.SetIcon(cell, (EvolutionaryType)trouts[i][j]);
             }
         }
     }
