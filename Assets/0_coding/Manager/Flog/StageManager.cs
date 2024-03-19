@@ -12,5 +12,5 @@ public class StageManager : SingletonObjectBase<StageManager>
     [SerializeField]
     private int _column = 3;
 
-    
+
 }
