@@ -14,12 +14,12 @@ public class PObeta : ObjectBase
     /// <summary>
     /// クリックしたときのイベント発行
     /// </summary>
-    public void SetEventClick()
+    public void Start()//SetEventClick()
     {
         Observable.EveryUpdate() // 毎フレーム
             .TakeUntilDestroy(this) // このクラスが破棄されるまで
-            .ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
-            .Where(_ => Input.GetMouseButtonDown(0) && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
+            //.ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
+            .Where(_ => Input.GetMouseButtonDown(0))// && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
             .DistinctUntilChanged() // 直前の値と同じなら発行しない
             .Subscribe(_ =>
             {
@@ -32,23 +32,5 @@ public class PObeta : ObjectBase
                 }
                 //その後、FrogのEvolveメソッドを呼ぶ
             }).AddTo(_disposable);
-    }
-
-    void Start()
-    {
-        Observable.EveryUpdate()
-            .TakeUntilDestroy(this)
-            //.ThrottleFirst(TimeSpan.FromSeconds(_clickInterval))
-            .Where(_ => Input.GetMouseButtonDown(0))// && QuestionManager.Instance.IsCheckedAnswer.Value)
-            .DistinctUntilChanged()
-            .Subscribe(_ => 
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray,out hit,100.0f))
-                {
-                    Debug.Log(hit.collider.gameObject.name);
-                }
-            }).AddTo(gameObject);
     }
 }
