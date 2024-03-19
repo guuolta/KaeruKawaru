@@ -15,7 +15,7 @@ public class PObeta : ObjectBase
     /// クリックしたときのイベント発行
     /// </summary>
     public void Start()//SetEventClick()
-    {
+    {//テストプレイ用
         Observable.EveryUpdate() // 毎フレーム
             .TakeUntilDestroy(this) // このクラスが破棄されるまで
             //.ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
