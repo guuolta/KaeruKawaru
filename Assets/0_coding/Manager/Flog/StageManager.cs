@@ -11,6 +11,13 @@ public class StageManager : SingletonObjectBase<StageManager>
     [Header("マスの列数")]
     [SerializeField]
     private int _column = 3;
+    [Header("盤面")]
+    [SerializeField]
+    private Board _board;
 
-
+    protected override void Init()
+    {
+        base.Init();
+        _board.CreateBoard(_row, _column);
+    }
 }
