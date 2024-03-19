@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-public class PlayerOperator : ObjectBase
+public class PObeta : ObjectBase
 {
     [Header("クリックのクールタイム")]
     [SerializeField]
@@ -14,12 +14,12 @@ public class PlayerOperator : ObjectBase
     /// <summary>
     /// クリックしたときのイベント発行
     /// </summary>
-    public void SetEventClick()
+    public void Start()//SetEventClick()
     {
         Observable.EveryUpdate() // 毎フレーム
             .TakeUntilDestroy(this) // このクラスが破棄されるまで
-            .ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
-            .Where(_ => Input.GetMouseButtonDown(0) && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
+            //.ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
+            .Where(_ => Input.GetMouseButtonDown(0))// && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
             .DistinctUntilChanged() // 直前の値と同じなら発行しない
             .Subscribe(_ =>
             {
