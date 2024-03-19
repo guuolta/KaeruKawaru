@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-public class PlayerOperator : ObjectBase
+public class PObeta : ObjectBase
 {
     [Header("クリックのクールタイム")]
     [SerializeField]
@@ -32,5 +32,23 @@ public class PlayerOperator : ObjectBase
                 }
                 //その後、FrogのEvolveメソッドを呼ぶ
             }).AddTo(_disposable);
+    }
+
+    void Start()
+    {
+        Observable.EveryUpdate()
+            .TakeUntilDestroy(this)
+            //.ThrottleFirst(TimeSpan.FromSeconds(_clickInterval))
+            .Where(_ => Input.GetMouseButtonDown(0))// && QuestionManager.Instance.IsCheckedAnswer.Value)
+            .DistinctUntilChanged()
+            .Subscribe(_ => 
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray,out hit,100.0f))
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                }
+            }).AddTo(gameObject);
     }
 }
