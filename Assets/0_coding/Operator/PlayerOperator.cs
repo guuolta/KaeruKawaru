@@ -21,7 +21,7 @@ public class PlayerOperator : ObjectBase
             .ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
             .Where(_ => Input.GetMouseButtonDown(0) && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
             .DistinctUntilChanged() // 直前の値と同じなら発行しない
-            .Subscribe(value =>
+            .Subscribe(_ =>
             {
                 //レイキャストでFrogを取得
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
