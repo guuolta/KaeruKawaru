@@ -24,23 +24,24 @@ public class FrogState : MonoBehaviour//AllFrogから数字を受け取って状
     {
         GetNumber();
 
-        if(FrogStateNum == 1)
+        switch(FrogStateNum)
         {
-            tamago.SetActive(true);
-            otama.SetActive(false);
-            kaeru.SetActive(false);
-        }
-        if(FrogStateNum == 2)
-        {
-            tamago.SetActive(false);
-            otama.SetActive(true);
-            kaeru.SetActive(false);
-        }
-        if(FrogStateNum == 3)
-        {
-            tamago.SetActive(false);
-            otama.SetActive(false);
-            kaeru.SetActive(true);
+            case 1 :
+                tamago.SetActive(true);
+                otama.SetActive(false);
+                kaeru.SetActive(false);
+                break;
+            case 2 :
+                tamago.SetActive(false);
+                otama.SetActive(true);
+                kaeru.SetActive(false);
+                break;
+            case 3 :
+                tamago.SetActive(false);
+                otama.SetActive(false);
+                kaeru.SetActive(true);
+                break;
+            default : break;
         }
     }
 
