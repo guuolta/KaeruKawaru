@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 80755230}
   - component: {fileID: 80755229}
   - component: {fileID: 80755228}
+  - component: {fileID: 80755232}
   m_Layer: 0
   m_Name: Frog1
   m_TagString: Untagged
@@ -337,6 +338,18 @@ Transform:
   - {fileID: 479594150}
   m_Father: {fileID: 285082575}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &80755232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80755227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &186739496
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,6 +569,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 285082575}
+  - component: {fileID: 285082576}
   m_Layer: 0
   m_Name: Frog
   m_TagString: Untagged
@@ -587,6 +601,18 @@ Transform:
   - {fileID: 1115157712}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &285082576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285082574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573f53ed97beb401cb243c97338de360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &285245481
 GameObject:
   m_ObjectHideFlags: 0
@@ -1049,6 +1075,7 @@ GameObject:
   - component: {fileID: 634482290}
   - component: {fileID: 634482289}
   - component: {fileID: 634482288}
+  - component: {fileID: 634482291}
   m_Layer: 0
   m_Name: Frog5
   m_TagString: Untagged
@@ -1146,6 +1173,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634482286}
   m_Mesh: {fileID: 0}
+--- !u!114 &634482291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634482286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &641949098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,6 +1302,7 @@ GameObject:
   - component: {fileID: 743241482}
   - component: {fileID: 743241481}
   - component: {fileID: 743241480}
+  - component: {fileID: 743241483}
   m_Layer: 0
   m_Name: Frog4
   m_TagString: Untagged
@@ -1360,6 +1400,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743241478}
   m_Mesh: {fileID: 0}
+--- !u!114 &743241483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743241478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &939266306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1746,6 +1798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clickInterval: 0.1
+  changestatebeta: {fileID: 285082576}
 --- !u!1 &1029291692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,6 +1916,7 @@ GameObject:
   - component: {fileID: 1115157715}
   - component: {fileID: 1115157714}
   - component: {fileID: 1115157713}
+  - component: {fileID: 1115157716}
   m_Layer: 0
   m_Name: Frog9
   m_TagString: Untagged
@@ -1960,6 +2014,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115157711}
   m_Mesh: {fileID: 0}
+--- !u!114 &1115157716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115157711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1161759433
 GameObject:
   m_ObjectHideFlags: 0
@@ -2392,6 +2458,7 @@ GameObject:
   - component: {fileID: 1431614636}
   - component: {fileID: 1431614635}
   - component: {fileID: 1431614634}
+  - component: {fileID: 1431614637}
   m_Layer: 0
   m_Name: Frog2
   m_TagString: Untagged
@@ -2489,6 +2556,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1431614632}
   m_Mesh: {fileID: 0}
+--- !u!114 &1431614637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431614632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1479087416
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2685,7 @@ GameObject:
   - component: {fileID: 1492985910}
   - component: {fileID: 1492985909}
   - component: {fileID: 1492985908}
+  - component: {fileID: 1492985911}
   m_Layer: 0
   m_Name: Frog6
   m_TagString: Untagged
@@ -2703,6 +2783,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492985906}
   m_Mesh: {fileID: 0}
+--- !u!114 &1492985911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492985906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1566819862
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,6 +3122,7 @@ GameObject:
   - component: {fileID: 1691991229}
   - component: {fileID: 1691991228}
   - component: {fileID: 1691991227}
+  - component: {fileID: 1691991230}
   m_Layer: 0
   m_Name: Frog3
   m_TagString: Untagged
@@ -3127,6 +3220,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1691991225}
   m_Mesh: {fileID: 0}
+--- !u!114 &1691991230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691991225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1705960532
 GameObject:
   m_ObjectHideFlags: 0
@@ -3349,6 +3454,7 @@ GameObject:
   - component: {fileID: 1829022521}
   - component: {fileID: 1829022520}
   - component: {fileID: 1829022519}
+  - component: {fileID: 1829022522}
   m_Layer: 0
   m_Name: Frog7
   m_TagString: Untagged
@@ -3446,6 +3552,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829022517}
   m_Mesh: {fileID: 0}
+--- !u!114 &1829022522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829022517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1835208477
 GameObject:
   m_ObjectHideFlags: 0
@@ -4075,6 +4193,7 @@ GameObject:
   - component: {fileID: 2073973087}
   - component: {fileID: 2073973086}
   - component: {fileID: 2073973085}
+  - component: {fileID: 2073973088}
   m_Layer: 0
   m_Name: Frog8
   m_TagString: Untagged
@@ -4172,6 +4291,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073973083}
   m_Mesh: {fileID: 0}
+--- !u!114 &2073973088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073973083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82dd1c8a300fe4422b8ffbeef9a17fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2087945524
 GameObject:
   m_ObjectHideFlags: 0

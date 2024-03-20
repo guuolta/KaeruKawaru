@@ -26,7 +26,7 @@ public class PlayerOperator : ObjectBase
                 //レイキャストでFrogを取得
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray,out hit,100.0f))
+                if (Physics.Raycast(ray,out hit,15.0f))
                 {
                     Debug.Log(hit.collider.gameObject.name);
                 }
