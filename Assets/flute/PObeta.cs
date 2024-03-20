@@ -11,6 +11,8 @@ public class PObeta : ObjectBase
     private float _clickInterval = 0.1f;
     CompositeDisposable _disposable = new CompositeDisposable();
 
+    public ChangeStatebeta changestatebeta;
+
     /// <summary>
     /// クリックしたときのイベント発行
     /// </summary>
@@ -26,11 +28,14 @@ public class PObeta : ObjectBase
                 //レイキャストでFrogを取得
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray,out hit,100.0f))
+                if (Physics.Raycast(ray,out hit,15.0f))
                 {
                     Debug.Log(hit.collider.gameObject.name);
                 }
+                
                 //その後、FrogのEvolveメソッドを呼ぶ
+                changestatebeta.Evolvebeta(hit);
+
             }).AddTo(_disposable);
     }
 }
