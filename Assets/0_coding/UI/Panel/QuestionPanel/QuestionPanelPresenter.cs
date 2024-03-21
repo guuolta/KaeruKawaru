@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +8,17 @@ public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
     [Header("マス")]
     [SerializeField]
     private QuestionPanelCellPresenter _cell;
+
+    public async UniTask ShowAsync(float posY ,CancellationToken ct)
+    {
+        await View.ShowAsync(posY, ct);
+    }
+
+    public override async UniTask HideAsync(CancellationToken ct)
+    {
+        await base.HideAsync(ct);
+        View.GameObject.SetActive(false);
+    }
 
     /// <summary>
     /// お題パネルを作成

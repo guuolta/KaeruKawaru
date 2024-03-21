@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
+using UniRx;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class StageManager : SingletonObjectBase<StageManager>
 {
@@ -15,9 +14,49 @@ public class StageManager : SingletonObjectBase<StageManager>
     [SerializeField]
     private Board _board;
 
+    private ReactiveProperty<Frog>[][] _troutFrogs => _board.TroutFrogs;
+
     protected override void Init()
     {
         base.Init();
         _board.CreateBoard(_row, _column);
+    }
+
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetEventTrouts(Ct);
+    }
+
+    /// <summary>
+    /// マスの進化状態のイベント設定
+    /// </summary>
+    private void SetEventTrouts(CancellationToken ct)
+    {
+        foreach(var trouts in _troutFrogs)
+        {
+            foreach(var trout in trouts)
+            {
+                trout.Value.Type
+                    .TakeUntilDestroy(this)
+                    .Skip(1)
+                    .DistinctUntilChanged()
+                    .Subscribe(async value =>
+                    {
+                        await QuestionManager.Instance.CheckQuestionAsync(_troutFrogs, ct);
+                    });
+            }        
+        }
+    }
+
+    private void Check()
+    {
+        for (int i = 0; i < _troutFrogs.Length; i++)
+        {
+            for (int j = 0; j < _troutFrogs[i].Length; j++)
+            {
+                Debug.Log(i + "," + j + ":" + _troutFrogs[i][j].Value);
+            }
+        }
     }
 }
