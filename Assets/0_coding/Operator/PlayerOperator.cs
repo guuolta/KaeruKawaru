@@ -10,7 +10,7 @@ public class PlayerOperator : ObjectBase
     [SerializeField]
     private float _clickInterval = 0.1f;
     CompositeDisposable _disposable = new CompositeDisposable();
-    public AllFrog allfrog;//AllFrogをつけるオブジェクトを入れる
+    Frog frog;
 
     /// <summary>
     /// クリックしたときのイベント発行
@@ -31,7 +31,7 @@ public class PlayerOperator : ObjectBase
                 {
                     //Debug.Log(hit.collider.gameObject.name);
                     //その後、FrogのEvolveメソッドを呼ぶ
-                    allfrog.Evolve(hit);
+                    frog.Evolve();
                 }          
             }).AddTo(_disposable);
     }
