@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Frog : GameObjectBase
 {
@@ -9,12 +10,21 @@ public class Frog : GameObjectBase
     [SerializeField]
     private List<FlogGameObject> _flogGameObjects = new List<FlogGameObject>();
 
+    private BoolReactiveProperty _isCorrect = new BoolReactiveProperty(false);
+    /// <summary>
+    /// 正解かどうか
+    /// </summary>
+    public IReadOnlyReactiveProperty<bool> IsCorrect => _isCorrect;
     private ReactiveProperty<EvolutionaryType> _type = new ReactiveProperty<EvolutionaryType>(EvolutionaryType.Egg);
     /// <summary>
     /// カエルの状態
     /// </summary>
     public ReactiveProperty<EvolutionaryType> Type => _type;
-
+    private int _evolveCount = 0;
+    /// <summary>
+    /// 進化回数
+    /// </summary>
+    public int EvolveCount => _evolveCount;
 
     private GameObject _showObject;
     private Dictionary<EvolutionaryType, GameObject> _flogDict = new Dictionary<EvolutionaryType, GameObject>();
@@ -23,12 +33,7 @@ public class Frog : GameObjectBase
     {
         base.Init();
         SetFlogDictionary();
-    }
-
-    protected override void SetEvent()
-    {
-        base.SetEvent();
-        SetEventEvolve();
+        InitFrog();
     }
 
     /// <summary>
@@ -43,6 +48,23 @@ public class Frog : GameObjectBase
     }
 
     /// <summary>
+    /// カエルの初期化
+    /// </summary>
+    private void InitFrog()
+    {
+        foreach (var flog in _flogGameObjects)
+        {
+            flog.FrogObject.SetActive(false);
+        }
+    }
+
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetEventEvolve();
+    }
+
+    /// <summary>
     /// 進化したときのイベント
     /// </summary>
     private void SetEventEvolve()
@@ -52,7 +74,11 @@ public class Frog : GameObjectBase
             .DistinctUntilChanged()
             .Subscribe(type =>
             {
-                _showObject.SetActive(false);
+                if(_showObject != null)
+                {
+                    _showObject.SetActive(false);
+                }
+
                 if(type == EvolutionaryType.None)
                 {
                     _showObject = null;
@@ -64,12 +90,29 @@ public class Frog : GameObjectBase
             });
     }
 
+    public void SetCorrect(bool isCorrect)
+    {
+        _isCorrect.Value = isCorrect;
+    }
+
     /// <summary>
     /// 次の進化状態へ
     /// </summary>
     public void Evolve()
     {
-        _type.Value = (EvolutionaryType)(Mathf.Clamp((int)Type.Value + 1, 0, 3));
+        int value = (int)Type.Value + 1; 
+        int nextType = value <= 0 || value > 3 ? 1 : value;
+        _type.Value = (EvolutionaryType)nextType;
+        //Debug.Log(_type.Value);
+        _evolveCount++;
+    }
+
+    /// <summary>
+    /// 進化回数をリセット
+    /// </summary>
+    public void ResetEvolveCount()
+    {
+        _evolveCount = 0;
     }
 }
 
@@ -84,6 +127,7 @@ public enum EvolutionaryType
     Frog
 }
 
+[System.Serializable]
 public class FlogGameObject
 {
     [Header("進化状態")]

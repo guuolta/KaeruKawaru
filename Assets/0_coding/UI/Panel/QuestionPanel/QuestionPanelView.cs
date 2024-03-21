@@ -1,5 +1,8 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class QuestionPanelView : PanelViewBase
@@ -7,9 +10,28 @@ public class QuestionPanelView : PanelViewBase
     [Header("アイコンのリスト")]
     [SerializeField]
     private List<Icon> _icons = new List<Icon>();
+    [Header("お題の消えるときの追加の位置")]
+    [SerializeField]
+    private float _questionPosX = 300;
 
     protected override void Init()
     {
+    }
+
+    public async UniTask ShowAsync(float posY, CancellationToken ct)
+    {
+        await RectTransform
+            .DOAnchorPosY(posY, AnimationTime)
+            .SetEase(Ease.InSine)
+            .ToUniTask(cancellationToken: ct);
+    }
+
+    public override async UniTask HideAsync(CancellationToken ct)
+    {
+        await RectTransform
+            .DOAnchorPosX(RectTransform.anchoredPosition.x + _questionPosX, AnimationTime)
+            .SetEase(Ease.OutSine)
+            .ToUniTask(cancellationToken: ct);
     }
 
     /// <summary>

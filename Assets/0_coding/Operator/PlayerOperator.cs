@@ -10,7 +10,31 @@ public class PlayerOperator : ObjectBase
     [SerializeField]
     private float _clickInterval = 0.1f;
     CompositeDisposable _disposable = new CompositeDisposable();
-    Frog frog;
+
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetEventState();
+    }
+
+    private void SetEventState()
+    {
+        GameStateManager.Status
+            .TakeUntilDestroy(this)
+            .Select(value => value == GameState.Play)
+            .DistinctUntilChanged()
+            .Subscribe(value =>
+            {
+                if(value)
+                {
+                    SetEventClick();
+                }
+                else
+                {
+                    _disposable = DisposeEvent(_disposable);
+                }
+            });
+    }
 
     /// <summary>
     /// クリックしたときのイベント発行
@@ -27,10 +51,12 @@ public class PlayerOperator : ObjectBase
                 //レイキャストでFrogを取得
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray,out hit,15.0f))
+                if (Physics.Raycast(ray, out hit))
                 {
-                    //Debug.Log(hit.collider.gameObject.name);
-                    //その後、FrogのEvolveメソッドを呼ぶ
+                    var frog = hit.collider.GetComponent<Frog>();
+                    if(frog == null)
+                        return;
+                    
                     frog.Evolve();
                 }          
             }).AddTo(_disposable);
