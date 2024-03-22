@@ -24,6 +24,7 @@ public class GameSeter : ObjectBase
 
     protected override void Destroy()
     {
+       AudioManager.Instance.SaveVolume();
        SaveManager.Save();
     }
 }

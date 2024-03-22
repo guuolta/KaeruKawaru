@@ -16,7 +16,12 @@ public static class GameSceneManager
             case SceneType.Title:
                 SceneManager.LoadScene(TITLE_SCENE_NAME);
                 break;
-            case SceneType.Game:
+            case SceneType.EasyGame:
+                GameStateManager.SetStageLevel(Level.Easy);
+                SceneManager.LoadScene(GAME_SCENE_NAME);
+                break;
+            case SceneType.HardGame:
+                GameStateManager.SetStageLevel(Level.Hard);
                 SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
         }
@@ -37,5 +42,6 @@ public static class GameSceneManager
 public enum SceneType
 {
     Title,
-    Game
+    EasyGame,
+    HardGame
 }
