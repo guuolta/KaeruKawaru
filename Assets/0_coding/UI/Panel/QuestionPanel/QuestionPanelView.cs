@@ -20,6 +20,12 @@ public class QuestionPanelView : PanelViewBase
 
     public async UniTask ShowAsync(float posY, CancellationToken ct)
     {
+        if(RectTransform.anchoredPosition.y == posY)
+        {
+            return;
+        }
+
+        RectTransform.DOComplete();
         await RectTransform
             .DOAnchorPosY(posY, AnimationTime)
             .SetEase(Ease.InSine)
@@ -28,6 +34,7 @@ public class QuestionPanelView : PanelViewBase
 
     public override async UniTask HideAsync(CancellationToken ct)
     {
+        RectTransform.DOComplete();
         await RectTransform
             .DOAnchorPosX(RectTransform.anchoredPosition.x + _questionPosX, AnimationTime)
             .SetEase(Ease.OutSine)

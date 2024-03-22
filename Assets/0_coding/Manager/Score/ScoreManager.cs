@@ -122,9 +122,25 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// スコアを追加
     /// </summary>
     /// <param name="point"> 追加するポイント </param>
-    public void AddPoint(int point)
+    public void AddPoint(List<int> point)
     {
-        _point.Value += point;
+        _point.Value += CalculatePoint(point);
         Debug.Log("point:"+_point);
+    }
+
+    /// <summary>
+    /// ポイントを計算
+    /// </summary>
+    /// <param name="score"> スコア </param>
+    /// <returns></returns>
+    private int CalculatePoint(List<int> score)
+    {
+        int point = 0;
+        foreach (var s in score)
+        {
+            point += s;
+        }
+
+        return point;
     }
 }
