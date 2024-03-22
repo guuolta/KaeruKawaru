@@ -1,6 +1,7 @@
 using UniRx;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UnityEngine;
 
 public class SoundPanelPresenter : PanelPresenterBase<SoundPanelView>
 {
@@ -8,6 +9,8 @@ public class SoundPanelPresenter : PanelPresenterBase<SoundPanelView>
     {
         SetValue();
         SetEventValueUIPart();
+        SetEventMuteButton();
+        PausePanelManager.Instance.SetEventCloseButton(View.CloseButton, Ct);
     }
 
     public override async UniTask ShowAsync(CancellationToken ct)
@@ -16,39 +19,44 @@ public class SoundPanelPresenter : PanelPresenterBase<SoundPanelView>
         await base.ShowAsync(ct);
     }
 
+    /// <summary>
+    /// 初期値設定
+    /// </summary>
     private void SetValue()
     {
         float[] volumes = AudioManager.Instance.GetSoundVolumes();
 
-        View.MasterValueUIPart.SetValue(volumes[(int)AudioType.Master]);
-        View.BGMValueUIPart.SetValue(volumes[(int)AudioType.BGM]);
-        View.SEValueUIPart.SetValue(volumes[(int)AudioType.SE]);
+        foreach (var soundUI in View.SoundUIList)
+        {
+            soundUI.SoundUIPart.SetValue(volumes[(int)soundUI.AudioType]);
+        }
     }
 
+    /// <summary>
+    /// UIパーツイベント設定
+    /// </summary>
     private void SetEventValueUIPart()
     {
-        View.MasterValueUIPart.Value
-            .TakeUntilDestroy(this)
-            .DistinctUntilChanged()
-            .Subscribe(value =>
-            {
-                AudioManager.Instance.SetVolume(AudioType.Master, value);
-            });
+        foreach (var soundUI in View.SoundUIList)
+        {
+            soundUI.SoundUIPart.Value
+                .TakeUntilDestroy(this)
+                .DistinctUntilChanged()
+                .Subscribe(value =>
+                {
+                    AudioManager.Instance.SetVolume(soundUI.AudioType, value);
+                });
+        }
+    }
 
-        View.BGMValueUIPart.Value
-            .TakeUntilDestroy(this)
-            .DistinctUntilChanged()
-            .Subscribe(value =>
-            {
-                AudioManager.Instance.SetVolume(AudioType.BGM, value);
-            });
-
-        View.SEValueUIPart.Value
-            .TakeUntilDestroy(this)
-            .DistinctUntilChanged()
-            .Subscribe(value =>
-            {
-                AudioManager.Instance.SetVolume(AudioType.SE, value);
-            });
+    /// <summary>
+    /// ミュートボタンのイベント設定
+    /// </summary>
+    private void SetEventMuteButton()
+    {
+        foreach (var soundUI in View.SoundUIList)
+        {
+            soundUI.SoundUIPart.SetEventMuteButton(soundUI.AudioType);
+        }
     }
 }
