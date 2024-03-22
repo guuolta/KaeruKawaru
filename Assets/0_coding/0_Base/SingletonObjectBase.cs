@@ -22,4 +22,13 @@ public class SingletonObjectBase<T> : ObjectBase
             return _instance;
         }
     }
+
+    protected override void Init()
+    {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 }

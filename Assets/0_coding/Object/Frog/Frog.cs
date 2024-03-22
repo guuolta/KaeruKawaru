@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Frog : GameObjectBase
 {
@@ -15,7 +16,6 @@ public class Frog : GameObjectBase
     /// </summary>
     public ReactiveProperty<EvolutionaryType> Type => _type;
 
-
     private GameObject _showObject;
     private Dictionary<EvolutionaryType, GameObject> _flogDict = new Dictionary<EvolutionaryType, GameObject>();
 
@@ -23,12 +23,7 @@ public class Frog : GameObjectBase
     {
         base.Init();
         SetFlogDictionary();
-    }
-
-    protected override void SetEvent()
-    {
-        base.SetEvent();
-        SetEventEvolve();
+        InitFrog();
     }
 
     /// <summary>
@@ -43,6 +38,23 @@ public class Frog : GameObjectBase
     }
 
     /// <summary>
+    /// カエルの初期化
+    /// </summary>
+    private void InitFrog()
+    {
+        foreach (var flog in _flogGameObjects)
+        {
+            flog.FrogObject.SetActive(false);
+        }
+    }
+
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetEventEvolve();
+    }
+
+    /// <summary>
     /// 進化したときのイベント
     /// </summary>
     private void SetEventEvolve()
@@ -52,7 +64,11 @@ public class Frog : GameObjectBase
             .DistinctUntilChanged()
             .Subscribe(type =>
             {
-                _showObject.SetActive(false);
+                if(_showObject != null)
+                {
+                    _showObject.SetActive(false);
+                }
+
                 if(type == EvolutionaryType.None)
                 {
                     _showObject = null;
@@ -69,7 +85,9 @@ public class Frog : GameObjectBase
     /// </summary>
     public void Evolve()
     {
-        _type.Value = (EvolutionaryType)(Mathf.Clamp((int)Type.Value + 1, 0, 3));
+        int value = (int)Type.Value + 1; 
+        int nextType = value <= 0 || value > 3 ? 1 : value;
+        _type.Value = (EvolutionaryType)nextType;
     }
 }
 
@@ -84,6 +102,7 @@ public enum EvolutionaryType
     Frog
 }
 
+[System.Serializable]
 public class FlogGameObject
 {
     [Header("進化状態")]
