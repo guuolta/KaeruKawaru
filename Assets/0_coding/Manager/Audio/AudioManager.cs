@@ -8,7 +8,7 @@ using UnityEngine.Audio;
 /// </summary>
 public class AudioManager : DontDestroySingletonObject<AudioManager>
 {
-    private const int SOUND_INDEX = 4;
+    private const int SOUND_INDEX = 3;
     private const string MASTER_VOLUME_NAME = "Master";
     private const string BGM_VOLUME_NAME = "BGM";
     private const string SE_VOLUME_NAME = "SE";

@@ -1,33 +1,40 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundPanelView : PanelViewBase
 {
-    [Header("マスター音量UI")]
+    [Header("音量UIリスト")]
     [SerializeField]
-    private ValueUIPart _masterValueUIPart;
+    private List<SoundUI> _soundUIList = new List<SoundUI>();
     /// <summary>
-    /// マスター音量UI
+    /// 音量UIリスト
     /// </summary>
-    public ValueUIPart MasterValueUIPart => _masterValueUIPart;
-    [Header("BGM音量UI")]
+    public List<SoundUI> SoundUIList => _soundUIList;
+    [Header("閉じるボタン")]
     [SerializeField]
-    private ValueUIPart _bgmValueUIParts;
+    private ButtonBase _closeButton;
     /// <summary>
-    /// BGM音量UI
+    /// 閉じるボタン
     /// </summary>
-    public ValueUIPart BGMValueUIPart => _bgmValueUIParts;
-    [Header("SE音量UI")]
+    public ButtonBase CloseButton => _closeButton;
+}
+
+[System.Serializable]
+public class SoundUI
+{
+    [Header("音量の種類")]
     [SerializeField]
-    private ValueUIPart _seValueUIParts;
+    private AudioType _audioType;
     /// <summary>
-    /// SE音量UI
+    /// 音量の種類
     /// </summary>
-    public ValueUIPart SEValueUIPart => _seValueUIParts;
-    [Header("動画音量UI")]
+    public AudioType AudioType => _audioType;
+    [Header("音量UI")]
     [SerializeField]
-    private ValueUIPart _movieValueUIParts;
+    private SoundUIPart _soundUIPart;
     /// <summary>
-    /// 動画音量UI
+    /// 音量UI
     /// </summary>
-    public ValueUIPart MovieValueUIPart => _movieValueUIParts;
+    public SoundUIPart SoundUIPart => _soundUIPart;
+
 }
