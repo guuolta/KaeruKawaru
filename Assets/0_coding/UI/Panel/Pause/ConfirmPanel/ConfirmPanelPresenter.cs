@@ -18,8 +18,7 @@ public class ConfirmPanelPresenter : PanelPresenterBase<ConfirmPanelView>
     {
         View.YesButton.OnClickCallback += () =>
         {
-            Debug.Log("タイトルロード");
-            //GameSceneManager.LoadScene(SceneType.Title);
+            GameSceneManager.LoadScene(SceneType.Title);
         };
 
         View.NoButton.OnClickCallback += () =>

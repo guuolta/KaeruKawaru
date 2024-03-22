@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using UniRx;
+using UnityEngine;
 
 public class ScoreManager : DontDestroySingletonObject<ScoreManager>
 {
@@ -14,6 +14,11 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// 現在のスコア
     /// </summary>
     public IReadOnlyReactiveProperty<int> Point => _point;
+    private List<int> _highScoreList = new List<int>();
+    /// <summary>
+    /// ハイスコアリスト
+    /// </summary>
+    public List<int> HighScoreList => _highScoreList;
     private List<int> _easyHighScoreList = new List<int>();
     /// <summary>
     /// イージーモードのハイスコアリスト
@@ -25,7 +30,23 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     public List<int> HardHighScoreList => _hardHighScoreList;
 
-    private List<int> _highScoreList = new List<int>();
+    private int _clearQuestionCount = 0;
+    /// <summary>
+    /// クリアしたお題の数
+    /// </summary>
+    public int ClearQuestionCount => _clearQuestionCount;
+    private int _comboBonus = 0;
+    /// <summary>
+    /// コンボボーナス
+    /// </summary>
+    public int ComboBonus => _comboBonus;
+    private int _stepBonus = 0;
+    /// <summary>
+    /// 手数ボーナス
+    /// </summary>
+    public int StepBonus => _stepBonus;
+
+    private int _stepBonusPoint = 10;
 
     protected override void Init()
     {
@@ -65,7 +86,7 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                 switch(value)
                 {
                     case GameState.Start:
-                        _point.Value = 0;
+                        ResetCount();
                         break;
                     case GameState.Result:
                         SetHighScore();
@@ -74,6 +95,17 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                         break;
                 }
             });
+    }
+
+    /// <summary>
+    /// 値の初期化
+    /// </summary>
+    private void ResetCount()
+    {
+        _point.Value = 0;
+        _clearQuestionCount = 0;
+        _comboBonus = 0;
+        _stepBonus = 0;
     }
 
     /// <summary>
@@ -125,7 +157,15 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     public void AddPoint(List<int> point)
     {
         _point.Value += CalculatePoint(point);
-        Debug.Log("point:"+_point);
+        _clearQuestionCount += point.Count;
+    }
+
+    /// <summary>
+    /// 手数ボーナス追加
+    /// </summary>
+    public void AddStepBonus()
+    {
+        _stepBonus += _stepBonusPoint;
     }
 
     /// <summary>
@@ -135,12 +175,13 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// <returns></returns>
     private int CalculatePoint(List<int> score)
     {
-        int point = 0;
-        foreach (var s in score)
+        int point = score.Sum();
+        int count = score.Count;
+        if (count > 1)
         {
-            point += s;
+            _comboBonus += point;
         }
 
-        return point;
+        return point * count;
     }
 }

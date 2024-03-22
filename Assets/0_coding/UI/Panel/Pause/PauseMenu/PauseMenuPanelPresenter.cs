@@ -25,7 +25,7 @@ public class PauseMenuPanelPresenter : PanelPresenterBase<PauseMenuPanelView>
         };
         View.RetryButton.OnClickCallback += () =>
         {
-            GameSceneManager.ReLoadScene();
+            GameSceneManager.ReLoadSceneAsync().Forget();
         };
         View.TitleButton.OnClickCallback += () =>
         {

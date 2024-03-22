@@ -4,11 +4,18 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-public class PlayerOperator : ObjectBase
+public class PlayerOperator : SingletonObjectBase<PlayerOperator>
 {
     [Header("クリックのクールタイム")]
     [SerializeField]
     private float _clickInterval = 0.1f;
+
+    private ReactiveProperty<int> _clickCount = new ReactiveProperty<int>(0);
+    /// <summary>
+    /// クリック回数
+    /// </summary>
+    public IReadOnlyReactiveProperty<int> ClickCount => _clickCount;
+
     CompositeDisposable _disposable = new CompositeDisposable();
 
     protected override void SetEvent()
@@ -39,7 +46,7 @@ public class PlayerOperator : ObjectBase
     /// <summary>
     /// クリックしたときのイベント発行
     /// </summary>
-    public void SetEventClick()
+    private void SetEventClick()
     {
         Observable.EveryUpdate() // 毎フレーム
             .TakeUntilDestroy(this) // このクラスが破棄されるまで
@@ -58,6 +65,7 @@ public class PlayerOperator : ObjectBase
                         return;
                     
                     frog.Evolve();
+                    _clickCount.Value++;
                 }          
             }).AddTo(_disposable);
     }
