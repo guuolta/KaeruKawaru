@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,13 @@ public class GameSeter : ObjectBase
     protected override void Init()
     {
         Application.targetFrameRate = _fps;
+        GameStateManager.SetStageLevel(Level.Easy);
+    }
+
+    protected async override void SetEvent()
+    {
+        await UniTask.WaitForSeconds(1f);
+        GameStateManager.SetGameState(GameState.Play);
     }
 
     protected override void Destroy()

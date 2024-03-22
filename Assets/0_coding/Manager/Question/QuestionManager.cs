@@ -16,16 +16,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     private int _widthCount = 2;
     [Header("お題パネルの親オブジェクト")]
     [SerializeField]
-    private Transform _questionPanelParent;
-    [Header("お題パネル")]
-    [SerializeField]
-    private QuestionPanelPresenter _questionPanelBase;
-    [Header("お題パネルの余白")]
-    [SerializeField]
-    private float _margin;
-    [Header("お題パネルの間隔")]
-    [SerializeField]
-    private float _padding;
+    private QuestionGroupPresenter _questionPanelParent;
 
     private BoolReactiveProperty _isCheckedAnswer = new BoolReactiveProperty(true);
     /// <summary>
@@ -38,40 +29,21 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// </summary>
     public IReadOnlyReactiveProperty<int> ActiveQuestionCount => _activeQuestionCount;
     
-    private float _panelIniPosY;
-    private List<float> _panelPosList = new List<float>();
-    private Dictionary<Question, QuestionPanelPresenter> _questionDict = new Dictionary<Question, QuestionPanelPresenter>();
+    private List<Question> _questionList = new List<Question>();
 
     protected override void Init()
     {
         base.Init();
+        _questionPanelParent.SetInit(_questionCount);
         _activeQuestionCount.Value = _questionCount;
-        SetQuestionPanel();
-        SetInitPanel(_widthCount, Ct).Forget();
     }
 
-    /// <summary>
-    /// お題パネルの設定
-    /// </summary>
-    private void SetQuestionPanel()
+    protected override void SetEvent()
     {
-        var parentRectTransform = _questionPanelParent.GetComponent<RectTransform>();
-        var panelRectTransform = _questionPanelBase.GetComponent<RectTransform>();
-
-        float sizeX = parentRectTransform.rect.width - _margin * 2;
-        float sizeY = (parentRectTransform.rect.height - (_margin * 2 + _padding * (_questionCount - 1))) / _questionCount;
-        float size = Mathf.Min(sizeX, sizeY);
-        panelRectTransform.sizeDelta = new Vector2(size, size);
-
-        float interval = _padding + size/2;
-        float topPos = parentRectTransform.rect.height / 2 - _margin - size/2;
-
-        for(int i = 0; i < _questionCount; i++)
-        {
-            _panelPosList.Add(topPos - interval * i);
-        }
-
-        _panelIniPosY = -(parentRectTransform.rect.height / 2 + size);
+        base.SetEvent();
+        SetEventQuestCount();
+        SetEventQuestion(_widthCount, Ct);
+        SetInitPanel(_widthCount);
     }
 
     /// <summary>
@@ -80,23 +52,12 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// <param name="widthCount">幅数</param>
     /// <param name="ct"></param>
     /// <returns></returns>
-    public async UniTask SetInitPanel(int widthCount, CancellationToken ct)
+    public void SetInitPanel(int widthCount)
     {
-        var tasks = new List<UniTask>();
-
         for (int i = 0; i < _questionCount; i++)
         {
-            tasks.Add(SetQuestionAsync(widthCount, i, ct));
+            SetQuestion(widthCount, i);
         }
-
-        await UniTask.WhenAll(tasks);
-    }
-
-    protected override void SetEvent()
-    {
-        base.SetEvent();
-        SetEventQuestCount();
-        SetEventQuestion(_widthCount, Ct);
     }
 
     /// <summary>
@@ -105,13 +66,13 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     private void SetEventQuestCount()
     {
         Observable.EveryUpdate()
+            .SkipWhile(_ => GameStateManager.Status.Value != GameState.Play)
             .TakeUntilDestroy(this)
-            .Select(_ => _questionDict.Count)
+            .Select(_ => _questionList.Count)
             .DistinctUntilChanged()
             .Where(value => _activeQuestionCount.Value != value && value <= _questionCount)
             .Subscribe(value =>
             {
-                Debug.Log(value);
                 _activeQuestionCount.Value = value;
             });
     }
@@ -132,7 +93,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             .Subscribe(async value =>
             {
                 await UniTask.WaitUntil(() => _isCheckedAnswer.Value, cancellationToken: ct);
-                await SetQuestionAsync(widthCount, value, ct);
+                SetQuestion(widthCount, value);
             });
     }
 
@@ -141,9 +102,8 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// </summary>
     /// <param name="widthCount"> 幅数 </param>
     /// <param name="index">お題番号</param>
-    /// <param name="ct"></param>
     /// <returns></returns>
-    private async UniTask SetQuestionAsync(int widthCount, int index, CancellationToken ct)
+    private void SetQuestion(int widthCount, int index)
     {
         if(index < 0 || index >= _questionCount)
         {
@@ -151,23 +111,8 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         }
 
         var question = CreateQuestion(widthCount);
-        var questionPanel = CreateQuestionPanel(question);
-        _questionDict.Add(question, questionPanel);
-        await questionPanel.ShowAsync(_panelPosList[index], ct);
-    }
-
-    /// <summary>
-    /// お題パネルを作成
-    /// </summary>
-    /// <param name="question"> お題 </param>
-    /// <returns></returns>
-    private QuestionPanelPresenter CreateQuestionPanel(Question question)
-    {
-        var questionPanel = Instantiate(_questionPanelBase, _questionPanelParent);
-        questionPanel.transform.localPosition = new Vector3(0, _panelIniPosY, 0);
-        questionPanel.CreateQuestionPanel(question.Trouts);
-        
-        return questionPanel;
+        _questionPanelParent.SetPanel(question);
+        _questionList.Add(question);
     }
 
     /// <summary>
@@ -205,7 +150,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答確認
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
-    public async UniTask CheckQuestionAsync(ReactiveProperty<Frog>[][] troutFrogs, CancellationToken ct)
+    public void CheckQuestion(ReactiveProperty<Frog>[][] troutFrogs)
     {
         _isCheckedAnswer.Value = false;
 
@@ -217,22 +162,25 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         var scoreList = new List<int>();
         var questionList = new List<Question>();
 
-        foreach (var question in _questionDict)
+        foreach (var question in _questionList)
         {
-            if (question.Key.CheckAnswer(troutFrogs))
+            if (question.CheckAnswer(troutFrogs))
             {
                 Debug.Log("Clear");
-                scoreList.Add(question.Key.GetPoint(GetFrogList(troutFrogs)));
-                questionList.Add(question.Key);
+                scoreList.Add(question.GetPoint(GetFrogList(troutFrogs)));
+                questionList.Add(question);
             }
         }
 
         if(scoreList.Count > 0)
         {
-            int point = CalculatePoint(scoreList);
-            ScoreManager.Instance.AddPoint(point);
+            ScoreManager.Instance.AddPoint(scoreList);
 
-            await HideClearQuestionAsync(questionList, ct);
+            foreach (var question in questionList)
+            {
+                _questionPanelParent.RemovePanel(question);
+                _questionList.Remove(question);
+            }
         }
 
         _isCheckedAnswer.Value = true;
@@ -259,42 +207,6 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         }
 
         return frogList;
-    }
-
-    /// <summary>
-    /// ポイントを計算
-    /// </summary>
-    /// <param name="score"> スコア </param>
-    /// <returns></returns>
-    private int CalculatePoint(List<int> score)
-    {
-        int point = 0;
-        foreach(var s in score)
-        {
-            point += s;
-        }
-
-        return point;
-    }
-
-    /// <summary>
-    /// クリアしたお題を非表示
-    /// </summary>
-    /// <param name="clearQuestionList">クリアしたお題</param>
-    /// <param name="ct"></param>
-    private async UniTask HideClearQuestionAsync(List<Question> clearQuestionList, CancellationToken ct)
-    {
-        var tasks = new List<UniTask>();
-
-        foreach (var question in clearQuestionList)
-        {
-            var questionPanel = _questionDict[question];
-            tasks.Add(questionPanel.HideAsync(ct));
-            _questionDict.Remove(question);
-        }
-
-        await UniTask.WhenAll(tasks);
-        
     }
 }
 
