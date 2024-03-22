@@ -1,4 +1,6 @@
 using UnityEngine.SceneManagement;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public static class GameSceneManager
 {
@@ -14,15 +16,21 @@ public static class GameSceneManager
         switch(type)
         {
             case SceneType.Title:
-                SceneManager.LoadScene(TITLE_SCENE_NAME);
+                GameStateManager.SetGameState(GameState.Load);
+                Debug.Log("タイトル");
+                //SceneManager.LoadScene(TITLE_SCENE_NAME);
                 break;
             case SceneType.EasyGame:
+                Debug.Log("イージー");
+                GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Easy);
-                SceneManager.LoadScene(GAME_SCENE_NAME);
+                //SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
             case SceneType.HardGame:
+                Debug.Log("ハード");
+                GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Hard);
-                SceneManager.LoadScene(GAME_SCENE_NAME);
+                //SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
         }
     }
@@ -30,8 +38,10 @@ public static class GameSceneManager
     /// <summary>
     /// シーンをリロードする
     /// </summary>
-    public static void ReLoadScene()
+    public static async UniTask ReLoadSceneAsync()
     {
+        GameStateManager.SetGameState(GameState.Load);
+        await UniTask.WaitForSeconds(0.1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

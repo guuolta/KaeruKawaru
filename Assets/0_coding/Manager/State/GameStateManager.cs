@@ -69,6 +69,7 @@ public enum GameState
 {
     None,
     Title,
+    Load,
     Start,
     Play,
     Pause,

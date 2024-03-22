@@ -94,6 +94,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             {
                 await UniTask.WaitUntil(() => _isCheckedAnswer.Value, cancellationToken: ct);
                 SetQuestion(widthCount, value);
+                CheckQuestion(StageManager.Instance.TroutFrogs);
             });
     }
 
@@ -166,9 +167,13 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         {
             if (question.CheckAnswer(troutFrogs))
             {
-                Debug.Log("Clear");
-                scoreList.Add(question.GetPoint(GetFrogList(troutFrogs)));
+                scoreList.Add(question.Point);
                 questionList.Add(question);
+
+                if(question.CheckGetBonus())
+                {
+                    ScoreManager.Instance.AddStepBonus();
+                }
             }
         }
 
@@ -180,33 +185,21 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             {
                 _questionPanelParent.RemovePanel(question);
                 _questionList.Remove(question);
+                question.Dispose();
             }
         }
 
         _isCheckedAnswer.Value = true;
     }
 
-    /// <summary>
-    /// カエルのリストを取得
-    /// </summary>
-    /// <param name="troutFrogs"> カエルのマス </param>
-    /// <returns></returns>
-    private List<Frog> GetFrogList(ReactiveProperty<Frog>[][] troutFrogs)
+    protected override void Destroy()
     {
-        var frogList = new List<Frog>();
-        foreach(var trouts in troutFrogs)
-        {
-            foreach(var trout in trouts)
-            {
-                if(trout.Value.IsCorrect.Value)
-                {
-                    frogList.Add(trout.Value);
-                    trout.Value.SetCorrect(false);
-                }
-            }
-        }
+        base.Destroy();
 
-        return frogList;
+        foreach (var question in _questionList)
+        {
+            question.Dispose();
+        }
     }
 }
 
@@ -237,8 +230,14 @@ public class Question
         }
     }
 
+    private int _step = 0;
+    private int _stepBonusCount = 0;
     private int _point = 0;
-    private int _stepPoint = 0;
+    /// <summary>
+    /// ポイント
+    /// </summary>
+    public int Point => _point;
+    private CompositeDisposable _disposable = new CompositeDisposable();
 
     public Question(EvolutionaryType[][] trouts)
     {
@@ -255,24 +254,31 @@ public class Question
         }
 
         _trouts = trouts;
-        
-        for(int i=0; i<trouts.Length; i++)
+        SetStepPoint();
+    }
+
+    /// <summary>
+    /// ボーナスをもらえる手数を設定
+    /// </summary>
+    private void SetStepPoint()
+    {
+        for (int i = 0; i < _trouts.Length; i++)
         {
-            for(int j=0; j < trouts[i].Length; j++)
+            for (int j = 0; j < _trouts[i].Length; j++)
             {
-                switch (trouts[i][j])
+                switch (_trouts[i][j])
                 {
                     case EvolutionaryType.Egg:
                         _point++;
-                        _stepPoint++;
+                        _stepBonusCount++;
                         break;
                     case EvolutionaryType.Tadpole:
-                        _point+=2;
-                        _stepPoint++;
+                        _point += 2;
+                        _stepBonusCount++;
                         break;
                     case EvolutionaryType.Frog:
-                        _point+=3;
-                        _stepPoint++;
+                        _point += 3;
+                        _stepBonusCount++;
                         break;
                     default:
                         break;
@@ -280,33 +286,27 @@ public class Question
             }
         }
 
-        if(_stepPoint > 0)
+        if (_stepBonusCount > 0)
         {
-            _stepPoint--; 
+            _stepBonusCount--;
         }
+        Debug.Log("step:"+_stepBonusCount);
+
+        SetEventStep();
     }
 
     /// <summary>
-    /// ポイントを取得
+    /// 手数のイベント設定
     /// </summary>
-    /// <param name="frog"> カエルオブジェクト </param>
-    /// <returns></returns>
-    public int GetPoint(List<Frog> frogList)
+    private void SetEventStep()
     {
-        foreach(var frog in frogList)
-        {
-            if(frog.IsCorrect.Value)
+        PlayerOperator.Instance.ClickCount
+            .DistinctUntilChanged()
+            .Subscribe(_ =>
             {
-                _point += 5;
-            }
-
-            frog.ResetEvolveCount();
-        }
-
-        return _point;
+                _step++;
+            }).AddTo(_disposable);
     }
-
-    private List<int[]> _correctIndexList = new List<int[]>();
 
     /// <summary>
     /// 解答確認
@@ -322,7 +322,6 @@ public class Question
             return false;
         }
 
-        _correctIndexList.Clear();
         int rowLoopCount = rowCount - WidthCount;
         int columnLoopCount = columnCount - WidthCount;
 
@@ -368,26 +367,29 @@ public class Question
             if (questionRows[i] != EvolutionaryType.None
                 && questionRows[i] != stageRows[i+ startIndex].Value.Type.Value)
             {
-                _correctIndexList.Clear();
                 return false;
             }
-
-            _correctIndexList.Add(new int[] { i + startIndex, i });
         }
 
         return true;
     }
 
     /// <summary>
-    /// カエルオブジェクトに正解を設定
+    /// 手数のボーナスをもらえるか
     /// </summary>
-    /// <param name="trouts"></param>
-    private void SetCorrect(ReactiveProperty<Frog>[][] trouts)
+    /// <returns></returns>
+    public bool CheckGetBonus()
     {
-        foreach(var index in _correctIndexList)
-        {
-            trouts[index[0]][index[1]].Value.SetCorrect(true);
-        }
+        return _step <= _stepBonusCount;
+    }
+
+
+    /// <summary>
+    /// イベント削除
+    /// </summary>
+    public void Dispose()
+    {
+        _disposable.Dispose();
     }
 
     private void CheckTrout()

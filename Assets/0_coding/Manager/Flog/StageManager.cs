@@ -15,6 +15,10 @@ public class StageManager : SingletonObjectBase<StageManager>
     private Board _board;
 
     private ReactiveProperty<Frog>[][] _troutFrogs => _board.TroutFrogs;
+    /// <summary>
+    /// マスのカエル
+    /// </summary>
+    public ReactiveProperty<Frog>[][] TroutFrogs => _troutFrogs;
 
     protected override void Init()
     {
