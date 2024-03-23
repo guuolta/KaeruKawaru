@@ -1,15 +1,13 @@
+using System.Collections.Generic;
 using System.Threading;
 using UniRx;
 using UnityEngine;
 
 public class StageManager : SingletonObjectBase<StageManager>
 {
-    [Header("マスの行数")]
+    [Header("マス")]
     [SerializeField]
-    private int _row = 3;
-    [Header("マスの列数")]
-    [SerializeField]
-    private int _column = 3;
+    private List<StageTrout> _stageTrouts = new List<StageTrout>();
     [Header("盤面")]
     [SerializeField]
     private Board _board;
@@ -23,7 +21,22 @@ public class StageManager : SingletonObjectBase<StageManager>
     protected override void Init()
     {
         base.Init();
-        _board.CreateBoard(_row, _column);
+
+        int row = 0;
+        int column = 0;
+        foreach(var stageTrout in _stageTrouts)
+        {
+            if (stageTrout.Level == GameStateManager.StageLevel.Value)
+            {
+                row = stageTrout.RowCount;
+                column = stageTrout.ColumnCount;
+            }
+        }
+
+        _board.CreateBoard(row, column);
+
+        GameStateManager.SetGameState(GameState.Play);
+        AudioManager.Instance.PlayBGM(BGMType.Main);
     }
 
     protected override void SetEvent()
@@ -63,4 +76,30 @@ public class StageManager : SingletonObjectBase<StageManager>
             }
         }
     }
+}
+
+[System.Serializable]
+public class StageTrout
+{
+    [Header("レベル")]
+    [SerializeField]
+    private Level _level;
+    /// <summary>
+    /// レベル
+    /// </summary>
+    public Level Level => _level;
+    [Header("マスの行")]
+    [SerializeField]
+    private int _rowCount;
+    /// <summary>
+    /// マスの行
+    /// </summary>
+    public int RowCount => _rowCount;
+    [Header("マスの列")]
+    [SerializeField]
+    private int _columnCount;
+    /// <summary>
+    /// マスの列
+    /// </summary>
+    public int ColumnCount => _columnCount;
 }
