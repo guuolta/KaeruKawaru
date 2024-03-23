@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using TMPro;
 
 public class ShowTimerbeta : MonoBehaviour
 {
@@ -11,17 +12,16 @@ public class ShowTimerbeta : MonoBehaviour
     float starttime;
     string m_strFormat = "{0:0}";
     public Timerbeta m_gameTimer;
-
-    private Text m_txt;
+    private TextMeshProUGUI m_txt;
 
     private void Start()
     {
-        m_txt = GetComponent<Text>();
+        m_txt = GetComponent<TextMeshProUGUI>();
         starttime = m_gameTimer.maxtime;
 
         Observable.EveryUpdate()
             .Do(_ => {
-                float fShowTime = Mathf.Clamp(starttime - m_gameTimer.CurrentTime, 0f, starttime);
+                float fShowTime = Mathf.Clamp(m_gameTimer.lefttime, 0f, starttime);
                 m_txt.text = string.Format(m_strFormat, fShowTime);
             })
             .Subscribe();

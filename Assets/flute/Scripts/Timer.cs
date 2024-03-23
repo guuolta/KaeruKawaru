@@ -11,6 +11,7 @@ public class Timer : MonoBehaviour
     public float CurrentTime { get { return timer; } }
     public bool tActive = false;
     public float maxtime;
+    public float lefttime;
 
     private void Start()
     {
@@ -22,6 +23,7 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        lefttime = maxtime - CurrentTime;
         if(GameStateManager.Status.Value == GameState.Play && tActive == false)
         {
             OnStart();
@@ -29,6 +31,11 @@ public class Timer : MonoBehaviour
         else if(GameStateManager.Status.Value != GameState.Play && tActive == true)
         {
             OnStop();
+        }
+        
+        if(lefttime <= 0)
+        {
+            GameStateManager.SetGameState(GameState.Result);
         }
     }
     public void OnStart()
