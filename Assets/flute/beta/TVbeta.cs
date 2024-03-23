@@ -1,12 +1,23 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
-/*
-public class TVbeta : ViewBase
+[RequireComponent(typeof(Text))]
+public class TVbeta : MonoBehaviour//ViewBase
 {
-    public override UniTask ShowAsync(CancellationToken ct)
+    private Text timerText;
+    TPbeta tpbeta;
+    public void Start()//SetEventClick()
+    {
+        timerText = GetComponentInChildren<Text>();
+        Observable.EveryUpdate()
+            .Subscribe(_ => {
+                timerText.text = tpbeta.lefttime.ToString();
+            });
+    }
+    /*public override UniTask ShowAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();
     }
@@ -14,5 +25,5 @@ public class TVbeta : ViewBase
     public override UniTask HideAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();
-    }
-}/**/
+    }/**/
+}
