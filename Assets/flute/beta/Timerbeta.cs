@@ -11,6 +11,7 @@ public class Timerbeta : MonoBehaviour
     public float CurrentTime { get { return m_fTimer; } }
     public bool m_bActive = false;
     public float maxtime;
+    public float lefttime;
 
     private void Start()
     {
@@ -22,6 +23,7 @@ public class Timerbeta : MonoBehaviour
 
     private void Update()
     {
+        lefttime = maxtime - CurrentTime;
         if(Input.GetKeyDown(KeyCode.Space)&&m_bActive == false)
         {
             OnStart();
@@ -29,6 +31,11 @@ public class Timerbeta : MonoBehaviour
         else if(Input.GetKeyDown(KeyCode.Space)&&m_bActive == true)
         {
             OnStop();
+        }
+
+        if(lefttime <= 0)
+        {
+            GameStateManager.SetGameState(GameState.Result);
         }
     }
     public void OnStart()

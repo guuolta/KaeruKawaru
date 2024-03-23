@@ -11,7 +11,6 @@ public class Count : MonoBehaviour
     float starttime;
     string strFormat = "{0:0}";
     public Timer gameTimer;
-
     private TextMeshProUGUI txt;
 
     private void Start()
@@ -21,7 +20,7 @@ public class Count : MonoBehaviour
 
         Observable.EveryUpdate()
             .Do(_ => {
-                float txtTime = Mathf.Clamp(starttime - gameTimer.CurrentTime, 0f, starttime);
+                float txtTime = Mathf.Clamp(gameTimer.lefttime, 0f, starttime);
                 txt.text = string.Format(strFormat, txtTime);
             })
             .Subscribe();
