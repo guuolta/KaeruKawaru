@@ -3148,10 +3148,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1650170475}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e5260bc7b0ce4d56893fc9c3d947f1c, type: 3}
+  m_Script: {fileID: 11500000, guid: d11a7c55c1db54cda91e8a9ef73fb1b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tActive: 0
+  m_bActive: 0
   maxtime: 30
 --- !u!1 &1688108885
 GameObject:
@@ -4577,7 +4577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71816a9b0a25442a9a413ad6429f1320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimer: {fileID: 1650170478}
+  gameTimer: {fileID: 0}
 --- !u!114 &2012267493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4590,7 +4590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7ff4b2e57464163b9250c5e8adbbdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimer: {fileID: 1650170478}
+  gameTimer: {fileID: 0}
   imgTarget: {fileID: 2012267490}
 --- !u!114 &2012267494
 MonoBehaviour:
@@ -4604,7 +4604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b67ac258ed842b48ca7ee8fbb86a6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameTimer: {fileID: 1650170478}
+  gameTimer: {fileID: 0}
 --- !u!1 &2073973083
 GameObject:
   m_ObjectHideFlags: 0
