@@ -268,12 +268,13 @@ public class Question
             {
                 if (_trouts[i][j] != EvolutionaryType.None)
                 {
-                    _point++;
+                    _point+=100;
+                    _stepBonusCount++;
                 }
             }
         }
 
-        _stepBonusCount = Mathf.Clamp(_point, 0, _point);
+        _stepBonusCount = Mathf.Clamp(_stepBonusCount, 0, _stepBonusCount-1);
 
         SetEventStep();
     }

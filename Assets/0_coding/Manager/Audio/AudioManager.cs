@@ -23,31 +23,34 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     [Header("SEのオーディオソース")]
     [SerializeField]
     private AudioSource _seAudioSource;
-    [Header("通常BGM")]
+    [Header("BGM")]
     [SerializeField]
-    private AudioClip _mainAudioClip;
+    private List<BGMData> _bgmList = new List<BGMData>();
     [Header("よく使うSE")]
     [SerializeField]
-    private List<SE> _seList = new List<SE>();
+    private List<SEData> _seList = new List<SEData>();
 
     private List<AudioSource> _seAudioSourceList = new List<AudioSource>();
-    private Dictionary<SEType, AudioClip> _seDictionary = new Dictionary<SEType, AudioClip>();
+    private Dictionary<BGMType, AudioClip> _bgmDic = new Dictionary<BGMType, AudioClip>();
+    private Dictionary<SEType, AudioClip> _seDict = new Dictionary<SEType, AudioClip>();
 
     protected override void Init()
     {
         base.Init();
-        GetSEDictionary();
+        GetDictionary();
         SetInitVolume();
-        PlayMainBGM();
     }
 
     /// <summary>
-    /// SEの辞書を取得
+    /// オーディオの辞書を取得
     /// </summary>
-    private void GetSEDictionary()
+    private void GetDictionary()
     {
+        foreach (var bgm in _bgmList)
+            _bgmDic.Add(bgm.BGMType, bgm.Clip);
+
         foreach (var se in _seList)
-            _seDictionary.Add(se.SEType, se.Clip);
+            _seDict.Add(se.SEType, se.Clip);
     }
 
     /// <summary>
@@ -72,27 +75,15 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     }
 
     /// <summary>
-    /// メインBGM再生
+    /// BGM再生
     /// </summary>
-    public void PlayMainBGM()
+    public void PlayBGM(BGMType type)
     {
-        if (_bgmAudioSource.clip == null)
-            _bgmAudioSource.clip = _mainAudioClip;
-        if (_bgmAudioSource.isPlaying)
+        if (type == BGMType.None)
             return;
 
+        _bgmAudioSource.clip = _bgmDic[type];
         _bgmAudioSource.Play();
-    }
-
-    /// <summary>
-    /// メインBGM停止
-    /// </summary>
-    public void PauseMainBGM()
-    {
-        if (!_bgmAudioSource.isPlaying)
-            return;
-
-        _bgmAudioSource.Pause();
     }
 
     /// <summary>
@@ -127,7 +118,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
         {
             if (!se.isPlaying)
             {
-                se.PlayOneShot(_seDictionary[type]);
+                se.PlayOneShot(_seDict[type]);
                 return;
             }
         }
@@ -230,11 +221,48 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     }
 }
 
+/// <summary>
+/// BGM
+/// </summary>
 [System.Serializable]
-public class SE
+public class BGMData
 {
-    public SEType SEType;
-    public AudioClip Clip;
+    [Header("BGMの種類")]
+    [SerializeField]
+    private BGMType _bgmType;
+    /// <summary>
+    /// BGMの種類
+    /// </summary>
+    public BGMType BGMType => _bgmType;
+    [Header("BGMのクリップ")]
+    [SerializeField]
+    private AudioClip _clip;
+    /// <summary>
+    /// SEのクリップ
+    /// </summary>
+    public AudioClip Clip => _clip;
+}
+
+/// <summary>
+/// SE
+/// </summary>
+[System.Serializable]
+public class SEData
+{
+    [Header("SEの種類")]
+    [SerializeField]
+    private SEType _seType;
+    /// <summary>
+    /// SEの種類
+    /// </summary>
+    public SEType SEType => _seType;
+    [Header("SEのクリップ")]
+    [SerializeField]
+    private AudioClip _clip;
+    /// <summary>
+    /// SEのクリップ
+    /// </summary>
+    public AudioClip Clip => _clip;
 }
 
 /// <summary>
@@ -246,6 +274,17 @@ public enum AudioType
     BGM = 1,
     SE = 2
 }
+
+/// <summary>
+/// BGMの種類
+/// </summary>
+public enum BGMType
+{
+    None,
+    Title,
+    Main
+}
+
 
 /// <summary>
 /// SEの種類
