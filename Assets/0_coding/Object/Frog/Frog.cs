@@ -78,6 +78,26 @@ public class Frog : GameObjectBase
                 _showObject = _flogDict[type];
                 _showObject.SetActive(true);
             });
+
+        _type
+            .Skip(1)
+           .TakeUntilDestroy(this)
+           .DistinctUntilChanged()
+           .Subscribe(type =>
+           {
+               switch (type)
+               {
+                   case EvolutionaryType.Egg:
+                       AudioManager.Instance.PlayOneShotSE(SEType.Evo1);
+                       break;
+                   case EvolutionaryType.Tadpole:
+                       AudioManager.Instance.PlayOneShotSE(SEType.Evo2);
+                       break;
+                   case EvolutionaryType.Frog:
+                       AudioManager.Instance.PlayOneShotSE(SEType.Evo3);
+                       break;
+               }
+           });
     }
 
     /// <summary>
@@ -112,7 +132,7 @@ public class FlogGameObject
     /// 進化状態
     /// </summary>
     public EvolutionaryType Type => _type;
-    [Header("返るオブジェクト")]
+    [Header("カエルオブジェクト")]
     [SerializeField]
     private GameObject _frogObject;
     /// <summary>

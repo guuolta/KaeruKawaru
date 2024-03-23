@@ -141,7 +141,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// </summary>
     private void CreateSEAudioSource()
     {
-        var seSource = Instantiate(_seAudioSource).GetComponent<AudioSource>();
+        var seSource = Instantiate(_seAudioSource, transform).GetComponent<AudioSource>();
         _seAudioSourceList.Add(seSource);
     }
 
@@ -254,5 +254,8 @@ public enum SEType
 {
     None,
     Posi,
-    Nega
+    Nega,
+    Evo1,
+    Evo2,
+    Evo3
 }
