@@ -54,7 +54,7 @@ public class Board : GameObjectBase
                 cell.transform.localScale = new Vector3(sizeX, 1, sizeZ);
 
                 var frog = Instantiate(_frog, cell.transform);
-                frog.Transform.localScale *= minSize;
+                frog.Transform.localScale = new Vector3(frog.Transform.localScale.x * minSize, 10f, frog.Transform.localScale.z * minSize);
                 frog.Transform.localPosition = new Vector3(0, frog.Transform.localScale.y/2, 0);
 
                 _troutFrogs[i][j].Value = frog;
