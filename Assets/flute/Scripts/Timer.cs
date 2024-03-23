@@ -22,11 +22,11 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && tActive == false)
+        if(GameStateManager.Status.Value == GameState.Play && tActive == false)
         {
             OnStart();
         }
-        else if(Input.GetKeyDown(KeyCode.Space) && tActive == true)
+        else if(GameStateManager.Status.Value != GameState.Play && tActive == true)
         {
             OnStop();
         }
