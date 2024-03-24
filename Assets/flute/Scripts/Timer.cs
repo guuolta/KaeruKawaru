@@ -18,7 +18,7 @@ public class Timer : MonoBehaviour
         Observable.EveryUpdate()
             .Where(_ => tActive)
             .Do(_ => timer += Time.deltaTime)
-            .Subscribe();
+            .Subscribe().AddTo(this);
     }
 
     private void Update()

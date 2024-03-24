@@ -17,6 +17,7 @@ public class Needle : MonoBehaviour
             .Do(_ => a = gameTimer.CurrentTime / gameTimer.maxtime)
             .Where(_ => a <= 1)
             .Subscribe(_ => 
-                recttransform.rotation = Quaternion.Euler(0, 0, -360*a));
+                recttransform.rotation = Quaternion.Euler(0, 0, -360*a)
+                ).AddTo(this);
     }
 }
