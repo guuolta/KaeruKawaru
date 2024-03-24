@@ -23,6 +23,6 @@ public class Count : MonoBehaviour
                 float txtTime = Mathf.Clamp(gameTimer.lefttime, 0f, starttime);
                 txt.text = string.Format(strFormat, txtTime);
             })
-            .Subscribe();
+            .Subscribe().AddTo(this);
     }
 }
