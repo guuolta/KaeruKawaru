@@ -39,7 +39,7 @@ public class AnimationPartBase : UIBase
         }
 
         Transform
-            .DOScale(1.2f, AnimationTime)
+            .DOScale(1.05f, AnimationTime)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken: Ct)
             .Forget();

@@ -266,31 +266,15 @@ public class Question
         {
             for (int j = 0; j < _trouts[i].Length; j++)
             {
-                switch (_trouts[i][j])
+                if (_trouts[i][j] != EvolutionaryType.None)
                 {
-                    case EvolutionaryType.Egg:
-                        _point++;
-                        _stepBonusCount++;
-                        break;
-                    case EvolutionaryType.Tadpole:
-                        _point += 2;
-                        _stepBonusCount++;
-                        break;
-                    case EvolutionaryType.Frog:
-                        _point += 3;
-                        _stepBonusCount++;
-                        break;
-                    default:
-                        break;
+                    _point+=100;
+                    _stepBonusCount++;
                 }
             }
         }
 
-        if (_stepBonusCount > 0)
-        {
-            _stepBonusCount--;
-        }
-        Debug.Log("step:"+_stepBonusCount);
+        _stepBonusCount = Mathf.Clamp(_stepBonusCount, 0, _stepBonusCount-1);
 
         SetEventStep();
     }

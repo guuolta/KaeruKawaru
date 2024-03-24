@@ -47,7 +47,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -178,9 +178,19 @@ MonoBehaviour:
   _bgmAudioSource: {fileID: 6385743797983824255}
   _seAudioSource: {fileID: 5183867995281862982, guid: 09caec424b541be4e91c4bd0a1e82a03,
     type: 3}
-  _mainAudioClip: {fileID: 8300000, guid: 07388b6ea0ed9f04080922cd6ac67728, type: 3}
+  _bgmList:
+  - _bgmType: 1
+    _clip: {fileID: 8300000, guid: 754b1ee7ccc2659489ccbbfb7ab8e927, type: 3}
+  - _bgmType: 2
+    _clip: {fileID: 8300000, guid: 97a2378ab039e3f49b97ada34cc82094, type: 3}
   _seList:
-  - SEType: 1
-    Clip: {fileID: 8300000, guid: 2edffa7d6aa75ef4d9ead5e4e9c7b4ab, type: 3}
-  - SEType: 2
-    Clip: {fileID: 8300000, guid: f2693698bc8adf54e884e855ed995a82, type: 3}
+  - _seType: 1
+    _clip: {fileID: 8300000, guid: 2edffa7d6aa75ef4d9ead5e4e9c7b4ab, type: 3}
+  - _seType: 2
+    _clip: {fileID: 8300000, guid: f2693698bc8adf54e884e855ed995a82, type: 3}
+  - _seType: 3
+    _clip: {fileID: 8300000, guid: 892ff963cfa4eb54ca46ec8ec2a206d0, type: 3}
+  - _seType: 4
+    _clip: {fileID: 8300000, guid: 6a5d35036ab632844894fb7a6a8af3ae, type: 3}
+  - _seType: 5
+    _clip: {fileID: 8300000, guid: 0be485df282f7f94eb23e1ea97632fcb, type: 3}

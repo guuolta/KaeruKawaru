@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 public static class GameSceneManager
 {
     private const string TITLE_SCENE_NAME = "Title";
-    private const string GAME_SCENE_NAME = "Main";
+    private const string GAME_SCENE_NAME = "MainGame";
 
     /// <summary>
     /// シーンをロードする
@@ -18,19 +18,19 @@ public static class GameSceneManager
             case SceneType.Title:
                 GameStateManager.SetGameState(GameState.Load);
                 Debug.Log("タイトル");
-                //SceneManager.LoadScene(TITLE_SCENE_NAME);
+                SceneManager.LoadScene(TITLE_SCENE_NAME);
                 break;
             case SceneType.EasyGame:
                 Debug.Log("イージー");
                 GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Easy);
-                //SceneManager.LoadScene(GAME_SCENE_NAME);
+                SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
             case SceneType.HardGame:
                 Debug.Log("ハード");
                 GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Hard);
-                //SceneManager.LoadScene(GAME_SCENE_NAME);
+                SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
         }
     }
