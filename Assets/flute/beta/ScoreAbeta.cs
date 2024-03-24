@@ -29,7 +29,7 @@ public class ScoreAbeta : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.Space))
         {
-            a.Value += 1;
+            a.Value += 10;
         }
     }
 
