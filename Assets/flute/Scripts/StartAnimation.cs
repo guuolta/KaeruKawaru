@@ -16,6 +16,7 @@ public class StartAnimation : MonoBehaviour
 
         Observable.EveryUpdate()
             .Where(_ => GameStateManager.Status.Value == GameState.Start)
+            .First()
             .Do(_ => DoStartAnimation())
             .Delay(TimeSpan.FromSeconds(1.5f))
             .Subscribe(_ => 
