@@ -14,7 +14,7 @@ public class ScoreAnimation : MonoBehaviour
         scoretext = this.GetComponent<TextMeshProUGUI>();
 
         ScoreManager.Instance.Point.Subscribe(value => {
-            Debug.Log(value);
+            //Debug.Log(value);
             DoScoreAnimation(value);
         }).AddTo(this);
     }
