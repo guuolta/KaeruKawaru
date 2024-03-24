@@ -27,7 +27,7 @@ public class ScoreAbeta : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyUp(KeyCode.Space))
+        if(Input.GetKeyUp(KeyCode.RightShift))
         {
             a.Value += 10;
         }
