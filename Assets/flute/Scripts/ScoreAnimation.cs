@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using TMPro;
+using System;
+using DG.Tweening;
 
-public class ScoreCount : MonoBehaviour
+public class ScoreAnimation : MonoBehaviour
 {
     TextMeshProUGUI scoretext;
     void Start()
@@ -18,6 +20,11 @@ public class ScoreCount : MonoBehaviour
     }
     private void DoScoreAnimation(int score)
     {
-        scoretext.SetText(score.ToString());
+        scoretext.DOText(score.ToString(),0);
+        if(score != 0)
+        {
+            scoretext.DOScale(0.5f,0.1f).SetEase(Ease.OutBack);
+            scoretext.DOScale(0.4f,0.1f).SetDelay(0.1f).SetEase(Ease.Linear);
+        }
     }
 }
