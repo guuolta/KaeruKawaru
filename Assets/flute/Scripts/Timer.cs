@@ -10,15 +10,11 @@ public class Timer : MonoBehaviour
     private float timer;
     public float CurrentTime { get { return timer; } }
     public bool tActive = false;
-    private float _maxTime;
-    public float Maxtime => _maxTime;
+    public float maxtime;
     public float lefttime;
 
     private void Start()
     {
-        _maxTime = StageManager.Instance.TimeLimit;
-        Debug.Log(_maxTime);
-
         Observable.EveryUpdate()
             .Where(_ => tActive)
             .Do(_ => timer += Time.deltaTime)
@@ -27,7 +23,7 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
-        lefttime = Maxtime - CurrentTime;
+        lefttime = maxtime - CurrentTime;
         if(GameStateManager.Status.Value == GameState.Play && tActive == false)
         {
             OnStart();
