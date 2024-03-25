@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UniRx;
 using TMPro;
+using UniRx;
+using UnityEngine;
 
 public class Count : MonoBehaviour
 {
-    float starttime;
+    private float starttime => gameTimer.MaxTime;
     string strFormat = "{0:0}";
     public Timer gameTimer;
     private TextMeshProUGUI txt;
@@ -16,7 +12,6 @@ public class Count : MonoBehaviour
     private void Start()
     {
         txt = GetComponent<TextMeshProUGUI>();
-        starttime = gameTimer.MaxTime;
 
         Observable.EveryUpdate()
             .Do(_ => {
