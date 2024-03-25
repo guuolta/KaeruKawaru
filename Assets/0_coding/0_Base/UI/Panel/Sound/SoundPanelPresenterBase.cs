@@ -3,14 +3,13 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 
-public class SoundPanelPresenter : PanelPresenterBase<SoundPanelView>
+public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
 {
     protected override void SetEvent()
     {
         SetValue();
         SetEventValueUIPart();
         SetEventMuteButton();
-        PausePanelManager.Instance.SetEventCloseButton(View.CloseButton, Ct);
     }
 
     public override async UniTask ShowAsync(CancellationToken ct)

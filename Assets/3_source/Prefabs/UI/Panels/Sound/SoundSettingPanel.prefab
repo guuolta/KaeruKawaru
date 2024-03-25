@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4419613418952892503}
   - component: {fileID: 5365231705425706687}
   - component: {fileID: 5581711487734402065}
-  - component: {fileID: 4809270972836189316}
   m_Layer: 5
   m_Name: SoundSettingPanel
   m_TagString: Untagged
@@ -102,18 +101,6 @@ MonoBehaviour:
   - _audioType: 2
     _soundUIPart: {fileID: 7465538238581702515}
   _closeButton: {fileID: 6483698902006059023}
---- !u!114 &4809270972836189316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4869397034613752932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee4251e184b8cbc4faf70768eac67a8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7861094069715777868
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
     private PauseMenuPanelPresenter _pauseMenuPanel;
     [Header("サウンドパネル")]
     [SerializeField]
-    private SoundPanelPresenter _soundPanel;
+    private SoundPanelPresenterBase _soundPanel;
     [Header("確認パネル")]
     [SerializeField]
     private ConfirmPanelPresenter _confirmPanel;
