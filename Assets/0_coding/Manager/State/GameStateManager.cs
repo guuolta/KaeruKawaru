@@ -5,7 +5,7 @@ using UniRx;
 /// </summary>
 public static class GameStateManager
 {
-    private static ReactiveProperty<GameState> _status = new ReactiveProperty<GameState>(GameState.Start);
+    private static ReactiveProperty<GameState> _status = new ReactiveProperty<GameState>(GameState.Title);
     /// <summary>
     /// ステート
     /// </summary>
@@ -69,6 +69,7 @@ public enum GameState
 {
     None,
     Title,
+    Select,
     Load,
     Start,
     Play,

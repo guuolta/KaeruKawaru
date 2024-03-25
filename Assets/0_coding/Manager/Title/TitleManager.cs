@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UniRx;
 using UnityEngine;
 
 public class TitleManager : SingletonObjectBase<TitleManager>
 {
+    private CompositeDisposable _disposable = new CompositeDisposable();
     protected override void Init()
     {
         base.Init();
@@ -14,7 +16,7 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventStart();
+        SetEventGameState(Ct);
     }
 
     /// <summary>
@@ -25,10 +27,25 @@ public class TitleManager : SingletonObjectBase<TitleManager>
         Observable.EveryUpdate()
             .TakeUntilDestroy(this)
             .Where(_ => Input.GetMouseButtonDown(0))
-            .Subscribe(_ =>
-            {
-                /*削除して、セレクト画面に遷移する*/
-                GameSceneManager.LoadScene(SceneType.EasyGame);
+            .Subscribe(_ => {
+                GameStateManager.SetGameState(GameState.Select);
+            }).AddTo(_disposable);
+    }
+    private void SetEventGameState(CancellationToken ct)
+    {
+        GameStateManager.Status
+            .TakeUntilDestroy(this)
+            .Where(_ => GameStateManager.Status.Value != GameState.Load)
+            .Select(_ => _ == GameState.Select)
+            .DistinctUntilChanged()
+            .Subscribe(async _ => {
+                if(_){
+                    _disposable = DisposeEvent(_disposable);
+                    await SelectPanelManager.Instance.OpenFirstPanelAsync(ct);
+                }
+                else{
+                    SetEventStart();
+                }
             });
     }
 }
