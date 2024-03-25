@@ -11,7 +11,6 @@ public class Gauge : MonoBehaviour
     {
         Observable.EveryUpdate()
             .Subscribe(_ => 
-                imgTarget.fillAmount = gameTimer.CurrentTime / gameTimer.maxtime
-                ).AddTo(this);
+                imgTarget.fillAmount = gameTimer.CurrentTime / gameTimer.maxtime);
     }
 }
