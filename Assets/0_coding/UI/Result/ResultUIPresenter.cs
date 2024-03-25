@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
+using unityroom.Api;
 
 public class ResultUIPresenter : PresenterBase<ResultUIView>
 {
@@ -65,6 +66,7 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     public override async UniTask ShowAsync(CancellationToken ct)
     {
         SetText(ct);
+        UnityroomApiClient.Instance.SendScore(1, ScoreManager.Instance.Point.Value, ScoreboardWriteMode.HighScoreDesc);
         await base.ShowAsync(ct);
     }
 

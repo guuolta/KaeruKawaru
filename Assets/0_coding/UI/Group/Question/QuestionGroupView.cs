@@ -75,6 +75,11 @@ public class QuestionGroupView : ViewBase
             {
                 value.Value.HideAsync(ct).Forget();
             });
+
+        foreach (var panel in _setPanelList)
+        {
+            panel.ShowAsync(_panelPosList[_setPanelList.IndexOf(panel)], ct).Forget();
+        }
     }
 
     /// <summary>
@@ -89,7 +94,7 @@ public class QuestionGroupView : ViewBase
             return;
         }
 
-        panel.transform.localPosition = new Vector3(0, _panelIniPosY, 0);
+        panel.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, _panelIniPosY, 0);
         _setPanelList.Add(panel);
     }
 
