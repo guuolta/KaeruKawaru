@@ -1769,7 +1769,7 @@ MonoBehaviour:
   - _level: 1
     _rowCount: 3
     _columnCount: 3
-    _timeLimit: 30
+    _timeLimit: 10
   - _level: 2
     _rowCount: 4
     _columnCount: 4

@@ -92,7 +92,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
 
         int randomRow = Random.Range(0, widthCount);
         int randomColumn = Random.Range(0, widthCount);
-        trouts[randomRow][randomColumn] = (EvolutionaryType)Random.Range(1, 4);
+        trouts[randomRow][randomColumn] = (EvolutionaryType)Random.Range(2, 3);
 
         for(int i=0; i<widthCount; i++)
         {
@@ -100,7 +100,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             {
                 if(i == randomRow && j == randomColumn)
                     continue;
-                trouts[i][j] = (EvolutionaryType)Random.Range(0, 4);
+                trouts[i][j] = (EvolutionaryType)Random.Range(0, 3);
             }
         }
 
@@ -130,10 +130,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
                 scoreList.Add(question.Point);
                 questionList.Add(question);
 
-                if(question.CheckGetBonus())
-                {
-                    ScoreManager.Instance.AddStepBonus();
-                }
+                ScoreManager.Instance.AddStepBonus(question.CheckGetBonus());
             }
         }
 
@@ -325,9 +322,10 @@ public class Question
     /// 手数のボーナスをもらえるか
     /// </summary>
     /// <returns></returns>
-    public bool CheckGetBonus()
+    public int CheckGetBonus()
     {
-        return _step <= _stepBonusCount;
+        int distance = _stepBonusCount - _step;
+        return distance >= 0 ? distance+1 : 0;
     }
 
 

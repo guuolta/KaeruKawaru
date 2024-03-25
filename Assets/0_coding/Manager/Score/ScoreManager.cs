@@ -8,6 +8,9 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     [Header("ハイスコアの記録数")]
     [SerializeField]
     private int _highScoreCount = 3;
+    [Header("手数ボーナス")]
+    [SerializeField]
+    private int _stepBonusPoint = 50;
 
     private ReactiveProperty<int> _point = new ReactiveProperty<int>();
     /// <summary>
@@ -46,7 +49,6 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     public int StepBonus => _stepBonus;
 
-    private int _stepBonusPoint = 10;
 
     protected override void Init()
     {
@@ -163,9 +165,10 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// <summary>
     /// 手数ボーナス追加
     /// </summary>
-    public void AddStepBonus()
+    public void AddStepBonus(int _stepDistance)
     {
-        _stepBonus += _stepBonusPoint;
+        _stepBonus += _stepBonusPoint * _stepDistance;
+        _point.Value += _stepBonus;
     }
 
     /// <summary>
