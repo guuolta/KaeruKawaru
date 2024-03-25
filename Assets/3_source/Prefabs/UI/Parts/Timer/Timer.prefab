@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1960996851109246808}
   - component: {fileID: 2834432483094995374}
   - component: {fileID: 4849918729591168037}
+  - component: {fileID: 3770661791524001733}
   m_Layer: 5
   m_Name: CountText
   m_TagString: Untagged
@@ -135,6 +136,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3770661791524001733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28538546716367095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b67ac258ed842b48ca7ee8fbb86a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameTimer: {fileID: 7296776255993566918}
 --- !u!1 &2666100076221641979
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +161,7 @@ GameObject:
   - component: {fileID: 2553279574469154884}
   - component: {fileID: 3056373990484868235}
   - component: {fileID: 2932668152673927119}
+  - component: {fileID: 7296776255993566918}
   m_Layer: 5
   m_Name: Timer
   m_TagString: Untagged
@@ -223,6 +238,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2666100076221641979}
   m_CullTransparentMesh: 1
+--- !u!114 &7296776255993566918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2666100076221641979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5260bc7b0ce4d56893fc9c3d947f1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tActive: 0
+  lefttime: 0
 --- !u!1 &2733582672916632685
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +414,7 @@ GameObject:
   - component: {fileID: 7129855052317519569}
   - component: {fileID: 8178759660715728113}
   - component: {fileID: 7559419416191702594}
+  - component: {fileID: 1480286228480252490}
   m_Layer: 5
   m_Name: Gauge
   m_TagString: Untagged
@@ -449,6 +479,20 @@ MonoBehaviour:
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1480286228480252490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4853164847462553701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb7ff4b2e57464163b9250c5e8adbbdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameTimer: {fileID: 7296776255993566918}
+  imgTarget: {fileID: 7559419416191702594}
 --- !u!1 &5002734236900198138
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,7 +511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5761253752084481481
 RectTransform:
   m_ObjectHideFlags: 0
@@ -611,6 +655,7 @@ GameObject:
   - component: {fileID: 7669694994865098363}
   - component: {fileID: 7079821029288393110}
   - component: {fileID: 6908260591888415422}
+  - component: {fileID: 5336886656274275227}
   m_Layer: 5
   m_Name: Needle
   m_TagString: Untagged
@@ -675,6 +720,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5336886656274275227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6965195760801407834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71816a9b0a25442a9a413ad6429f1320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameTimer: {fileID: 7296776255993566918}
 --- !u!1 &7311077534509687241
 GameObject:
   m_ObjectHideFlags: 0
