@@ -60,7 +60,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             .Take(1)
             .Subscribe(_ =>
             {
-                CheckQuestion(StageManager.Instance.TroutFrogs);
+                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
             });
     }
 
@@ -92,7 +92,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
 
         int randomRow = Random.Range(0, widthCount);
         int randomColumn = Random.Range(0, widthCount);
-        trouts[randomRow][randomColumn] = (EvolutionaryType)Random.Range(2, 3);
+        trouts[randomRow][randomColumn] = (EvolutionaryType)Random.Range(1, 4);
 
         for(int i=0; i<widthCount; i++)
         {
@@ -100,7 +100,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             {
                 if(i == randomRow && j == randomColumn)
                     continue;
-                trouts[i][j] = (EvolutionaryType)Random.Range(0, 3);
+                trouts[i][j] = (EvolutionaryType)Random.Range(0, 4);
             }
         }
 
@@ -111,8 +111,10 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答確認
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
-    public void CheckQuestion(ReactiveProperty<Frog>[][] troutFrogs)
+    public async void CheckQuestionAsync(ReactiveProperty<Frog>[][] troutFrogs)
     {
+        await UniTask.WaitUntil(() => _isCheckedAnswer.Value);
+
         _isCheckedAnswer.Value = false;
 
         if(troutFrogs.Length == 0 || troutFrogs[0].Length == 0)
@@ -137,15 +139,19 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         if(scoreList.Count > 0)
         {
             ScoreManager.Instance.AddPoint(scoreList);
+            int count = scoreList.Count;
 
             foreach (var question in questionList)
             {
                 _questionPanelParent.RemovePanel(question);
                 _questionList.Remove(question);
                 question.Dispose();
+            }
 
+            for(int i=0; i<count; i++)
+            {
                 SetQuestion(_widthCount);
-                CheckQuestion(StageManager.Instance.TroutFrogs);
+                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
             }
         }
 

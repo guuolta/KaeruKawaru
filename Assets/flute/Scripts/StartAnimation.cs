@@ -26,9 +26,9 @@ public class StartAnimation : MonoBehaviour
 
     public void DoStartAnimation()
     {
-        readytext.DOText("Ready?",0.2f).SetEase(Ease.Linear);
+        readytext.DOText("よーい",0.2f).SetEase(Ease.Linear);
         readytext.DOFade(0,0.2f).SetDelay(0.7f);
-        starttext.DOText("Start!!",0f).SetDelay(0.9f);
+        starttext.DOText("どん!!",0f).SetDelay(0.9f);
         starttext.DOScale(1.2f,0.2f).SetDelay(0.9f).SetEase(Ease.OutExpo);
         starttext.DOFade(0,0.2f).SetDelay(1.3f);
     }

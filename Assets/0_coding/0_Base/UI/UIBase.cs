@@ -110,6 +110,9 @@ public class UIBase : GameObjectBase,
     /// <param name="isInteractive">押せるか</param>
     public void ChangeInteractive(bool isInteractive)
     {
+        if(CanvasGroup == null)
+            return;
+
         CanvasGroup.interactable = isInteractive;
         CanvasGroup.blocksRaycasts = isInteractive;
         if (isInteractive)

@@ -61,6 +61,8 @@ public class ButtonBase : AnimationPartBase
         {
             ChangeInteractive(false);
             await UniTask.WaitForSeconds(0.1f, cancellationToken: Ct);
+
+            if (Ct.IsCancellationRequested) return;
             ChangeInteractive(true);
         };
     }
