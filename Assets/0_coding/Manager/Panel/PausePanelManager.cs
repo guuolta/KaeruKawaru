@@ -41,9 +41,23 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
     /// </summary>
     private void SetEventPauseButton()
     {
+        _pauseButton.ChangeInteractive(false);
+
+        GameStateManager.Status
+            .TakeUntilDestroy(this)
+            .Where(value => value == GameState.Play)
+            .Take(1)
+            .Subscribe(_ =>
+            {
+                _pauseButton.ChangeInteractive(true);
+            });
+
         _pauseButton.OnClickCallback += () =>
         {
-            GameStateManager.SetGameState(GameState.Pause);
+            if(GameStateManager.Status.Value == GameState.Play)
+            {
+                GameStateManager.SetGameState(GameState.Pause);
+            }
         };
     }
 

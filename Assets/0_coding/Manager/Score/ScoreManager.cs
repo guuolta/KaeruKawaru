@@ -167,8 +167,9 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     public void AddStepBonus(int _stepDistance)
     {
-        _stepBonus += _stepBonusPoint * _stepDistance;
-        _point.Value += _stepBonus;
+        int bounus = _stepBonusPoint * _stepDistance;
+        _stepBonus += bounus;
+        _point.Value += bounus;
     }
 
     /// <summary>

@@ -24,7 +24,7 @@ public class ScoreAnimation : MonoBehaviour
         if(score != 0)
         {
             scoretext.DOScale(0.5f,0.1f).SetEase(Ease.OutBack);
-            scoretext.DOScale(0.4f,0.1f).SetDelay(0.1f).SetEase(Ease.Linear);
+            scoretext.DOScale(1f,0.1f).SetDelay(0.1f).SetEase(Ease.Linear);
         }
     }
 }

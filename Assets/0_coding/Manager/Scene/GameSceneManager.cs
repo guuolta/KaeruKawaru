@@ -11,25 +11,26 @@ public static class GameSceneManager
     /// シーンをロードする
     /// </summary>
     /// <param name="type"> シーンの種類 </param>
-    public static void LoadScene(SceneType type)
+    public static async void LoadScene(SceneType type)
     {
-        switch(type)
+        await UniTask.WaitForSeconds(0.1f);
+        switch (type)
         {
             case SceneType.Title:
-                GameStateManager.SetGameState(GameState.Load);
                 Debug.Log("タイトル");
                 SceneManager.LoadScene(TITLE_SCENE_NAME);
+                GameStateManager.SetGameState(GameState.Title);
                 break;
             case SceneType.EasyGame:
                 Debug.Log("イージー");
-                GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Easy);
+                GameStateManager.SetGameState(GameState.Start);
                 SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
             case SceneType.HardGame:
                 Debug.Log("ハード");
-                GameStateManager.SetGameState(GameState.Load);
                 GameStateManager.SetStageLevel(Level.Hard);
+                GameStateManager.SetGameState(GameState.Start);
                 SceneManager.LoadScene(GAME_SCENE_NAME);
                 break;
         }
@@ -40,9 +41,9 @@ public static class GameSceneManager
     /// </summary>
     public static async UniTask ReLoadSceneAsync()
     {
-        GameStateManager.SetGameState(GameState.Load);
         await UniTask.WaitForSeconds(0.1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameStateManager.SetGameState(GameState.Start);
     }
 }
 

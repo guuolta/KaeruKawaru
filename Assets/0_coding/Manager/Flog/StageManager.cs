@@ -36,7 +36,7 @@ public class StageManager : SingletonObjectBase<StageManager>
             }
         }
 
-        GameStateManager.SetGameState(GameState.Play);
+        GameStateManager.SetGameState(GameState.Start);
         AudioManager.Instance.PlayBGM(BGMType.Main);
     }
 
@@ -61,7 +61,7 @@ public class StageManager : SingletonObjectBase<StageManager>
                     .DistinctUntilChanged()
                     .Subscribe(value =>
                     {
-                        QuestionManager.Instance.CheckQuestion(_troutFrogs);
+                        QuestionManager.Instance.CheckQuestionAsync(_troutFrogs);
                     });
             }        
         }

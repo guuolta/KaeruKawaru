@@ -7,6 +7,11 @@ public class AnimationPartBase : UIBase
 {
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if(Transform == null || CanvasGroup == null)
+        {
+            return;
+        }
+
         Transform
             .DOScale(0.8f, AnimationTime)
             .SetEase(Ease.InSine)
@@ -21,6 +26,11 @@ public class AnimationPartBase : UIBase
 
     public override void OnPointerUp(PointerEventData eventData)
     {
+        if (Transform == null || CanvasGroup == null)
+        {
+            return;
+        }
+
         Transform.DOScale(1f, AnimationTime)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken: Ct)
@@ -33,11 +43,6 @@ public class AnimationPartBase : UIBase
 
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        if (Input.GetMouseButton(0))
-        {
-            return;
-        }
-
         Transform
             .DOScale(1.05f, AnimationTime)
             .SetEase(Ease.InSine)
@@ -45,10 +50,8 @@ public class AnimationPartBase : UIBase
             .Forget();
     }
 
-    public override async void OnPointerExit(PointerEventData eventData)
+    public override void OnPointerExit(PointerEventData eventData)
     {
-        await UniTask.WaitUntil(() => !Input.GetMouseButton(0), cancellationToken: Ct);
-
         Transform
             .DOScale(1f, AnimationTime)
             .SetEase(Ease.OutSine)
