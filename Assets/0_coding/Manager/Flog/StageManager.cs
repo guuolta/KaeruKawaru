@@ -7,11 +7,16 @@ public class StageManager : SingletonObjectBase<StageManager>
 {
     [Header("マス")]
     [SerializeField]
-    private List<StageTrout> _stageTrouts = new List<StageTrout>();
+    private List<StageData> _stageDataList = new List<StageData>();
     [Header("盤面")]
     [SerializeField]
     private Board _board;
 
+    private int _timeLimit;
+    /// <summary>
+    /// 制限時間
+    /// </summary>
+    public int TimeLimit => _timeLimit;
     private ReactiveProperty<Frog>[][] _troutFrogs => _board.TroutFrogs;
     /// <summary>
     /// マスのカエル
@@ -24,12 +29,13 @@ public class StageManager : SingletonObjectBase<StageManager>
 
         int row = 0;
         int column = 0;
-        foreach(var stageTrout in _stageTrouts)
+        foreach(var stageData in _stageDataList)
         {
-            if (stageTrout.Level == GameStateManager.StageLevel.Value)
+            if (stageData.Level == GameStateManager.StageLevel.Value)
             {
-                row = stageTrout.RowCount;
-                column = stageTrout.ColumnCount;
+                row = stageData.RowCount;
+                column = stageData.ColumnCount;
+                _timeLimit = stageData.TimeLimit;
             }
         }
 
@@ -79,7 +85,8 @@ public class StageManager : SingletonObjectBase<StageManager>
 }
 
 [System.Serializable]
-public class StageTrout
+public class StageData
+
 {
     [Header("レベル")]
     [SerializeField]
@@ -102,4 +109,12 @@ public class StageTrout
     /// マスの列
     /// </summary>
     public int ColumnCount => _columnCount;
+    [Header("制限時間")]
+    [SerializeField]
+    [Range(0, 300)]
+    private int _timeLimit;
+    /// <summary>
+    /// 制限時間
+    /// </summary>
+    public int TimeLimit => _timeLimit;
 }
