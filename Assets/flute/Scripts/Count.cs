@@ -16,7 +16,7 @@ public class Count : MonoBehaviour
     private void Start()
     {
         txt = GetComponent<TextMeshProUGUI>();
-        starttime = gameTimer.maxtime;
+        starttime = gameTimer.MaxTime;
 
         Observable.EveryUpdate()
             .Do(_ => {

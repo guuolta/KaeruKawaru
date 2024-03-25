@@ -1,10 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading;
 using UniRx;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class QuestionManager : SingletonObjectBase<QuestionManager>
 {
@@ -23,27 +20,19 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答を確認したか
     /// </summary>
     public BoolReactiveProperty IsCheckedAnswer => _isCheckedAnswer;
-    private ReactiveProperty<int> _activeQuestionCount = new ReactiveProperty<int>();
-    /// <summary>
-    /// 生成しているお題の数
-    /// </summary>
-    public IReadOnlyReactiveProperty<int> ActiveQuestionCount => _activeQuestionCount;
-    
     private List<Question> _questionList = new List<Question>();
 
     protected override void Init()
     {
         base.Init();
         _questionPanelParent.SetInit(_questionCount);
-        _activeQuestionCount.Value = _questionCount;
     }
 
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventQuestCount();
-        SetEventQuestion(_widthCount, Ct);
         SetInitPanel(_widthCount);
+        SetEventStart();
     }
 
     /// <summary>
@@ -56,44 +45,21 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     {
         for (int i = 0; i < _questionCount; i++)
         {
-            SetQuestion(widthCount, i);
+            SetQuestion(widthCount);
         }
     }
 
     /// <summary>
-    /// お題の数のイベント設定
+    /// 開始のイベント設定
     /// </summary>
-    private void SetEventQuestCount()
+    private void SetEventStart()
     {
-        Observable.EveryUpdate()
-            .SkipWhile(_ => GameStateManager.Status.Value != GameState.Play)
+        GameStateManager.Status
             .TakeUntilDestroy(this)
-            .Select(_ => _questionList.Count)
-            .DistinctUntilChanged()
-            .Where(value => _activeQuestionCount.Value != value && value <= _questionCount)
-            .Subscribe(value =>
+            .Where(status => status == GameState.Play)
+            .Take(1)
+            .Subscribe(_ =>
             {
-                _activeQuestionCount.Value = value;
-            });
-    }
-
-    /// <summary>
-    /// お題のイベント設定
-    /// </summary>
-    /// <param name="widthCount"> 幅数 </param>
-    private void SetEventQuestion(int widthCount, CancellationToken ct)
-    {
-        bool isWait = false;
-
-        _activeQuestionCount
-            .Skip(1)
-            .TakeUntilDestroy(this)
-            .Where(value => !isWait && value <= _questionCount)
-            .DistinctUntilChanged()
-            .Subscribe(async value =>
-            {
-                await UniTask.WaitUntil(() => _isCheckedAnswer.Value, cancellationToken: ct);
-                SetQuestion(widthCount, value);
                 CheckQuestion(StageManager.Instance.TroutFrogs);
             });
     }
@@ -102,15 +68,9 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// お題を設定
     /// </summary>
     /// <param name="widthCount"> 幅数 </param>
-    /// <param name="index">お題番号</param>
     /// <returns></returns>
-    private void SetQuestion(int widthCount, int index)
+    private void SetQuestion(int widthCount)
     {
-        if(index < 0 || index >= _questionCount)
-        {
-            return;
-        }
-
         var question = CreateQuestion(widthCount);
         _questionPanelParent.SetPanel(question);
         _questionList.Add(question);
@@ -186,6 +146,9 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
                 _questionPanelParent.RemovePanel(question);
                 _questionList.Remove(question);
                 question.Dispose();
+
+                SetQuestion(_widthCount);
+                CheckQuestion(StageManager.Instance.TroutFrogs);
             }
         }
 

@@ -14,7 +14,7 @@ public class Needle : MonoBehaviour
         recttransform = GetComponent<RectTransform>();
 
         Observable.EveryUpdate()
-            .Do(_ => a = gameTimer.CurrentTime / gameTimer.maxtime)
+            .Do(_ => a = gameTimer.CurrentTime / gameTimer.MaxTime)
             .Where(_ => a <= 1)
             .Subscribe(_ => 
                 recttransform.rotation = Quaternion.Euler(0, 0, -360*a)
