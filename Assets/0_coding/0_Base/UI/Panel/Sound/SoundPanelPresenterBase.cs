@@ -18,6 +18,12 @@ public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
         await base.ShowAsync(ct);
     }
 
+    public override async UniTask HideAsync(CancellationToken ct)
+    {
+        await base.HideAsync(ct);
+        AudioManager.Instance.SaveVolume();
+    }
+
     /// <summary>
     /// 初期値設定
     /// </summary>
