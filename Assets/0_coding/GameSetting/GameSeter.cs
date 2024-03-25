@@ -18,7 +18,6 @@ public class GameSeter : DontDestroySingletonObject<GameSeter>
 
     protected override void Destroy()
     {
-       AudioManager.Instance.SaveVolume();
        SaveManager.Save();
     }
 }

@@ -27,6 +27,7 @@ public class TitleManager : SingletonObjectBase<TitleManager>
             .Where(_ => Input.GetMouseButtonDown(0))
             .Subscribe(_ =>
             {
+                /*削除して、セレクト画面に遷移する*/
                 GameSceneManager.LoadScene(SceneType.EasyGame);
             });
     }
