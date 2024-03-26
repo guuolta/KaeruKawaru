@@ -9,6 +9,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: grass_medium_01
     second: {fileID: 2100000, guid: 9bbc2b17b3a1f624bb3084c19f330a96, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: grass_medium_01_diff_4k
+    second: {fileID: 2800000, guid: cdbb8ff10d0daa44fb6a1147dc12b593, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

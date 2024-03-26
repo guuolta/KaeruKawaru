@@ -137,7 +137,10 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                 break;
         }
 
-        _highScoreIndex.Value = _highScoreList.IndexOf(_point.Value);
+        if(_highScoreList.IndexOf(_point.Value) == 0)
+        {
+            _highScoreIndex.Value = 0;
+        }
     }
 
     /// <summary>
