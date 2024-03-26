@@ -242,6 +242,11 @@ MonoBehaviour:
   _disInteractiveAlpha: 0
   AnimationTime: 0.1
   _textAnimationTime: 1
+  _highScoreColor:
+    topLeft: {r: 0, g: 0, b: 0, a: 0}
+    topRight: {r: 0, g: 0, b: 0, a: 0}
+    bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+    bottomRight: {r: 0, g: 0, b: 0, a: 0}
   _scoreText: {fileID: 8591102392080442813}
   _highScoreText: {fileID: 3348909667304509109}
   _clearCountText: {fileID: 5129480897848887157}
@@ -1038,7 +1043,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 15e535e9be0bbf141be45c1bf0711911, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4ab1caf8220767d49be3376895ec74f3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
