@@ -103,4 +103,13 @@ public static class SaveManager
         PlayerPrefs.Save();
         Debug.Log("セーブ完了");
     }
+
+    /// <summary>
+    /// データ削除
+    /// </summary>
+    public static void DeleteAll()
+    {
+        PlayerPrefs.DeleteAll();
+        Debug.Log("データ削除");
+    }
 }

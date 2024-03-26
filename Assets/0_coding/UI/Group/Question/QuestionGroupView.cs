@@ -13,7 +13,6 @@ public class QuestionGroupView : ViewBase
     [SerializeField]
     private float _padding;
 
-    private bool _isRemoving = false;
     private int _questionMaxCount;
     private float _size;
     private float _topPos;

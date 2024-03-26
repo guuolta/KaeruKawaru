@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
-using unityroom.Api;
+using UnityEngine;
 
 public class ResultUIPresenter : PresenterBase<ResultUIView>
 {
@@ -28,9 +28,15 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
             .TakeUntilDestroy(this)
             .Where(value => value == GameState.Result)
             .DistinctUntilChanged()
-            .Subscribe(_ =>
+            .Subscribe(async _ =>
             {
-                ShowAsync(ct).Forget();
+                await ShowAsync(ct);
+
+                if (ScoreManager.Instance.HighScoreIndex.Value >= 0)
+                {
+                    Debug.Log(ScoreManager.Instance.HighScoreIndex.Value);
+                    await View.DoNewHighScoreTextAsync(ScoreManager.Instance.HighScoreIndex.Value, ct);
+                }
             });
     }
 
@@ -63,36 +69,25 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
         };
     }
 
-    private void SetEventHighScore()
-    {
-        ScoreManager.Instance.IsUpdateHighScore
-            .TakeUntilDestroy(this)
-            .Where(value => value)
-            .DistinctUntilChanged()
-            .Subscribe(_ =>
-            {
-                
-            });
-    }
-
     public override async UniTask ShowAsync(CancellationToken ct)
     {
-        SetText(ct);
         await base.ShowAsync(ct);
+        await SetTextAsync(ct);
     }
 
     /// <summary>
     /// テキストにスコアを設定
     /// </summary>
     /// <param name="ct"></param>
-    private void SetText(CancellationToken ct)
+    private async UniTask SetTextAsync(CancellationToken ct)
     {
         var _scoreManager = ScoreManager.Instance;
-        
-        View.SetScoreTextAsync(_scoreManager.Point.Value, ct).Forget();
-        View.SetScoreText(_scoreManager.HighScoreList[0],
-            _scoreManager.ClearQuestionCount,
+
+        View.SetHighScoreText(_scoreManager.HighScoreList[0]);
+        await View.SetScoreTextAsync(_scoreManager.Point.Value, ct);
+        await View.SetBounusScoreTextAsync(_scoreManager.ClearQuestionCount,
             _scoreManager.ComboBonus,
-            _scoreManager.StepBonus);
+            _scoreManager.StepBonus,
+            ct);
     }
 }

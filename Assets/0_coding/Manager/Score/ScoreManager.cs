@@ -13,17 +13,16 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     [SerializeField]
     private int _stepBonusPoint = 50;
 
-    private BoolReactiveProperty _isUpdateHighScore = new BoolReactiveProperty(false);
-    /// <summary>
-    /// ハイスコア更新フラグ
-    /// </summary>
-    public BoolReactiveProperty IsUpdateHighScore => _isUpdateHighScore;
-
     private ReactiveProperty<int> _point = new ReactiveProperty<int>();
     /// <summary>
     /// 現在のスコア
     /// </summary>
     public IReadOnlyReactiveProperty<int> Point => _point;
+    private ReactiveProperty<int> _highScoreIndex = new ReactiveProperty<int>(-1);
+    /// <summary>
+    /// ハイスコアを更新した順位
+    /// </summary>
+    public IReadOnlyReactiveProperty<int> HighScoreIndex => _highScoreIndex;
     private List<int> _highScoreList = new List<int>();
     /// <summary>
     /// ハイスコアリスト
@@ -101,11 +100,11 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     private void ResetCount()
     {
-        _isUpdateHighScore.Value = false;
         _point.Value = 0;
         _clearQuestionCount = 0;
         _comboBonus = 0;
         _stepBonus = 0;
+        _highScoreIndex.Value = -1;
     }
 
     /// <summary>
@@ -128,15 +127,17 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
         {
             case Level.Easy:
                 _easyHighScoreList = _highScoreList;
+                SaveManager.SetEasyHighScore(_easyHighScoreList.ToArray());
                 break;
             case Level.Hard:
                 _hardHighScoreList = _highScoreList;
+                SaveManager.SetHardHighScore(_hardHighScoreList.ToArray());
                 break;
             default:
                 break;
         }
 
-        _isUpdateHighScore.Value = true;
+        _highScoreIndex.Value = _highScoreList.IndexOf(_point.Value);
     }
 
     /// <summary>
