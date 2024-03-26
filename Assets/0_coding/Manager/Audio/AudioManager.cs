@@ -58,7 +58,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// </summary>
     private void SetInitVolume()
     {
-        _volumes = SaveManager.GetSoundVolume();
+        _volumes = SaveManager.GetSoundVolumes();
         _audioMixer.SetFloat(MASTER_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.Master]));
         _audioMixer.SetFloat(BGM_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.BGM]));
         _audioMixer.SetFloat(SE_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.SE]));
@@ -296,5 +296,6 @@ public enum SEType
     Nega,
     Evo1,
     Evo2,
-    Evo3
+    Evo3,
+    Fanfare
 }
