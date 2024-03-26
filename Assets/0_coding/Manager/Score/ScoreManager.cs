@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UnityEngine;
+using unityroom.Api;
 
 public class ScoreManager : DontDestroySingletonObject<ScoreManager>
 {
@@ -11,6 +12,12 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     [Header("手数ボーナス")]
     [SerializeField]
     private int _stepBonusPoint = 50;
+
+    private BoolReactiveProperty _isUpdateHighScore = new BoolReactiveProperty(false);
+    /// <summary>
+    /// ハイスコア更新フラグ
+    /// </summary>
+    public BoolReactiveProperty IsUpdateHighScore => _isUpdateHighScore;
 
     private ReactiveProperty<int> _point = new ReactiveProperty<int>();
     /// <summary>
@@ -53,19 +60,8 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     protected override void Init()
     {
         base.Init();
-        InitHighScoreList();
-    }
-
-    /// <summary>
-    /// ハイスコアリストの初期化
-    /// </summary>
-    private void InitHighScoreList()
-    {
-        for(int i = 0; i < _highScoreCount; i++)
-        {
-            _easyHighScoreList.Add(0);
-            _hardHighScoreList.Add(0);
-        }
+        _easyHighScoreList = SaveManager.GetEasyHighScores().ToList();
+        _hardHighScoreList = SaveManager.GetHardHighScores().ToList();
     }
 
     protected override void SetEvent()
@@ -92,6 +88,7 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                         break;
                     case GameState.Result:
                         SetHighScore();
+                        UpdateScoreToUnityRoom();
                         break;
                     default:
                         break;
@@ -104,10 +101,50 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     private void ResetCount()
     {
+        _isUpdateHighScore.Value = false;
         _point.Value = 0;
         _clearQuestionCount = 0;
         _comboBonus = 0;
         _stepBonus = 0;
+    }
+
+    /// <summary>
+    /// ハイスコアを設定
+    /// </summary>
+    /// <returns> ポイントがハイスコアか </returns>
+    private void SetHighScore()
+    {
+        if (_point.Value <= _highScoreList[_highScoreCount - 1])
+        {
+            return;
+        }
+
+        _highScoreList.Add(_point.Value);
+        _highScoreList.Sort();
+        _highScoreList.Reverse();
+        _highScoreList.RemoveAt(_highScoreList.Count - 1);
+
+        switch(GameStateManager.StageLevel.Value)
+        {
+            case Level.Easy:
+                _easyHighScoreList = _highScoreList;
+                break;
+            case Level.Hard:
+                _hardHighScoreList = _highScoreList;
+                break;
+            default:
+                break;
+        }
+
+        _isUpdateHighScore.Value = true;
+    }
+
+    /// <summary>
+    /// UnityRoomにスコアを送信
+    /// </summary>
+    private void UpdateScoreToUnityRoom()
+    {
+        UnityroomApiClient.Instance.SendScore(1, _point.Value, ScoreboardWriteMode.HighScoreDesc);
     }
 
     /// <summary>
@@ -132,24 +169,6 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                         break;
                 }
             });
-    }
-
-    /// <summary>
-    /// ハイスコアを設定
-    /// </summary>
-    /// <returns> ポイントがハイスコアか </returns>
-    private bool SetHighScore()
-    {
-        if (_point.Value <= _highScoreList[_highScoreCount-1])
-        {
-            return false;
-        }
-
-        _highScoreList.Add(_point.Value);
-        _highScoreList.Sort();
-        _highScoreList.Reverse();
-        _highScoreList.RemoveAt(_highScoreList.Count - 1);
-        return true;
     }
 
     /// <summary>

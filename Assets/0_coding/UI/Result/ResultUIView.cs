@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Threading;
 using TMPro;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 
 public class ResultUIView : ViewBase
@@ -14,6 +15,9 @@ public class ResultUIView : ViewBase
     [Range(0f, 5f)]
     [SerializeField]
     private float _textAnimationTime = 1f;
+    [Header("ハイスコアの色")]
+    [SerializeField]
+    private VertexGradient _highScoreColor;
     [Header("現在のスコアテキスト")]
     [SerializeField]
     private TMP_Text _scoreText;
@@ -105,6 +109,12 @@ public class ResultUIView : ViewBase
             .DOText(score.ToString(), _textAnimationTime, scrambleMode: ScrambleMode.Numerals)
             .SetEase(Ease.Linear)
             .ToUniTask(cancellationToken: ct);
+    }
+
+    public async UniTask DoHighScoreAnimatinAsync()
+    {
+        _highScoreText.colorGradient = _highScoreColor;
+        AudioManager.Instance.PlayOneShotSE(SEType.Fanfare);
     }
 
     /// <summary>

@@ -63,10 +63,21 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
         };
     }
 
+    private void SetEventHighScore()
+    {
+        ScoreManager.Instance.IsUpdateHighScore
+            .TakeUntilDestroy(this)
+            .Where(value => value)
+            .DistinctUntilChanged()
+            .Subscribe(_ =>
+            {
+                
+            });
+    }
+
     public override async UniTask ShowAsync(CancellationToken ct)
     {
         SetText(ct);
-        UnityroomApiClient.Instance.SendScore(1, ScoreManager.Instance.Point.Value, ScoreboardWriteMode.HighScoreDesc);
         await base.ShowAsync(ct);
     }
 
