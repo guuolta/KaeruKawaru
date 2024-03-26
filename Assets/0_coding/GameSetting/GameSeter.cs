@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public class GameSeter : DontDestroySingletonObject<GameSeter>
 {
+    [Header("セーブデータをリセットするか")]
+    [SerializeField]
+    private bool _isResetSaveData = false;
     [Header("fpsの量")]
     [SerializeField]
     private int _fps = 60;
@@ -14,6 +17,10 @@ public class GameSeter : DontDestroySingletonObject<GameSeter>
     {
         Application.targetFrameRate = _fps;
         GameStateManager.SetStageLevel(Level.Easy);
+        if(_isResetSaveData)
+        {
+            SaveManager.DeleteAll();
+        }
     }
 
     protected override void Destroy()
