@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreditPanelView : PanelViewBase
+public class TitlePanelView : PanelViewBase
 {
-    //aa
     
 }

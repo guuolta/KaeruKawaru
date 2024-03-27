@@ -4,15 +4,19 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
 {
+    [Header("タイトルパネル")]
+    [SerializeField]
+    private TitlePanelPresenter _titlePanel;
     [Header("セレクトパネル")]
     [SerializeField]
     private SelectPanelPresenter _selectPanel;
     [Header("ステージセレクトパネル")]
     [SerializeField]
-    private StageSelectPanelPresenter _stageselectPanel;
+    private StageSelectPanelPresenter _stageSelectPanel;
     [Header("サウンドパネル")]
     [SerializeField]
     private SelectSoundPanelPresenter _soundPanel;
@@ -22,45 +26,38 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
     [Header("クレジットパネル")]
     [SerializeField]
     private CreditPanelPresenter _creditPanel;
+    [Header("遊び方パネル")]
+    [SerializeField]
+    private HowToPlayPanelPresenter _howToPlayPanel;
     protected override void Init()
     {
         base.Init();
         SetFirstPanel();
+        OpenFirstPanelAsync(Ct).Forget();
     }
     private void SetFirstPanel()
     {
-        SetFirstPanel(_selectPanel);
+        SetFirstPanel(_titlePanel);
     }
-    protected override void SetEvent()
-    {
-        base.SetEvent();
-        SetEventOpenPanel(Ct);
-    }
-    /// <summary>
-    /// パネルを開くイベントを発行
-    /// </summary>
-    /// <param name="ct"></param>
-    private void SetEventOpenPanel(CancellationToken ct)
-    {
-        GameStateManager.Status
-            .TakeUntilDestroy(this)
-            .Where(_ => _ == GameState.Select)
-            .DistinctUntilChanged()
-            .Subscribe(async _ => {
-                await OpenFirstPanelAsync(ct);
-            });
-    }
+
     public async UniTask OpenPanelAsync(SelectPanelType type, CancellationToken ct)
     {
+        IPresenter panel = null;
+
         switch(type)
         {
-            case SelectPanelType.Slect : await OpenFirstPanelAsync(ct); break;
-            case SelectPanelType.StageSelect : await OpenPanelAsync(_stageselectPanel,ct); break;
-            case SelectPanelType.Sound : await OpenPanelAsync(_soundPanel,ct); break;
-            case SelectPanelType.Score : await OpenPanelAsync(_scorePanel,ct); break;
-            case SelectPanelType.Credit : await OpenPanelAsync(_creditPanel,ct); break;
+            case SelectPanelType.Title: await OpenFirstPanelAsync(ct); return;
+            case SelectPanelType.Slect : panel = _selectPanel;  break;
+            case SelectPanelType.StageSelect : panel = _stageSelectPanel; break;
+            case SelectPanelType.Sound : panel = _soundPanel; break;
+            case SelectPanelType.Score : panel = _scorePanel; break;
+            case SelectPanelType.Credit : panel = _creditPanel; break;
+            case SelectPanelType.HowToPlay: panel = _howToPlayPanel; break;
         }
+
+        await OpenPanelAsync(panel, ct);
     }
+
     public override async UniTask ClosePanelAsync(CancellationToken ct)
     {
         await base.ClosePanelAsync(ct);
@@ -70,12 +67,15 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
         }
     }
 }
+
 public enum SelectPanelType
 {
     None,
+    Title,
     Slect,
     StageSelect,
     Sound,
     Score,
-    Credit
+    Credit,
+    HowToPlay
 }
