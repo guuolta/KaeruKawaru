@@ -38,7 +38,7 @@ public class SelectPanelView : PanelViewBase
 
     protected override void Init()
     {
-        base.Init();
+        Hide(CanvasGroup);
         HideButton();
     }
     public override async UniTask ShowAsync(CancellationToken ct)
@@ -67,6 +67,4 @@ public class SelectPanelView : PanelViewBase
         _creditButton.ChangeInteractive(false);
         _howPlayButton.ChangeInteractive(false);
     }
-
-    
 }

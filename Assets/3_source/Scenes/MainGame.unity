@@ -1668,7 +1668,7 @@ PrefabInstance:
     - target: {fileID: 8147994337000828419, guid: 7882d8f2146e92e429485f347e50d553,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 1194.6666
       objectReference: {fileID: 0}
     - target: {fileID: 8147994337000828419, guid: 7882d8f2146e92e429485f347e50d553,
         type: 3}
@@ -1735,7 +1735,7 @@ MonoBehaviour:
   - _level: 1
     _rowCount: 3
     _columnCount: 3
-    _timeLimit: 10
+    _timeLimit: 30
   - _level: 2
     _rowCount: 4
     _columnCount: 4
@@ -1754,7 +1754,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _questionCount: 3
-  _widthCount: 2
+  _questionWidthList:
+  - _level: 1
+    _widthCount: 2
+  - _level: 2
+    _widthCount: 3
   _questionPanelParent: {fileID: 968394250}
 --- !u!4 &1370040773
 Transform:
@@ -1916,6 +1920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1141574908923427212, guid: 31a1fe5f7dd1abb4d84a7500e4f508a0,
+        type: 3}
+      propertyPath: _highScoreAnimationTime
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4036759236405136156, guid: 31a1fe5f7dd1abb4d84a7500e4f508a0,
         type: 3}
@@ -3382,12 +3391,12 @@ PrefabInstance:
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 980
       objectReference: {fileID: 0}
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
