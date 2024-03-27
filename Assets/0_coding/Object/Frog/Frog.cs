@@ -9,10 +9,10 @@ public class Frog : GameObjectBase
     [Header("カエルオブジェクトリスト")]
     [SerializeField]
     private List<FlogData> _flogGameObjects = new List<FlogData>();
-    [Header("進化時のパーティクル")]
-    [SerializeField]
+    /// <summary>
+    /// 進化時のパーティクル
+    /// </summary>
     private ParticleSystem _particleSystem;
-
     private ReactiveProperty<EvolutionaryType> _type = new ReactiveProperty<EvolutionaryType>(EvolutionaryType.Egg);
     /// <summary>
     /// カエルの状態
@@ -111,6 +111,8 @@ public class Frog : GameObjectBase
         int value = (int)Type.Value + 1; 
         int nextType = value <= 0 || value > 3 ? 1 : value;
         _type.Value = (EvolutionaryType)nextType;
+        _particleSystem = transform.GetChild(3).gameObject.GetComponent<ParticleSystem>();
+        _particleSystem.Play();
     }
 }
 
