@@ -8,7 +8,10 @@ public class Frog : GameObjectBase
 {
     [Header("カエルオブジェクトリスト")]
     [SerializeField]
-    private List<FlogGameObject> _flogGameObjects = new List<FlogGameObject>();
+    private List<FlogData> _flogGameObjects = new List<FlogData>();
+    [Header("進化時のパーティクル")]
+    [SerializeField]
+    private ParticleSystem _particleSystem;
 
     private ReactiveProperty<EvolutionaryType> _type = new ReactiveProperty<EvolutionaryType>(EvolutionaryType.Egg);
     /// <summary>
@@ -123,7 +126,7 @@ public enum EvolutionaryType
 }
 
 [System.Serializable]
-public class FlogGameObject
+public class FlogData
 {
     [Header("進化状態")]
     [SerializeField]
