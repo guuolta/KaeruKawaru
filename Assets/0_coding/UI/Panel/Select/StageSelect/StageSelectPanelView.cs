@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageSelectPanelView : PanelViewBase
+public class StageSelectPanelView : SelectPanelViewBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("イージーボタン")]
+    [SerializeField]
+    private ButtonBase _easyButton;
+    public ButtonBase EasyButton => _easyButton;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("ハードボタン")]
+    [SerializeField]
+    private ButtonBase _hardButton;
+    public ButtonBase HardButton => _hardButton;
 }

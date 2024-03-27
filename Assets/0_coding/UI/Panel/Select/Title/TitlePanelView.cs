@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class TitlePanelView : PanelViewBase
 {
-    
+    protected override void Init()
+    {
+        
+    }
 }

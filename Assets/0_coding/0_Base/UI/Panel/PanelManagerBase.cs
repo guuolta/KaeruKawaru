@@ -28,7 +28,7 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     /// </summary>
     /// <param name="ct"></param>
     /// <returns></returns>
-    public async UniTask OpenFirstPanelAsync(CancellationToken ct)
+    public virtual async UniTask OpenFirstPanelAsync(CancellationToken ct)
     {
         await OpenPanelAsync(_firstPanel, ct);
     }

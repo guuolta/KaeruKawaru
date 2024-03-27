@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class ScorePanelPresenter : PanelPresenterBase<ScorePanelView>
+public class ScorePanelPresenter : SelectPanelPresenterBase<ScorePanelView>
 {
-    // Start is called before the first frame update
-    void Start()
+    
+    public override async UniTask ShowAsync(CancellationToken ct)
     {
-        
+        SetScore();
+        await base.ShowAsync(ct);
     }
-
-    // Update is called once per frame
-    void Update()
+    private void SetScore()
     {
-        
+        View.SetEasyScore(ScoreManager.Instance.EasyHighScoreList);
+        View.SetHardScore(ScoreManager.Instance.HardHighScoreList);
     }
+    
 }

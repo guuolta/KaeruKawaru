@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreditPanelPresenter : PanelPresenterBase<CreditPanelView>
+public class CreditPanelPresenter : SelectPanelPresenterBase<CreditPanelView>
 {
     //aaa
     //fasdfaf
