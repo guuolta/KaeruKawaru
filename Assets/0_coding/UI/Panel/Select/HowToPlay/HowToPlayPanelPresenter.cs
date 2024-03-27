@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class HowToPlayPanelPresenter : PanelPresenterBase<HowToPlayPanelView>
+public class HowToPlayPanelPresenter : SelectPanelPresenterBase<HowToPlayPanelView>
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void SetEvent()
     {
-        
+        base.SetEvent();
+        SetButton(Ct);
     }
-
-    // Update is called once per frame
-    void Update()
+    private void SetButton(CancellationToken ct)
     {
-        
+        View.LeftButton.OnClickCallback += () => {
+            View.SlideLeftAsync(ct).Forget();
+        };
+        View.RightButton.OnClickCallback += () => {
+            View.SlideRightAsync(ct).Forget();
+        };
     }
 }

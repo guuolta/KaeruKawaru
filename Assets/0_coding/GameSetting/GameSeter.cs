@@ -16,7 +16,7 @@ public class GameSeter : DontDestroySingletonObject<GameSeter>
     protected override void Init()
     {
         Application.targetFrameRate = _fps;
-        GameStateManager.SetStageLevel(Level.Easy);
+        //GameStateManager.SetStageLevel(Level.Easy);
         if(_isResetSaveData)
         {
             SaveManager.DeleteAll();

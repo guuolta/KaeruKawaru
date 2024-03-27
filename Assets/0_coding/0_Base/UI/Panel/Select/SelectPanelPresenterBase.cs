@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
-public class SelectSoundPanelPresenter : SoundPanelPresenterBase
+public class SelectPanelPresenterBase<TView> : PanelPresenterBase<TView>
+    where TView : SelectPanelViewBase
 {
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetButton(Ct);
+        SetCloseButton(Ct);
     }
 
-    private void SetButton(CancellationToken ct)
+    private void SetCloseButton(CancellationToken ct)
     {
         View.CloseButton.OnClickCallback += () => {
             SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect,ct).Forget();

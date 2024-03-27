@@ -39,7 +39,11 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
     {
         SetFirstPanel(_titlePanel);
     }
-
+    public override async UniTask OpenFirstPanelAsync(CancellationToken ct)
+    {
+        await base.OpenFirstPanelAsync(ct);
+        await TitleManager.Instance.TargetTitleAsync(ct);
+    }
     public async UniTask OpenPanelAsync(SelectPanelType type, CancellationToken ct)
     {
         IPresenter panel = null;
