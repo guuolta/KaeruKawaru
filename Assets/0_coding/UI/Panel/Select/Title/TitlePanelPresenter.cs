@@ -15,6 +15,7 @@ public class TitlePanelPresenter : PanelPresenterBase<TitlePanelView>
     {
         View.OnClickCallback += async () =>
         {
+            AudioManager.Instance.PlayOneShotSE(SEType.Posi);
             await TitleManager.Instance.TargetSelectAsync(ct);
             await SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect, ct);
         };

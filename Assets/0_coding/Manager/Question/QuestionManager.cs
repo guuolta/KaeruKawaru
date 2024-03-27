@@ -8,9 +8,9 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     [Header("お題の数")]
     [SerializeField]
     private int _questionCount = 3;
-    [Header("お題の幅")]
+    [Header("お題の幅リスト")]
     [SerializeField]
-    private int _widthCount = 2;
+    private List<QuestionWidthData> _questionWidthList = new List<QuestionWidthData>();
     [Header("お題パネルの親オブジェクト")]
     [SerializeField]
     private QuestionGroupPresenter _questionPanelParent;
@@ -20,12 +20,27 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答を確認したか
     /// </summary>
     public BoolReactiveProperty IsCheckedAnswer => _isCheckedAnswer;
+
+    private int _widthCount;
     private List<Question> _questionList = new List<Question>();
 
     protected override void Init()
     {
         base.Init();
         _questionPanelParent.SetInit(_questionCount);
+        SetWidthCount();
+    }
+
+    private void SetWidthCount()
+    {
+        foreach(var questionWidth in _questionWidthList)
+        {
+            if (questionWidth.Level == GameStateManager.StageLevel.Value)
+            {
+                _widthCount = questionWidth.WidthCount;
+                return;
+            }
+        }
     }
 
     protected override void SetEvent()
@@ -167,6 +182,28 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             question.Dispose();
         }
     }
+}
+
+/// <summary>
+/// お題の幅データ
+/// </summary>
+[System.Serializable]
+public class QuestionWidthData
+{
+    [Header("レベル")]
+    [SerializeField]
+    private Level _level;
+    /// <summary>
+    /// レベル
+    /// </summary>
+    public Level Level => _level;
+    [Header("お題の幅")]
+    [SerializeField]
+    private int _widthCount;
+    /// <summary>
+    /// お題の幅
+    /// </summary>
+    public int WidthCount => _widthCount;
 }
 
 /// <summary>

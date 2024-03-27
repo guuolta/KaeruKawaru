@@ -26,12 +26,6 @@ public class ButtonBase : AnimationPartBase
         }
     }
 
-    protected override void Init()
-    {
-        base.Init();
-        ChangeInteractive(true);
-    }
-
     protected override void SetEvent()
     {
         SetEventPlaySe();
