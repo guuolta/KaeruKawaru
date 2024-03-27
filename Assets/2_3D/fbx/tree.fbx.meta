@@ -10,20 +10,30 @@ ModelImporter:
       name: island_tree_01
     second: {fileID: 2100000, guid: d834129583dc70c4fb30ea1be02777c9, type: 2}
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: island_tree_01_leaves
+    second: {fileID: 2100000, guid: 97c7d781abcdc734982ae93ebb5c15ca, type: 2}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: island_tree_01_diff_4k
-    second: {fileID: 2800000, guid: cdaebb7ad8f06204da1a0deef951d94e, type: 3}
+    second: {fileID: 2800000, guid: 5218ad9414dab104bb8c26d6ee81e3ec, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: island_tree_01_leaves_diff_4k
+    second: {fileID: 2800000, guid: b89213b4a8550f24f9a049f73ec245e2, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: island_tree_01_nor_gl_4k
-    second: {fileID: 2800000, guid: 73d854929b664b441b49619ef8e78c25, type: 3}
+    second: {fileID: 2800000, guid: 2f3ffe3abed47b84185612f16cbd064c, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: island_tree_01_rough_4k
-    second: {fileID: 2800000, guid: a40c1ab03ded08841a63fd90e0a8ba80, type: 3}
+    second: {fileID: 2800000, guid: e4575129602db21478951ffacff21c08, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
