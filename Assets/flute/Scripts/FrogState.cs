@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class FrogState : MonoBehaviour//AllFrogから数字を受け取って状態変更
 {
+    [SerializeField] private ParticleSystem _particle;
     int FrogStateNum = 0;
     GameObject Frog,tamago,otama,kaeru;
     AllFrog allfrog;
+    private int _currentState;
     void Start()
     {
         Frog = transform.parent.gameObject;
@@ -30,19 +32,27 @@ public class FrogState : MonoBehaviour//AllFrogから数字を受け取って状
                 tamago.SetActive(true);
                 otama.SetActive(false);
                 kaeru.SetActive(false);
+                if(_currentState != 1)
+                    _particle.Play();
                 break;
             case 2 :
                 tamago.SetActive(false);
                 otama.SetActive(true);
                 kaeru.SetActive(false);
+                if(_currentState != 2)
+                    _particle.Play();
                 break;
             case 3 :
                 tamago.SetActive(false);
                 otama.SetActive(false);
                 kaeru.SetActive(true);
+                if(_currentState != 3)
+                    _particle.Play();
                 break;
             default : break;
         }
+
+        _currentState = FrogStateNum;
     }
 
     void GetNumber()
