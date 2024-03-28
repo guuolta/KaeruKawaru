@@ -21,13 +21,13 @@ public static class SaveManager
     /// 全音量取得
     /// </summary>
     /// <returns>音量</returns>
-    public static float[] GetSoundVolumes()
+    public static int[] GetSoundVolumes()
     {
-        float[] soundVolumes = new float[SOUND_INDEX];
+        int[] soundVolumes = new int[SOUND_INDEX];
 
-        soundVolumes[(int)AudioType.Master] = PlayerPrefs.GetFloat(MASTER_VOLUME_KEY, 8f);
-        soundVolumes[(int)AudioType.BGM] = PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 8f);
-        soundVolumes[(int)AudioType.SE] = PlayerPrefs.GetFloat(SE_VOLUME_KEY, 8f);
+        soundVolumes[(int)AudioType.Master] = PlayerPrefs.GetInt(MASTER_VOLUME_KEY, 8);
+        soundVolumes[(int)AudioType.BGM] = PlayerPrefs.GetInt(BGM_VOLUME_KEY, 8);
+        soundVolumes[(int)AudioType.SE] = PlayerPrefs.GetInt(SE_VOLUME_KEY, 8);
 
         return soundVolumes;
     }
@@ -66,11 +66,11 @@ public static class SaveManager
     /// セーブデータに音量をセット
     /// </summary>
     /// <param name="volumes"> 音量 </param>
-    public static void SetSoundVolume(float[] volumes)
+    public static void SetSoundVolume(int[] volumes)
     {
-        PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, volumes[(int)AudioType.Master]);
-        PlayerPrefs.SetFloat(BGM_VOLUME_KEY, volumes[(int)AudioType.BGM]);
-        PlayerPrefs.SetFloat(SE_VOLUME_KEY, volumes[(int)AudioType.SE]);
+        PlayerPrefs.SetInt(MASTER_VOLUME_KEY, volumes[(int)AudioType.Master]);
+        PlayerPrefs.SetInt(BGM_VOLUME_KEY, volumes[(int)AudioType.BGM]);
+        PlayerPrefs.SetInt(SE_VOLUME_KEY, volumes[(int)AudioType.SE]);
     }
 
     /// <summary>
