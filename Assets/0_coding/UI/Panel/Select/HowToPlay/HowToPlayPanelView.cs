@@ -1,7 +1,6 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
@@ -66,13 +65,13 @@ public class HowToPlayPanelView : SelectPanelViewBase
     }
     public async UniTask SlideLeftAsync(CancellationToken ct)
     {
-        await _slidePanelList[_index.Value].HideAsync(_hideleftposX,ct);
+        await _slidePanelList[_index.Value].HideAsync(_hiderightposX, ct);
         ChangeIndex(_index.Value - 1);
         await _slidePanelList[_index.Value].ShowAsync(_showposX,ct);
     }
     public async UniTask SlideRightAsync(CancellationToken ct)
     {
-        await _slidePanelList[_index.Value].HideAsync(_hiderightposX,ct);
+        await _slidePanelList[_index.Value].HideAsync(_hideleftposX, ct);
         ChangeIndex(_index.Value + 1);
         await _slidePanelList[_index.Value].ShowAsync(_showposX,ct);
     }
@@ -84,6 +83,7 @@ public class HowToPlayPanelView : SelectPanelViewBase
     {
         _index
             .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
             .Subscribe(value => {
                 LeftButton.SetisHide(value > 0);
                 RightButton.SetisHide(value < _listCount-1);

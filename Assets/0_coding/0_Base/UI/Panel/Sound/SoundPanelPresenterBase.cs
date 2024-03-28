@@ -1,7 +1,6 @@
-using UniRx;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine;
+using UniRx;
 
 public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
 {
