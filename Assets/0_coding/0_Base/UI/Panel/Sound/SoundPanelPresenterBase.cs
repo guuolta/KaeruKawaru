@@ -28,7 +28,7 @@ public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
     /// </summary>
     private void SetValue()
     {
-        float[] volumes = AudioManager.Instance.GetSoundVolumes();
+        int[] volumes = AudioManager.Instance.GetSoundVolumes();
 
         foreach (var soundUI in View.SoundUIList)
         {

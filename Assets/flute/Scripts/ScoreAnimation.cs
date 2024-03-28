@@ -1,30 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
-using UniRx;
-using UnityEngine;
-using TMPro;
-using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System.Threading;
+using TMPro;
+using UniRx;
 
-public class ScoreAnimation : MonoBehaviour
+public class ScoreAnimation : UIBase
 {
-    TextMeshProUGUI scoretext;
-    void Start()
-    {
-        scoretext = this.GetComponent<TextMeshProUGUI>();
+    private const int ANIMATION_COUNT = 2;
 
-        ScoreManager.Instance.Point.Subscribe(value => {
-            //Debug.Log(value);
-            DoScoreAnimation(value);
-        }).AddTo(this);
-    }
-    private void DoScoreAnimation(int score)
+    private TMP_Text scoretext;
+
+    protected override void Init()
     {
-        scoretext.DOText(score.ToString(),0);
-        if(score != 0)
-        {
-            scoretext.DOScale(0.5f,0.1f).SetEase(Ease.OutBack);
-            scoretext.DOScale(1f,0.1f).SetDelay(0.1f).SetEase(Ease.Linear);
-        }
+        base.Init();
+        scoretext = GetComponent<TextMeshProUGUI>();
+        scoretext.text = "0";
+    }
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetEventScoreAnimation(Ct);
+    }
+
+    private void SetEventScoreAnimation(CancellationToken ct)
+    {
+        ScoreManager.Instance.Point
+            .SkipWhile(value => value <= 0)
+            .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
+            .Subscribe(async value =>
+            {
+                await DoScoreAnimationAsync(value, ct);
+            });
+    }
+
+    private async UniTask DoScoreAnimationAsync(int score, CancellationToken ct)
+    {
+        scoretext.DOComplete();
+
+        var sequence = DOTween.Sequence();
+        await sequence
+            .Append(scoretext
+                .DOText(score.ToString(), AnimationTime, scrambleMode: ScrambleMode.Numerals)
+                .SetEase(Ease.Linear))
+            .Join(scoretext
+                .DOScale(0.5f, AnimationTime/ ANIMATION_COUNT)
+                .SetEase(Ease.OutBack))
+            .Append(scoretext.DOScale(1f, AnimationTime/ ANIMATION_COUNT)
+                .SetEase(Ease.InBack))
+            .ToUniTask(cancellationToken: ct);
     }
 }

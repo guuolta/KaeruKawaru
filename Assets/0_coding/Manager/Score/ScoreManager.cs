@@ -118,7 +118,6 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
             return;
         }
 
-        Debug.Log(_highScoreList[0] + "," + _highScoreList[1]+ "," + _highScoreList[2]);
         _highScoreList.Add(_point.Value);
         _highScoreList.Sort();
         _highScoreList.Reverse();

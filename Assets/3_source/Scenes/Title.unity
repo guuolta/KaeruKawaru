@@ -409,43 +409,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
-      propertyPath: _seList.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[4]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0be485df282f7f94eb23e1ea97632fcb, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[5]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3981cd1eea2e4ed4a85b7f475e0701bc, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[6]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3981cd1eea2e4ed4a85b7f475e0701bc, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[4]._seType
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[5]._seType
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[6]._seType
-      value: 6
+      propertyPath: _frogSoundInterval
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4928622667025986936, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8761480932084532381, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
