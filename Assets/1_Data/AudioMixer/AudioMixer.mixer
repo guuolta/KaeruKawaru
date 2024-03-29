@@ -73,6 +73,8 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: 4281535b12d42ff4bb7d86e561073151
     name: BGM
+  - guid: 182d7b0ada95b5f49ab7952c1907f153
+    name: MainPitch
   - guid: 592cd3855e365fa40967e21aa46308e0
     name: BGMPitch
   - guid: 9b9b4dd41a2c727459b3d31b3be86fca
@@ -136,7 +138,7 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: f0406d91bc6acea488a3d06a0cf9d93a
   m_FloatValues:
-    592cd3855e365fa40967e21aa46308e0: 0.8
+    592cd3855e365fa40967e21aa46308e0: 1
     39175dbc5ddf1d24ab3939babfca11c8: 1.0717354
   m_TransitionOverrides: {}
 --- !u!244 &325939072108601143

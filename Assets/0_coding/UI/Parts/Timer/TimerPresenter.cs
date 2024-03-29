@@ -19,11 +19,15 @@ public class TimerPresenter : PresenterBase<TimerView>
         75
     };
 
+    [Header("加速SE")]
+    [SerializeField]
+    private AudioClip _hurryupSE;
     private TimerModel _model;
     private int _maxTime => _model.MaxTime;
 
     private List<int> _changeTimeList = new List<int>();
     private CompositeDisposable _disposable = new CompositeDisposable();
+    public AudioManager _audioManager;
     
 
     protected override void Init()
@@ -60,16 +64,17 @@ public class TimerPresenter : PresenterBase<TimerView>
 
                 if (value <= 0)
                 {
-                    //ピッチ戻す
+                    _audioManager.ChangePitch(1f);
                     GameStateManager.SetGameState(GameState.Result);
                     DisposeEvent(_disposable);
                 }
                 else if (value == _changeTimeList[2])
                 {
                     View.ChangeTimerState(TimerState.Danger);
-                    //ここに追加
+                    _audioManager.ChangePitch(0.8f);
+                    AudioManager.Instance.PlayOneShotSE(_hurryupSE);
                 }
-                else if(value == _changeTimeList[1])
+                else if (value == _changeTimeList[1])
                 {
                     View.ChangeTimerState(TimerState.Warning);
                 }

@@ -1261,6 +1261,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54fe3c54397852f439743260b4f120db, type: 3}
+--- !u!114 &863860654 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
+    type: 3}
+  m_PrefabInstance: {fileID: 863860653}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c0a908964280d47adb643c73aa5d71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &880546244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,6 +1678,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Timer
       objectReference: {fileID: 0}
+    - target: {fileID: 4102598872501519321, guid: 7882d8f2146e92e429485f347e50d553,
+        type: 3}
+      propertyPath: _hurryupSE
+      value: 
+      objectReference: {fileID: 8300000, guid: c10f5f0ba2a029343a7c187d9a7b9913, type: 3}
+    - target: {fileID: 4102598872501519321, guid: 7882d8f2146e92e429485f347e50d553,
+        type: 3}
+      propertyPath: _audioManager
+      value: 
+      objectReference: {fileID: 863860654}
+    - target: {fileID: 4102598872501519321, guid: 7882d8f2146e92e429485f347e50d553,
+        type: 3}
+      propertyPath: _hurryupAudioSource
+      value: 
+      objectReference: {fileID: 5183867995281862982, guid: 09caec424b541be4e91c4bd0a1e82a03,
+        type: 3}
     - target: {fileID: 7669694994865098363, guid: 7882d8f2146e92e429485f347e50d553,
         type: 3}
       propertyPath: m_Pivot.y
@@ -1754,7 +1782,7 @@ PrefabInstance:
     - target: {fileID: 8147994337000828419, guid: 7882d8f2146e92e429485f347e50d553,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 1194.6666
       objectReference: {fileID: 0}
     - target: {fileID: 8147994337000828419, guid: 7882d8f2146e92e429485f347e50d553,
         type: 3}
@@ -3703,12 +3731,12 @@ PrefabInstance:
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 980
       objectReference: {fileID: 0}
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3820777605382952215, guid: 1412d196a6d042d4ea1b96cb9f5c5409,
         type: 3}
