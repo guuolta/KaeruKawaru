@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.24617752, g: 0.35977477, b: 0.44265276, a: 1}
+  m_IndirectSpecularColor: {r: 0.43656757, g: 0.5542215, b: 0.54339606, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -409,43 +409,38 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
-      propertyPath: _seList.Array.size
-      value: 6
+      propertyPath: _frogSoundInterval
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
-      propertyPath: _seList.Array.data[4]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0be485df282f7f94eb23e1ea97632fcb, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[5]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3981cd1eea2e4ed4a85b7f475e0701bc, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[6]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3981cd1eea2e4ed4a85b7f475e0701bc, type: 3}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[4]._seType
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[5]._seType
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
-        type: 3}
-      propertyPath: _seList.Array.data[6]._seType
-      value: 6
+      propertyPath: _frogSoundProbability
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4928622667025986936, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385743797983824255, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8761480932084532381, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
@@ -1529,7 +1524,7 @@ MonoBehaviour:
   Slideparent: {fileID: 353227155}
   _leftButton: {fileID: 1015837644}
   _rightButton: {fileID: 632361498}
-  _inipos: {x: -1400, y: -5}
+  _inipos: {x: 1400, y: -5}
   _showposX: 0
   _hideleftposX: -1400
   _hiderightposX: 1400
@@ -3932,7 +3927,7 @@ GameObject:
   - component: {fileID: 556020874}
   - component: {fileID: 556020876}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3970,14 +3965,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: c251deb4790b41b448363b45593df654, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4368,7 +4363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b3f0579694354b19a89e2013777f4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disInteractiveAlpha: 0.3
+  _disInteractiveAlpha: 0
   AnimationTime: 0.1
   _normalImage: {fileID: 21300000, guid: b53c388e17a8d4d5abfec04acfce5846, type: 3}
   _pushedImage: {fileID: 21300000, guid: b53c388e17a8d4d5abfec04acfce5846, type: 3}
@@ -6467,7 +6462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b3f0579694354b19a89e2013777f4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disInteractiveAlpha: 0.3
+  _disInteractiveAlpha: 0
   AnimationTime: 0.1
   _normalImage: {fileID: 21300000, guid: 3a4895b705f004a31a5a397e418c57bf, type: 3}
   _pushedImage: {fileID: 21300000, guid: 3a4895b705f004a31a5a397e418c57bf, type: 3}
@@ -6941,7 +6936,7 @@ GameObject:
   - component: {fileID: 1127503283}
   - component: {fileID: 1127503285}
   m_Layer: 5
-  m_Name: Image
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6986,7 +6981,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: a93229b79ae5006429cd9d41c10ae8ae, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10945,7 +10940,7 @@ GameObject:
   - component: {fileID: 1741054756}
   - component: {fileID: 1741054758}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10983,14 +10978,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 9b797baac2b0a1842bfdcc2a609a2b6c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

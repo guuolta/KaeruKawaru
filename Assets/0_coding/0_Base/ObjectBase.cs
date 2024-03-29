@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using System.Collections.Generic;
 using System.Threading;
 using UniRx;
 using UnityEngine;
@@ -22,6 +24,7 @@ public class ObjectBase : MonoBehaviour
             return _ct;
         }
     }
+    private List<Tween> _tweenList = new List<Tween>();
 
     private void Awake()
     {
@@ -68,7 +71,20 @@ public class ObjectBase : MonoBehaviour
     /// </summary>
     protected virtual void Destroy()
     {
+        DisposeTween();
+    }
 
+    /// <summary>
+    /// DOTweenのアニメーションを破棄
+    /// </summary>
+    protected virtual void DisposeTween()
+    {
+        foreach (var tween in _tweenList)
+        {
+            tween.Kill();
+        }
+
+        _tweenList.Clear();
     }
 
     /// <summary>
@@ -78,5 +94,14 @@ public class ObjectBase : MonoBehaviour
     {
         disposable.Dispose();
         return new CompositeDisposable();
+    }
+
+    /// <summary>
+    /// DOTweenのアニメーションを追加
+    /// </summary>
+    /// <param name="tween"></param>
+    public void AddTween(Tween tween)
+    {
+        _tweenList.Add(tween);
     }
 }

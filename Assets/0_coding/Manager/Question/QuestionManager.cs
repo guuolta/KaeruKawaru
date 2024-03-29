@@ -73,9 +73,9 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             .TakeUntilDestroy(this)
             .Where(status => status == GameState.Play)
             .Take(1)
-            .Subscribe(_ =>
+            .Subscribe(async _ =>
             {
-                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
+                await CheckQuestionAsync(StageManager.Instance.TroutFrogs);
             });
     }
 
@@ -126,7 +126,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答確認
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
-    public async void CheckQuestionAsync(ReactiveProperty<Frog>[][] troutFrogs)
+    public async UniTask CheckQuestionAsync(Frog[][] troutFrogs)
     {
         await UniTask.WaitUntil(() => _isCheckedAnswer.Value);
 
@@ -166,7 +166,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             for(int i=0; i<count; i++)
             {
                 SetQuestion(_widthCount);
-                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
+                CheckQuestionAsync(StageManager.Instance.TroutFrogs).Forget();
             }
         }
 
@@ -240,6 +240,7 @@ public class Question
     /// ポイント
     /// </summary>
     public int Point => _point;
+    private List<Frog> _clearTroutList = new List<Frog>();
     private CompositeDisposable _disposable = new CompositeDisposable();
 
     public Question(EvolutionaryType[][] trouts)
@@ -300,7 +301,7 @@ public class Question
     /// </summary>
     /// <param name="trouts"> ステージの現在のマス </param>
     /// <returns></returns>
-    public bool CheckAnswer(ReactiveProperty<Frog>[][] trouts)
+    public bool CheckAnswer(Frog[][] trouts)
     {
         int rowCount = trouts.Length;
         int columnCount = trouts[0].Length;
@@ -317,7 +318,7 @@ public class Question
             for (int j = 0; j <= columnLoopCount; j++)
             {
                 if (Trouts[0][0] == EvolutionaryType.None
-                    || Trouts[0][0] == trouts[i][j].Value.Type.Value)
+                    || Trouts[0][0] == trouts[i][j].Type.Value)
                 {
                     bool isMatch = true;
                     for(int k = 0; k < WidthCount; k++)
@@ -331,6 +332,11 @@ public class Question
 
                     if (isMatch)
                     {
+                        foreach(var trout in _clearTroutList)
+                        {
+                            trout.StartClearAnimationAsync().Forget();
+                        }
+
                         return true;
                     }
                 }
@@ -347,15 +353,18 @@ public class Question
     /// <param name="questionRows"> お題の行 </param>
     /// <param name="stageRows"> ステージの行 </param>
     /// <returns></returns>
-    private bool CheckRow(int startIndex, EvolutionaryType[] questionRows, ReactiveProperty<Frog>[] stageRows)
+    private bool CheckRow(int startIndex, EvolutionaryType[] questionRows, Frog[] stageRows)
     {
         for(int i=0; i<questionRows.Length; i++)
         {
             if (questionRows[i] != EvolutionaryType.None
-                && questionRows[i] != stageRows[i+ startIndex].Value.Type.Value)
+                && questionRows[i] != stageRows[i+ startIndex].Type.Value)
             {
+                _clearTroutList.Clear();
                 return false;
             }
+
+            _clearTroutList.Add(stageRows[i + startIndex]);
         }
 
         return true;

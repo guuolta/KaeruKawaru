@@ -1,15 +1,12 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using TMPro;
 using UniRx;
 using UnityEditor;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SocialPlatforms.Impl;
-using System.Linq.Expressions;
-using System;
 
 public class ResultUIView : ViewBase
 {
@@ -104,7 +101,6 @@ public class ResultUIView : ViewBase
     {
         base.SetEvent();
         SetEventButtonText();
-        SetEventScoreAnimation();
     }
 
     /// <summary>
@@ -125,13 +121,12 @@ public class ResultUIView : ViewBase
     /// <summary>
     /// スコアのアニメーション設定
     /// </summary>
-    private void SetEventScoreAnimation()
+    public void SetEventScoreAnimation()
     {
         var disposable = new CompositeDisposable();
 
         Observable.EveryUpdate()
             .TakeUntilDestroy(this)
-            .SkipWhile(_ => GameStateManager.Status.Value != GameState.Result)
             .Select(_ => Input.GetMouseButtonDown(0))
             .SkipWhile(_ => !_)
             .Where(_ => _)

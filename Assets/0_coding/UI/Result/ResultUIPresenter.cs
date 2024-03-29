@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class ResultUIPresenter : PresenterBase<ResultUIView>
 {
+    [Header("終了時のパネル")]
+    [SerializeField]
+    private FinishPanel _finishPanel;
+
     protected override void Init()
     {
         base.Init();
@@ -30,11 +34,13 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
             .DistinctUntilChanged()
             .Subscribe(async _ =>
             {
+                await _finishPanel.StartAnimation(ct);
+                View.SetEventScoreAnimation();
+
                 await ShowAsync(ct);
 
                 if (ScoreManager.Instance.HighScoreIndex.Value >= 0)
                 {
-                    Debug.Log(ScoreManager.Instance.HighScoreIndex.Value);
                     await View.DoNewHighScoreTextAsync(ScoreManager.Instance.HighScoreIndex.Value, ct);
                 }
 
@@ -49,7 +55,8 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     {
         View.LevelChangeButton.OnClickCallback += () =>
         {
-            switch(GameStateManager.StageLevel.Value)
+            AudioManager.Instance.KillSE();
+            switch (GameStateManager.StageLevel.Value)
             {
                 case Level.Easy:
                     GameSceneManager.LoadScene(SceneType.HardGame);
@@ -62,11 +69,13 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
 
         View.RetryButton.OnClickCallback += () =>
         {
+            AudioManager.Instance.KillSE();
             GameSceneManager.ReLoadSceneAsync().Forget();
         };
 
         View.TitleButton.OnClickCallback += () =>
         {
+            AudioManager.Instance.KillSE();
             GameSceneManager.LoadScene(SceneType.Title);
         };
     }

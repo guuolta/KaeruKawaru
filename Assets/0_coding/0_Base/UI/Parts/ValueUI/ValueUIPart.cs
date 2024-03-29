@@ -9,21 +9,21 @@ public class ValueUIPart : UIBase
 {
     [Header("スライダーとインプットフィールドの最小値")]
     [SerializeField]
-    private float _minValue;
+    private int _minValue;
     [Header("スライダーとインプットフィールドの最大値")]
     [SerializeField]
-    private float _maxValue;
+    private int _maxValue;
     [Header("対象のスライダー")]
     [SerializeField]
     private SliderBase _slider;
     [Header("対象のインプットフィールド")]
     [SerializeField]
     private ValueInputFieldBase _inputField;
-    private ReactiveProperty<float> _value = new ReactiveProperty<float>();
+    private ReactiveProperty<int> _value = new ReactiveProperty<int>();
     /// <summary>
     /// 値
     /// </summary>
-    public ReactiveProperty<float> Value => _value;
+    public ReactiveProperty<int> Value => _value;
 
     protected override void SetFirstEvent()
     {
@@ -44,7 +44,7 @@ public class ValueUIPart : UIBase
             .Subscribe(value =>
             {
                 _inputField.SetValue(value);
-                _value.Value = value;
+                _value.Value = (int)value;
             });
 
         _inputField.InputValueAsObservable
@@ -54,7 +54,7 @@ public class ValueUIPart : UIBase
             .Subscribe(value =>
             {
                 _slider.SetValue(value);
-                _value.Value = value;
+                _value.Value = (int)value;
             });
     }
 
@@ -62,7 +62,7 @@ public class ValueUIPart : UIBase
     /// 値を設定する
     /// </summary>
     /// <param name="value"> 値 </param>
-    public void SetValue(float value)
+    public void SetValue(int value)
     {
         _slider.SetValue(value);
         _inputField.SetValue(value);

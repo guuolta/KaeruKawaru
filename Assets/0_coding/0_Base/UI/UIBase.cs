@@ -108,21 +108,14 @@ public class UIBase : GameObjectBase,
     /// UIを押せるようにするか設定
     /// </summary>
     /// <param name="isInteractive">押せるか</param>
-    public void ChangeInteractive(bool isInteractive)
+    public virtual void ChangeInteractive(bool isInteractive)
     {
         if(CanvasGroup == null)
             return;
 
         CanvasGroup.interactable = isInteractive;
         CanvasGroup.blocksRaycasts = isInteractive;
-        if (isInteractive)
-        {
-            CanvasGroup.alpha = 1f;
-        }
-        else
-        {
-            CanvasGroup.alpha = _disInteractiveAlpha;
-        }
+        CanvasGroup.alpha = isInteractive ? 1f : _disInteractiveAlpha;
     }
 
     /// <summary>
@@ -179,8 +172,11 @@ public class UIBase : GameObjectBase,
             return;
         }
 
-        await image.DOFade(1, AnimationTime)
-            .SetEase(Ease.InSine)
+        var tween = image.DOFade(1, AnimationTime)
+            .SetEase(Ease.InSine);
+        AddTween(tween);
+
+        await tween
             .ToUniTask(cancellationToken: ct);
     }
 

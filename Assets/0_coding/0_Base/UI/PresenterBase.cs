@@ -7,7 +7,7 @@ using UnityEngine;
 /// プレゼンターベース
 /// </summary>
 /// <typeparam name="TView"> ビュー </typeparam>
-public class PresenterBase<TView> : ObjectBase, IPresenter
+public class PresenterBase<TView> : GameObjectBase, IPresenter
     where TView : ViewBase
 {
     private TView _view;
