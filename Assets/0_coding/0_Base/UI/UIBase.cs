@@ -172,8 +172,11 @@ public class UIBase : GameObjectBase,
             return;
         }
 
-        await image.DOFade(1, AnimationTime)
-            .SetEase(Ease.InSine)
+        var tween = image.DOFade(1, AnimationTime)
+            .SetEase(Ease.InSine);
+        AddTween(tween);
+
+        await tween
             .ToUniTask(cancellationToken: ct);
     }
 

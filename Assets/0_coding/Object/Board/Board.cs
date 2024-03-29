@@ -9,9 +9,6 @@ public class Board : GameObjectBase
     [Header("カエルオブジェクト")]
     [SerializeField]
     private Frog _frog;
-    [Header("進化時のパーティクル")]
-    [SerializeField]
-    private ParticleSystem _particle;
     [Header("マスとカエルオブジェクトの余白")]
     [SerializeField]
     private float _margin = 0.1f;
@@ -59,10 +56,6 @@ public class Board : GameObjectBase
                 var frog = Instantiate(_frog, cell.transform);
                 frog.Transform.localScale = new Vector3(frog.Transform.localScale.x * minSize, 10f, frog.Transform.localScale.z * minSize);
                 frog.Transform.localPosition = new Vector3(0, frog.Transform.localScale.y/2, 0);
-
-                var particle = Instantiate(_particle, frog.transform);
-                particle.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-                particle.transform.localPosition = new Vector3(0, 0, 0);
 
                 _troutFrogs[i][j] = frog;
             }
