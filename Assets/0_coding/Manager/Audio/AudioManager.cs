@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -14,6 +15,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     private const string BGM_VOLUME_NAME = "BGM";
     private const string ENVIROMENTAL_VOLUME_NAME = "Environmental";
     private const string SE_VOLUME_NAME = "SE";
+    private const string BGM_PITCH = "BGMPitch";
 
     private int[] _volumes = new int[SOUND_INDEX];
     private List<int> _volumeChangerList = new List<int>
@@ -91,11 +93,12 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
         Observable
             .Interval(TimeSpan.FromSeconds(_frogSoundInterval))
             .TakeUntilDestroy(this)
+            .Where(_ => GameStateManager.Status.Value == GameState.Play || GameStateManager.Status.Value == GameState.Title)
+            .Select(_ => UnityEngine.Random.Range(0, 100))
+            .Where(value => value <= _frogSoundProbability)
             .Subscribe(_ =>
             {
-                int per = UnityEngine.Random.Range(0, 100);
-                if (per <= _frogSoundProbability)
-                    PlayEnvironmental();
+                PlayEnvironmental();
             });
     }
 

@@ -126,7 +126,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答確認
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
-    public async void CheckQuestionAsync(ReactiveProperty<Frog>[][] troutFrogs)
+    public async void CheckQuestionAsync(Frog[][] troutFrogs)
     {
         await UniTask.WaitUntil(() => _isCheckedAnswer.Value);
 
@@ -300,7 +300,7 @@ public class Question
     /// </summary>
     /// <param name="trouts"> ステージの現在のマス </param>
     /// <returns></returns>
-    public bool CheckAnswer(ReactiveProperty<Frog>[][] trouts)
+    public bool CheckAnswer(Frog[][] trouts)
     {
         int rowCount = trouts.Length;
         int columnCount = trouts[0].Length;
@@ -317,7 +317,7 @@ public class Question
             for (int j = 0; j <= columnLoopCount; j++)
             {
                 if (Trouts[0][0] == EvolutionaryType.None
-                    || Trouts[0][0] == trouts[i][j].Value.Type.Value)
+                    || Trouts[0][0] == trouts[i][j].Type.Value)
                 {
                     bool isMatch = true;
                     for(int k = 0; k < WidthCount; k++)
@@ -347,12 +347,12 @@ public class Question
     /// <param name="questionRows"> お題の行 </param>
     /// <param name="stageRows"> ステージの行 </param>
     /// <returns></returns>
-    private bool CheckRow(int startIndex, EvolutionaryType[] questionRows, ReactiveProperty<Frog>[] stageRows)
+    private bool CheckRow(int startIndex, EvolutionaryType[] questionRows, Frog[] stageRows)
     {
         for(int i=0; i<questionRows.Length; i++)
         {
             if (questionRows[i] != EvolutionaryType.None
-                && questionRows[i] != stageRows[i+ startIndex].Value.Type.Value)
+                && questionRows[i] != stageRows[i+ startIndex].Type.Value)
             {
                 return false;
             }

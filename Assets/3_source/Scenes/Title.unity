@@ -412,15 +412,30 @@ PrefabInstance:
       propertyPath: _frogSoundInterval
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3219576902050771642, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: _frogSoundProbability
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 4928622667025986936, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6385743797983824255, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 1.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
       propertyPath: Loop
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
+        type: 3}
+      propertyPath: m_Pitch
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 6744005498177109027, guid: 54fe3c54397852f439743260b4f120db,
         type: 3}
@@ -2557,7 +2572,7 @@ PrefabInstance:
     - target: {fileID: 7491000210752637782, guid: 4a8ba644442842e4bbde2a31fb992d69,
         type: 3}
       propertyPath: _isResetSaveData
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
