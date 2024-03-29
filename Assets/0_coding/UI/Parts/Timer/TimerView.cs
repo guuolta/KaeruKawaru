@@ -30,6 +30,7 @@ public class TimerView : ViewBase
     {
         base.Init();
         _sequence = DOTween.Sequence();
+        AddTween(_sequence);
         _timerGauge.fillAmount = 0;
         _needle.rectTransform.localEulerAngles = new Vector3(0, 0, 0);
         GetDictionary();
@@ -87,15 +88,16 @@ public class TimerView : ViewBase
     /// <returns></returns>
     private async UniTask SetTimerColorAsync(TimerState state, CancellationToken ct)
     {
-        await UniTask.WhenAll(
-            _timerGauge
+        var _timerColorSequence = DOTween.Sequence();
+        AddTween(_timerColorSequence);
+
+        await _timerColorSequence
+            .Append(_timerGauge
                 .DOColor(_timerColorDic[state], AnimationTime)
-                .SetEase(Ease.InSine)
-                .ToUniTask(cancellationToken: ct),
-            _timerText.DOColor(_timerColorDic[state], AnimationTime)
-                .SetEase(Ease.InSine)
-                .ToUniTask(cancellationToken: ct)
-        );
+                .SetEase(Ease.InSine))
+            .Join(_timerText.DOColor(_timerColorDic[state], AnimationTime)
+                .SetEase(Ease.InSine))
+            .ToUniTask(cancellationToken: ct);
     }
 
     /// <summary>
@@ -135,6 +137,8 @@ public class TimerView : ViewBase
         if (_timeState.Value == TimerState.Danger)
         {
             var _textSequence = DOTween.Sequence();
+            AddTween(_textSequence);
+
             _textSequence
                 .Append(_timerText.rectTransform
                     .DOScale(Vector3.zero, AnimationTime / 3)
