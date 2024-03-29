@@ -1,35 +1,81 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
-using System;
-using TMPro;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System.Threading;
+using TMPro;
+using UniRx;
+using UnityEngine;
 
-public class StartAnimation : MonoBehaviour
+public class StartAnimation : UIBase
 {
-    TextMeshProUGUI readytext, starttext;
-    void Start()
-    {
-        readytext = this.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        starttext = this.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+    private const int ANIMATION_COUNT = 4;
 
-        Observable.EveryUpdate()
-            .Where(_ => GameStateManager.Status.Value == GameState.Start)
-            .First()
-            .Do(_ => DoStartAnimation())
-            .Delay(TimeSpan.FromSeconds(1.5f))
-            .Subscribe(_ => 
-                GameStateManager.SetGameState(GameState.Play)
-            ).AddTo(this);
+    [Header("開始前の文章")]
+    [SerializeField]
+    private string _readyText = "よーい";
+    [Header("開始の文章")]
+    [SerializeField]
+    private string _startText = "どん!!";
+    [Header("開始時のSE")]
+    [SerializeField]
+    private AudioClip _startSE;
+
+    private TextMeshProUGUI _readytext, _starttext;
+    private CompositeDisposable _disposable = new CompositeDisposable();
+
+    protected override void Init()
+    {
+        base.Init();
+
+        _readytext = Transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        _starttext = Transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _starttext.text = _startText;
+        _starttext.transform.localScale = Vector3.zero;
     }
 
-    public void DoStartAnimation()
+    protected override void SetEvent()
     {
-        readytext.DOText("よーい",0.2f).SetEase(Ease.Linear);
-        readytext.DOFade(0,0.2f).SetDelay(0.7f);
-        starttext.DOText("どん!!",0f).SetDelay(0.9f);
-        starttext.DOScale(1.2f,0.2f).SetDelay(0.9f).SetEase(Ease.OutExpo);
-        starttext.DOFade(0,0.2f).SetDelay(1.3f);
+        base.SetEvent();
+        SetEventStartAnimatin(Ct);
+    }
+
+    private void SetEventStartAnimatin(CancellationToken ct)
+    {
+        GameStateManager.Status
+            .TakeUntilDestroy(this)
+            .DistinctUntilChanged()
+            .Where(value => value == GameState.Start)
+            .Subscribe(async _ =>
+            {
+                await DoStartAnimationAsync(ct);
+                GameStateManager.SetGameState(GameState.Play);
+                DisposeEvent(_disposable);
+            }).AddTo(_disposable);
+    }
+
+    public async UniTask DoStartAnimationAsync(CancellationToken ct)
+    {
+        var sequence = DOTween.Sequence();
+
+        await sequence.Append(_readytext
+                .DOText(_readyText, AnimationTime/ ANIMATION_COUNT)
+                .SetEase(Ease.Linear))
+            .Append(_readytext
+                .DOFade(0, AnimationTime / ANIMATION_COUNT)
+                .SetEase(Ease.Linear))
+            .AppendCallback(() => AudioManager.Instance.PlayOneShotSE(_startSE))
+            .Append(_starttext
+                .DOScale(1.2f, AnimationTime / ANIMATION_COUNT)
+                .SetEase(Ease.OutExpo))
+            .Append(_starttext
+                .DOFade(0, AnimationTime / ANIMATION_COUNT))
+            .ToUniTask(cancellationToken: ct);
+        ChangeInteractive(false);
+    }
+
+
+    protected override void Destroy()
+    {
+        base.Destroy();
+        DisposeEvent(_disposable);
     }
 }

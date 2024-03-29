@@ -126,11 +126,13 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
         switch(GameStateManager.StageLevel.Value)
         {
             case Level.Easy:
-                _easyHighScoreList = _highScoreList;
+                _easyHighScoreList.Clear();
+                _easyHighScoreList.AddRange(_highScoreList);
                 SaveManager.SetEasyHighScore(_easyHighScoreList.ToArray());
                 break;
             case Level.Hard:
-                _hardHighScoreList = _highScoreList;
+                _hardHighScoreList.Clear();
+                _hardHighScoreList.AddRange(_highScoreList);
                 SaveManager.SetHardHighScore(_hardHighScoreList.ToArray());
                 break;
             default:
@@ -164,10 +166,10 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                 switch(value)
                 {
                     case Level.Easy:
-                        _highScoreList = _easyHighScoreList;
+                        _highScoreList = new List<int>(_easyHighScoreList);
                         break;
                     case Level.Hard:
-                        _highScoreList = _hardHighScoreList;
+                        _highScoreList = new List<int>(_hardHighScoreList);
                         break;
                     default:
                         break;

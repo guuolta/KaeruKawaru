@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
+using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class ArrowButton : ButtonBase
 {
@@ -20,7 +17,7 @@ public class ArrowButton : ButtonBase
             ChangeInteractive(false);
             await UniTask.WaitForSeconds(0.1f, cancellationToken: Ct);
 
-            if (Ct.IsCancellationRequested) return;
+            if (Ct.IsCancellationRequested || _isHide) return;
             ChangeInteractive(true);
         };
     }
@@ -28,5 +25,32 @@ public class ArrowButton : ButtonBase
     {
         _isHide =ishide;
         ChangeInteractive(ishide);
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        if (Transform == null)
+        {
+            return;
+        }
+
+        Transform
+            .DOScale(0.8f, AnimationTime)
+            .SetEase(Ease.InSine)
+            .ToUniTask(cancellationToken: Ct)
+            .Forget();
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        if (Transform == null)
+        {
+            return;
+        }
+
+        Transform.DOScale(1f, AnimationTime)
+            .SetEase(Ease.OutSine)
+            .ToUniTask(cancellationToken: Ct)
+            .Forget();
     }
 }
