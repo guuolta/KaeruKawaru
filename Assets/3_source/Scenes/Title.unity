@@ -2572,7 +2572,7 @@ PrefabInstance:
     - target: {fileID: 7491000210752637782, guid: 4a8ba644442842e4bbde2a31fb992d69,
         type: 3}
       propertyPath: _isResetSaveData
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

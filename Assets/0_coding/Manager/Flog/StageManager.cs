@@ -58,9 +58,9 @@ public class StageManager : SingletonObjectBase<StageManager>
                     .TakeUntilDestroy(this)
                     .Skip(1)
                     .DistinctUntilChanged()
-                    .Subscribe(value =>
+                    .Subscribe(async value =>
                     {
-                        QuestionManager.Instance.CheckQuestionAsync(_troutFrogs);
+                        await QuestionManager.Instance.CheckQuestionAsync(_troutFrogs);
                     });
             }        
         }

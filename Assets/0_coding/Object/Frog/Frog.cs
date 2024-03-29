@@ -1,18 +1,23 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Frog : GameObjectBase
 {
     [Header("カエルオブジェクトリスト")]
     [SerializeField]
     private List<FlogData> _flogGameObjects = new List<FlogData>();
-    /// <summary>
-    /// 進化時のパーティクル
-    /// </summary>
-    private ParticleSystem _particleSystem;
+    [Header("進化時のパーティクルシステム")]
+    [SerializeField]
+    private ParticleSystem _evoParticleSystem;
+    [Header("クリア時のパーティクルシステム")]
+    [SerializeField]
+    private ParticleSystem _clearParticleSystem;
+    [Header("アニメーションの時間")]
+    [SerializeField]
+    private float _animationTime = 1.0f;
+
     private ReactiveProperty<EvolutionaryType> _type = new ReactiveProperty<EvolutionaryType>(EvolutionaryType.Egg);
     /// <summary>
     /// カエルの状態
@@ -111,8 +116,22 @@ public class Frog : GameObjectBase
         int value = (int)Type.Value + 1; 
         int nextType = value <= 0 || value > 3 ? 1 : value;
         _type.Value = (EvolutionaryType)nextType;
-        _particleSystem = transform.GetChild(3).gameObject.GetComponent<ParticleSystem>();
-        _particleSystem.Play();
+        _evoParticleSystem.Play();
+    }
+
+    /// <summary>
+    /// クリアアニメーションの再生
+    /// </summary>
+    public async UniTask StartClearAnimationAsync()
+    {
+        if (_clearParticleSystem.isPlaying)
+        {
+            return;
+        }
+
+        _clearParticleSystem.Play();
+        await UniTask.WaitForSeconds(_animationTime);
+        _clearParticleSystem.Stop();
     }
 }
 

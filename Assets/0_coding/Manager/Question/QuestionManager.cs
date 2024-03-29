@@ -73,9 +73,9 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             .TakeUntilDestroy(this)
             .Where(status => status == GameState.Play)
             .Take(1)
-            .Subscribe(_ =>
+            .Subscribe(async _ =>
             {
-                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
+                await CheckQuestionAsync(StageManager.Instance.TroutFrogs);
             });
     }
 
@@ -126,7 +126,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// 解答確認
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
-    public async void CheckQuestionAsync(Frog[][] troutFrogs)
+    public async UniTask CheckQuestionAsync(Frog[][] troutFrogs)
     {
         await UniTask.WaitUntil(() => _isCheckedAnswer.Value);
 
@@ -166,7 +166,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             for(int i=0; i<count; i++)
             {
                 SetQuestion(_widthCount);
-                CheckQuestionAsync(StageManager.Instance.TroutFrogs);
+                CheckQuestionAsync(StageManager.Instance.TroutFrogs).Forget();
             }
         }
 
@@ -240,6 +240,7 @@ public class Question
     /// ポイント
     /// </summary>
     public int Point => _point;
+    private List<Frog> _clearTroutList = new List<Frog>();
     private CompositeDisposable _disposable = new CompositeDisposable();
 
     public Question(EvolutionaryType[][] trouts)
@@ -331,6 +332,11 @@ public class Question
 
                     if (isMatch)
                     {
+                        foreach(var trout in _clearTroutList)
+                        {
+                            trout.StartClearAnimationAsync().Forget();
+                        }
+
                         return true;
                     }
                 }
@@ -354,8 +360,11 @@ public class Question
             if (questionRows[i] != EvolutionaryType.None
                 && questionRows[i] != stageRows[i+ startIndex].Type.Value)
             {
+                _clearTroutList.Clear();
                 return false;
             }
+
+            _clearTroutList.Add(stageRows[i + startIndex]);
         }
 
         return true;
