@@ -26,20 +26,6 @@ public class TitleManager : SingletonObjectBase<TitleManager>
 
     private Camera _camera;
     private CompositeDisposable _disposable = new CompositeDisposable();
-    //protected override void SetEvent()
-    //{
-    //    base.SetEvent();
-
-    //    AudioManager.Instance.PlayBGM(BGMType.Title);
-    //    Observable.EveryUpdate()
-    //        .TakeUntilDestroy(this)
-    //        .Where(_ => Input.GetMouseButtonDown(0))
-    //        .Subscribe(_ =>
-    //        {
-    //            GameSceneManager.LoadScene(SceneType.EasyGame);
-    //        });
-
-    //}
 
     protected override void Init()
     {

@@ -150,7 +150,10 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     private void UpdateScoreToUnityRoom()
     {
-        UnityroomApiClient.Instance.SendScore(1, _point.Value, ScoreboardWriteMode.HighScoreDesc);
+        UnityroomApiClient.Instance.SendScore(GameStateManager.StageLevel.Value == Level.Hard ? 2 : 1,
+            _point.Value, ScoreboardWriteMode.HighScoreDesc);
+
+        Debug.Log(GameStateManager.StageLevel.Value == Level.Hard ? 2 : 1);
     }
 
     /// <summary>
