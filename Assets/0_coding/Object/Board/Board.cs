@@ -16,11 +16,11 @@ public class Board : GameObjectBase
     [SerializeField]
     private float _margin = 0.1f;
 
-    private ReactiveProperty<Frog>[][] _troutFrogs;
+    private Frog[][] _troutFrogs;
     /// <summary>
     /// マスのカエル
     /// </summary>
-    public ReactiveProperty<Frog>[][] TroutFrogs => _troutFrogs;
+    public Frog[][] TroutFrogs => _troutFrogs;
 
     /// <summary>
     /// 盤面を作成
@@ -45,13 +45,13 @@ public class Board : GameObjectBase
         float frogSizeZ = (1 - _margin) / _frog.Transform.localScale.z;
         float minSize = Mathf.Min(frogSizeX, frogSizeZ);
 
-        _troutFrogs = new ReactiveProperty<Frog>[rowCount][];
+        _troutFrogs = new Frog[rowCount][];
         for (int i = 0; i < rowCount; i++)
         {
-            _troutFrogs[i] = new ReactiveProperty<Frog>[columnCount];
+            _troutFrogs[i] = new Frog[columnCount];
             for (int j = 0; j < columnCount; j++)
             {
-                _troutFrogs[i][j] = new ReactiveProperty<Frog>();
+                _troutFrogs[i][j] = new Frog();
                 var cell = Instantiate(_cell, Transform);
                 cell.transform.localPosition = new Vector3(iniPosX + j * sizeX, 0, iniPosZ - i * sizeZ);
                 cell.transform.localScale = new Vector3(sizeX, 1, sizeZ);
@@ -64,7 +64,7 @@ public class Board : GameObjectBase
                 particle.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                 particle.transform.localPosition = new Vector3(0, 0, 0);
 
-                _troutFrogs[i][j].Value = frog;
+                _troutFrogs[i][j] = frog;
             }
         }
     }

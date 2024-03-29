@@ -60,12 +60,14 @@ public class TimerPresenter : PresenterBase<TimerView>
 
                 if (value <= 0)
                 {
+                    //ピッチ戻す
                     GameStateManager.SetGameState(GameState.Result);
                     DisposeEvent(_disposable);
                 }
                 else if (value == _changeTimeList[2])
                 {
                     View.ChangeTimerState(TimerState.Danger);
+                    //ここに追加
                 }
                 else if(value == _changeTimeList[1])
                 {

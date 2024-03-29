@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
 using UniRx;
 using UnityEngine;
 
@@ -17,11 +16,11 @@ public class StageManager : SingletonObjectBase<StageManager>
     /// 制限時間
     /// </summary>
     public int TimeLimit => _timeLimit;
-    private ReactiveProperty<Frog>[][] _troutFrogs => _board.TroutFrogs;
+    private Frog[][] _troutFrogs => _board.TroutFrogs;
     /// <summary>
     /// マスのカエル
     /// </summary>
-    public ReactiveProperty<Frog>[][] TroutFrogs => _troutFrogs;
+    public Frog[][] TroutFrogs => _troutFrogs;
 
     protected override void Init()
     {
@@ -43,19 +42,19 @@ public class StageManager : SingletonObjectBase<StageManager>
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventTrouts(Ct);
+        SetEventTrouts();
     }
 
     /// <summary>
     /// マスの進化状態のイベント設定
     /// </summary>
-    private void SetEventTrouts(CancellationToken ct)
+    private void SetEventTrouts()
     {
         foreach(var trouts in _troutFrogs)
         {
             foreach(var trout in trouts)
             {
-                trout.Value.Type
+                trout.Type
                     .TakeUntilDestroy(this)
                     .Skip(1)
                     .DistinctUntilChanged()
@@ -73,7 +72,7 @@ public class StageManager : SingletonObjectBase<StageManager>
         {
             for (int j = 0; j < _troutFrogs[i].Length; j++)
             {
-                Debug.Log(i + "," + j + ":" + _troutFrogs[i][j].Value);
+                Debug.Log(i + "," + j + ":" + _troutFrogs[i][j]);
             }
         }
     }

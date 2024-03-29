@@ -23,7 +23,7 @@ public class TimerView : ViewBase
     private List<TimerColorData> _timerColorList = new List<TimerColorData>();
 
     private Dictionary<TimerState, Color> _timerColorDic = new Dictionary<TimerState, Color>();
-    private ReactiveProperty<TimerState> _timerState = new ReactiveProperty<TimerState>(TimerState.Normal);
+    private ReactiveProperty<TimerState> _timeState = new ReactiveProperty<TimerState>(TimerState.Normal);
     private Sequence _sequence;
 
     protected override void Init()
@@ -53,7 +53,7 @@ public class TimerView : ViewBase
     /// <param name="ct"></param>
     private void SetEventState(CancellationToken ct)
     {
-        _timerState
+        _timeState
             .TakeUntilDestroy(this)
             .DistinctUntilChanged()
             .Subscribe(async state =>
@@ -104,7 +104,7 @@ public class TimerView : ViewBase
     /// <param name="state"></param>
     public void ChangeTimerState(TimerState state)
     {
-        _timerState.Value = state;
+        _timeState.Value = state;
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ public class TimerView : ViewBase
                 .SetEase(Ease.Linear))
             .ToUniTask(cancellationToken: ct);
 
-        if (_timerState.Value == TimerState.Danger)
+        if (_timeState.Value == TimerState.Danger)
         {
             var _textSequence = DOTween.Sequence();
             _textSequence
