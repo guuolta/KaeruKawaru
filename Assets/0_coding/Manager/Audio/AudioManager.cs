@@ -16,6 +16,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     private const string ENVIROMENTAL_VOLUME_NAME = "Environmental";
     private const string SE_VOLUME_NAME = "SE";
     private const string BGM_PITCH = "BGMPitch";
+    private const string MAIN_PITCH = "MainPitch";
 
     private int[] _volumes = new int[SOUND_INDEX];
     private List<int> _volumeChangerList = new List<int>
@@ -280,6 +281,16 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     public void SaveVolume()
     {
         SaveManager.SetSoundVolume(_volumes);
+    }
+
+    /// <summary>
+    /// ピッチ変更
+    /// </summary>
+    public void ChangePitch(float _pitch)
+    {
+        _audioMixer.SetFloat(BGM_PITCH,_pitch);
+        _audioMixer.SetFloat(MAIN_PITCH,1/_pitch);
+
     }
 }
 
