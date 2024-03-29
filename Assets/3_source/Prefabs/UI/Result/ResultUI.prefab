@@ -226,6 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b243cfdde4422774f8956421e9d12428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _finishPanel: {fileID: 0}
 --- !u!114 &1141574908923427212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +248,7 @@ MonoBehaviour:
   _clearCountText: {fileID: 5129480897848887157}
   _comboBonusText: {fileID: 2713438433789975004}
   _stepBonusText: {fileID: 1656465473626576851}
+  _buttonGroup: {fileID: 2124521937985717633}
   _levelChangeButton: {fileID: 2688901971143490188}
   _levelChangeText: {fileID: 975720916879171600}
   _retryButton: {fileID: 6223750055320952188}

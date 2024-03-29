@@ -88,9 +88,9 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     /// </param>
     public void SetEventCloseButton(ButtonBase closeButton, CancellationToken ct)
     {
-        closeButton.OnClickCallback += () =>
+        closeButton.OnClickCallback += async () =>
         {
-            ClosePanelAsync(ct).Forget();
+            await ClosePanelAsync(ct);
         };
     }
 }

@@ -94,6 +94,7 @@ public class ResultUIView : ViewBase
         ChangeButtonInteractive(false);
 
         _highScoreTextSequence = DOTween.Sequence();
+        _newHighScoreText.text = string.Empty;
         _newHighScoreText.transform.localScale = Vector3.zero;
     }
 
