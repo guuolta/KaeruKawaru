@@ -45,17 +45,12 @@ public class HowToPlayPanelView : SelectPanelViewBase
     {
         base.Init();
         SetList();
-        _slidePanelList[_index.Value].ChangeInteractive(true);
-        _slidePanelList[_index.Value].RectTransform.anchoredPosition = new Vector2(_showposX,_inipos.y);
+        SetIniPos(Ct);
     }
-    protected override void SetEvent()
-    {
-        base.SetEvent();
-        SetButton();
-    }
+
     private void SetList()
     {
-        for(int i=0;i<Slideparent.childCount;i++)
+        for (int i = 0; i < Slideparent.childCount; i++)
         {
             var slide = Slideparent.GetChild(i).GetComponent<SlidePanel>();
             _slidePanelList.Add(slide);
@@ -63,6 +58,27 @@ public class HowToPlayPanelView : SelectPanelViewBase
         }
         _listCount = _slidePanelList.Count;
     }
+
+    private void SetIniPos(CancellationToken ct)
+    {
+        _slidePanelList[0].RectTransform.anchoredPosition = new Vector2(_showposX, _inipos.y);
+        _slidePanelList[0].ChangeInteractive(true);
+
+        for (int i=1;i< _slidePanelList.Count;i++)
+        {
+            _slidePanelList[i].ChangeInteractive(false);
+            _slidePanelList[i].RectTransform.anchoredPosition = new Vector2(_hiderightposX, _inipos.y);
+        }
+
+        _index.Value = 0;
+    }
+
+    protected override void SetEvent()
+    {
+        base.SetEvent();
+        SetButton();
+    }
+    
     public async UniTask SlideLeftAsync(CancellationToken ct)
     {
         await _slidePanelList[_index.Value].HideAsync(_hiderightposX, ct);
@@ -88,5 +104,11 @@ public class HowToPlayPanelView : SelectPanelViewBase
                 LeftButton.SetisHide(value > 0);
                 RightButton.SetisHide(value < _listCount-1);
             });
+    }
+
+    public override async UniTask HideAsync(CancellationToken ct)
+    {
+        await base.HideAsync(ct);
+        SetIniPos(Ct);
     }
 }

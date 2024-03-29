@@ -14,14 +14,14 @@ public class SlidePanel : UIBase
     }
     public async UniTask ShowAsync(float posX,CancellationToken ct)
     {
+        ChangeInteractive(true);
         RectTransform.DOComplete();
 
         await RectTransform
             .DOAnchorPosX(posX,AnimationTime)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken : ct);
-
-        ChangeInteractive(true);
+        
     }
     public async UniTask HideAsync(float posX,CancellationToken ct)
     {

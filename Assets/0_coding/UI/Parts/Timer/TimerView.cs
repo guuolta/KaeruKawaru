@@ -22,6 +22,7 @@ public class TimerView : ViewBase
     [SerializeField]
     private List<TimerColorData> _timerColorList = new List<TimerColorData>();
 
+    private int _startTime;
     private Dictionary<TimerState, Color> _timerColorDic = new Dictionary<TimerState, Color>();
     private ReactiveProperty<TimerState> _timeState = new ReactiveProperty<TimerState>(TimerState.Normal);
     private Sequence _sequence;
@@ -81,6 +82,16 @@ public class TimerView : ViewBase
     }
 
     /// <summary>
+    /// 開始タイム
+    /// </summary>
+    /// <param name="startTime"></param>
+    public void SetMaxTime(int startTime)
+    {
+        _startTime = startTime;
+        _timerText.text = startTime.ToString();
+    }
+
+    /// <summary>
     /// タイマーの色を設定
     /// </summary>
     /// <param name="state"> タイマーの状態 </param>
@@ -113,31 +124,18 @@ public class TimerView : ViewBase
     /// タイマーを設定
     /// </summary>
     /// <param name="time"> 設定する時間 </param>
-    /// <param name="maxTime"> 開始時間 </param>
     /// <param name="animationTime"></param>
     /// <param name="ct"></param>
     /// <returns></returns>
-    public async UniTask SetTimerAsync(int time, int maxTime, int animationTime, CancellationToken ct)
+    public async UniTask SetTimerAsync(int time, int animationTime, CancellationToken ct)
     {
-        _timerGauge.DOComplete();
-        _needle.rectTransform.DOComplete();
-        _timerText.rectTransform.DOComplete();
-
-        float fillAmount = (float)time / maxTime;
-
-        await _sequence
-            .Append(_timerGauge
-                .DOFillAmount(1 - fillAmount, animationTime)
-                .SetEase(Ease.Linear))
-            .Join(_needle.rectTransform
-                .DORotate(new Vector3(0, 0, fillAmount * 360), animationTime)
-                .SetEase(Ease.Linear))
-            .ToUniTask(cancellationToken: ct);
+        float fillAmount = (float)(time-1) / _startTime;
 
         if (_timeState.Value == TimerState.Danger)
         {
             var _textSequence = DOTween.Sequence();
             AddTween(_textSequence);
+            _timerText.rectTransform.DOComplete();
 
             _textSequence
                 .Append(_timerText.rectTransform
@@ -149,10 +147,23 @@ public class TimerView : ViewBase
                 .Append(_timerText.rectTransform
                     .DOScale(Vector3.one, AnimationTime / 3)
                     .SetEase(Ease.OutSine))
-                .ToUniTask(cancellationToken: ct)
-                .Forget();
+                .ToUniTask(cancellationToken: ct).Forget();
         }
 
+        if (fillAmount >= 0)
+        {
+            _sequence.Complete();
+
+            await _sequence
+            .Append(_timerGauge
+                .DOFillAmount(1 - fillAmount, animationTime)
+                .SetEase(Ease.Linear))
+            .Join(_needle.rectTransform
+                .DORotate(new Vector3(0, 0, fillAmount * 360), animationTime)
+                .SetEase(Ease.Linear))
+            .ToUniTask(cancellationToken: ct);
+        }
+        
         _timerText.text = time.ToString();
     }
 

@@ -23,7 +23,7 @@ public class TimerPresenter : PresenterBase<TimerView>
     [SerializeField]
     private AudioClip _hurryupSE;
     private TimerModel _model;
-    private int _maxTime => _model.MaxTime;
+    private int _startTime => _model.MaxTime;
 
     private List<int> _changeTimeList = new List<int>();
     private CompositeDisposable _disposable = new CompositeDisposable();
@@ -44,6 +44,7 @@ public class TimerPresenter : PresenterBase<TimerView>
     protected override void SetEvent()
     {
         base.SetEvent();
+        View.SetMaxTime(_startTime);
         SetEventTimer(Ct);
     }
 
@@ -51,16 +52,16 @@ public class TimerPresenter : PresenterBase<TimerView>
     {
         GetChangeTimeList();
         View.ChangeTimerState(TimerState.Normal);
-        View.SetTimerAsync(_maxTime, _maxTime, 0, ct).Forget();
 
         _model.TimeValue
             .TakeUntilDestroy(this)
             .DistinctUntilChanged()
-            .Skip(1)
-            .Select(value => _maxTime - value)
+            .Select(value => _startTime - value)
+            .Where(value => value >= 0)
             .Subscribe(async value =>
             {
-                await View.SetTimerAsync(value, _maxTime, _animationTime, ct);
+                await UniTask.WaitUntil(() => GameStateManager.Status.Value == GameState.Play, cancellationToken: ct);
+                await View.SetTimerAsync(value, _animationTime, ct);
 
                 if (value <= 0)
                 {
@@ -90,7 +91,7 @@ public class TimerPresenter : PresenterBase<TimerView>
     {
         foreach(var percentage in _timerPercentageList)
         {
-            _changeTimeList.Add(_maxTime - _maxTime * percentage / 100);
+            _changeTimeList.Add(_startTime - _startTime * percentage / 100);
         }
     }
 }
