@@ -39,6 +39,9 @@ public class ResultUIView : ViewBase
     [SerializeField]
     private TMP_Text _stepBonusText;
 
+    [Header("ボタングループ")]
+    [SerializeField]
+    private RectTransform _buttonGroup;
     [Header("レベル変更ボタン")]
     [SerializeField]
     private ButtonBase _levelChangeButton;
@@ -81,11 +84,18 @@ public class ResultUIView : ViewBase
     private float _bonusAnimationTime = 0.3f;
 
     private bool _doCompleate = false;
+    private float _iniPosY;
+    private float _targetPosY;
     private Sequence _highScoreTextSequence;
 
     protected override void Init()
     {
         base.Init();
+        _targetPosY = _buttonGroup.anchoredPosition.y;
+        _iniPosY = _targetPosY - _buttonGroup.rect.size.y;
+        _buttonGroup.anchoredPosition = new Vector2(_buttonGroup.anchoredPosition.x, _iniPosY);
+        ChangeButtonInteractive(false);
+
         _highScoreTextSequence = DOTween.Sequence();
         _newHighScoreText.transform.localScale = Vector3.zero;
     }
@@ -129,8 +139,6 @@ public class ResultUIView : ViewBase
             {
                 _doCompleate = true;
                 _scoreText.DOComplete();
-                _highScoreTextSequence.Complete();
-                _highScoreBubble.DOComplete();
                 _clearCountText.DOComplete();
                 _comboBonusText.DOComplete();
                 _stepBonusText.DOComplete();
@@ -161,29 +169,29 @@ public class ResultUIView : ViewBase
         _newHighScoreText.text = _scoreText.text;
         _newHighScoreText.colorGradient = _highScoreColorList[index];
 
-        var tasks = new List<UniTask>();
-        tasks.Add(_highScoreTextSequence
+        AudioManager.Instance.PlayOneShotSE(SEType.Fanfare);
+        await _highScoreTextSequence
             .Append(_scoreText
                 .DOScale(0, _highScoreAnimationTime / 2)
                 .SetEase(Ease.OutSine))
             .Append(_newHighScoreText
                 .DOScale(1, _highScoreAnimationTime / 2)
                 .SetEase(Ease.InSine))
-            .ToUniTask(cancellationToken: ct));
-        tasks.Add(_highScoreBubble.ShowAsync(ct));
-
-        AudioManager.Instance.PlayOneShotSE(SEType.Fanfare);
-
-        if(_doCompleate)
-        {
-            _scoreText.transform.localScale = Vector3.zero;
-            _newHighScoreText.transform.localScale = Vector3.one;
-            _highScoreBubble.ShowAsync(ct).Forget();
-            _highScoreBubble.DOComplete();
-            return;
-        }
-
-        await UniTask.WhenAll(tasks);
+            .AppendCallback(async () =>
+            {
+                if (!_doCompleate)
+                    await _highScoreBubble.ShowAsync(ct);
+            })
+            .OnUpdate(() =>
+            {
+                if (_doCompleate)
+                {
+                    _highScoreTextSequence.Complete();
+                    _highScoreBubble.ShowAsync(ct).Forget();
+                    _highScoreBubble.DOComplete();
+                }
+            })
+            .ToUniTask(cancellationToken: ct);
     }
 
     /// <summary>
@@ -213,10 +221,10 @@ public class ResultUIView : ViewBase
     /// </summary>
     /// <param name="text"> 対象のテキスト </param>
     /// <param name="content"> 表示する内容 </param>
-    /// <param name="time"> アニメーションの時間 </param>
+    /// <param name="animationTime"> アニメーションの時間 </param>
     /// <param name="ct"></param>
     /// <returns></returns>
-    private async UniTask DOScoreText(TMP_Text text, string content, float time, CancellationToken ct)
+    private async UniTask DOScoreText(TMP_Text text, string content, float animationTime, CancellationToken ct)
     {
         if(_doCompleate)
         {
@@ -224,10 +232,51 @@ public class ResultUIView : ViewBase
             return;
         }
 
+        float timeValue = 0;
+        float interval = animationTime / content.Length * 0.8f;
+
         await text
-            .DOText(content, time, scrambleMode: ScrambleMode.Numerals)
+            .DOText(content, animationTime, scrambleMode: ScrambleMode.Numerals)
             .SetEase(Ease.Linear)
+            .OnUpdate(() =>
+            {
+                timeValue += Time.deltaTime;
+                if(timeValue < interval)
+                {
+                    return;
+                }
+
+                AudioManager.Instance.PlayOneShotSE(SEType.Text);
+                timeValue = 0;
+            })
             .ToUniTask(cancellationToken: ct);
+    }
+
+    /// <summary>
+    /// ボタンを表示
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    public async UniTask ShowButtonAsync(CancellationToken ct)
+    {
+        _buttonGroup.DOComplete();
+
+        await _buttonGroup
+                .DOAnchorPosY(_targetPosY, AnimationTime)
+                .SetEase(Ease.InSine)
+                .ToUniTask(cancellationToken: ct);
+        ChangeButtonInteractive(true);
+    }
+
+    /// <summary>
+    /// ボタンを押せるようにするか設定
+    /// </summary>
+    /// <param name="isInteractive"> ボタンを押せるようにするか </param>
+    private void ChangeButtonInteractive(bool isInteractive)
+    {
+        _levelChangeButton.ChangeInteractive(isInteractive);
+        _retryButton.ChangeInteractive(isInteractive);
+        _titleButton.ChangeInteractive(isInteractive);
     }
 
     public override async UniTask ShowAsync(CancellationToken ct)

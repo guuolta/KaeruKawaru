@@ -297,5 +297,6 @@ public enum SEType
     Evo1,
     Evo2,
     Evo3,
-    Fanfare
+    Fanfare,
+    Text
 }

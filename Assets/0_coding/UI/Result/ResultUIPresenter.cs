@@ -37,6 +37,8 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
                     Debug.Log(ScoreManager.Instance.HighScoreIndex.Value);
                     await View.DoNewHighScoreTextAsync(ScoreManager.Instance.HighScoreIndex.Value, ct);
                 }
+
+                await View.ShowButtonAsync(ct);
             });
     }
 
