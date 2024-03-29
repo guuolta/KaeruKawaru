@@ -290,7 +290,6 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     {
         _audioMixer.SetFloat(BGM_PITCH,_pitch);
         _audioMixer.SetFloat(MAIN_PITCH,1/_pitch);
-
     }
 }
 

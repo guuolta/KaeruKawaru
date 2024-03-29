@@ -73,6 +73,8 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: 4281535b12d42ff4bb7d86e561073151
     name: BGM
+  - guid: 182d7b0ada95b5f49ab7952c1907f153
+    name: MainPitch
   - guid: 592cd3855e365fa40967e21aa46308e0
     name: BGMPitch
   - guid: 9b9b4dd41a2c727459b3d31b3be86fca

@@ -21,8 +21,7 @@ public class TimerPresenter : PresenterBase<TimerView>
 
     [Header("加速SE")]
     [SerializeField]
-    private AudioSource _hurryupAudioSourse;
-
+    private AudioClip _hurryupSE;
     private TimerModel _model;
     private int _maxTime => _model.MaxTime;
 
@@ -73,6 +72,7 @@ public class TimerPresenter : PresenterBase<TimerView>
                 {
                     View.ChangeTimerState(TimerState.Danger);
                     _audioManager.ChangePitch(0.8f);
+                    AudioManager.Instance.PlayOneShotSE(_hurryupSE);
                 }
                 else if (value == _changeTimeList[1])
                 {
