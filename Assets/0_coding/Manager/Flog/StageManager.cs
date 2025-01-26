@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// ゲームのマスの状態、ステージごとの設定管理
+/// </summary>
 public class StageManager : SingletonObjectBase<StageManager>
 {
     [Header("マス")]
@@ -26,6 +29,7 @@ public class StageManager : SingletonObjectBase<StageManager>
     {
         base.Init();
 
+        // 現在のレベルのステージデータから盤面を作成し、時間制限の設定をする
         foreach(var stageData in _stageDataList)
         {
             if (stageData.Level == GameStateManager.StageLevel.Value)
@@ -35,6 +39,7 @@ public class StageManager : SingletonObjectBase<StageManager>
             }
         }
 
+        // ゲームを開始する
         GameStateManager.SetGameState(GameState.Start);
         AudioManager.Instance.PlayBGM(BGMType.Main);
     }
@@ -46,7 +51,7 @@ public class StageManager : SingletonObjectBase<StageManager>
     }
 
     /// <summary>
-    /// マスの進化状態のイベント設定
+    /// マスのカエルの進化系のイベント設定
     /// </summary>
     private void SetEventTrouts()
     {
@@ -54,6 +59,7 @@ public class StageManager : SingletonObjectBase<StageManager>
         {
             foreach(var trout in trouts)
             {
+                // マスのカエルの進化系が変わったら、正当確認
                 trout.Type
                     .TakeUntilDestroy(this)
                     .Skip(1)
@@ -66,6 +72,9 @@ public class StageManager : SingletonObjectBase<StageManager>
         }
     }
 
+    /// <summary>
+    /// マスのカエルの進化系の確認用
+    /// </summary>
     private void Check()
     {
         for (int i = 0; i < _troutFrogs.Length; i++)
@@ -78,6 +87,9 @@ public class StageManager : SingletonObjectBase<StageManager>
     }
 }
 
+/// <summary>
+/// ステージのデータ
+/// </summary>
 [System.Serializable]
 public class StageData
 {

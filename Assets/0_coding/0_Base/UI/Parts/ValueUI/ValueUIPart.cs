@@ -27,8 +27,8 @@ public class ValueUIPart : UIBase
 
     protected override void SetFirstEvent()
     {
-        _slider.SetSlider(_minValue, _maxValue);
-        _inputField.SetInputField(_minValue, _maxValue);
+        _slider.InitSlider(_minValue, _maxValue);
+        _inputField.InitInputField(_minValue, _maxValue);
         SetEventChangeValue();
     }
 

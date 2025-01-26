@@ -1,8 +1,9 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// お題パネルをまとめたUI
+/// </summary>
 public class QuestionGroupPresenter : PresenterBase<QuestionGroupView>
 {
     [Header("お題パネル")]
@@ -25,21 +26,34 @@ public class QuestionGroupPresenter : PresenterBase<QuestionGroupView>
         _questionCount = questCount;
     }
     
-    public void SetPanel(Question question)
+    /// <summary>
+    /// お題パネルを追加
+    /// </summary>
+    /// <param name="question"></param>
+    public void AddPanel(Question question)
     {
+        // すでに作成済みの場合は終了
         if(_questionDict.ContainsKey(question) || _questionDict.Count >= _questionCount)
         {
             return;
         }
 
+        // お題作成
         var panel = Instantiate(_questionPanelBase, transform);
         panel.CreateQuestionPanel(question.Trouts);
-        View.SetPanel(panel);
         _questionDict.Add(question, panel);
+        
+        // 表示
+        View.AddPanel(panel);
     }
 
+    /// <summary>
+    /// お題パネルを削除
+    /// </summary>
+    /// <param name="question"></param>
     public void RemovePanel(Question question)
     {
+        // お題が見つからない場合は終了
         if(!_questionDict.ContainsKey(question))
         {
             return;

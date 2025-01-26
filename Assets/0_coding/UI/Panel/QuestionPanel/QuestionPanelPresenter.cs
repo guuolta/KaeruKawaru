@@ -3,6 +3,9 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// お題のパネル
+/// </summary>
 public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
 {
     [Header("マス")]
@@ -26,13 +29,17 @@ public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
     /// <param name="trouts"> お題 </param>
     public void CreateQuestionPanel(EvolutionaryType[][] trouts)
     {
+        // レイアウトグループの設定
         var layoutGroup = GetComponent<GridLayoutGroup>();
         int rowCount = trouts.Length;
         int columnCount = trouts[0].Length;
+        // マスの大きさを縦横の小さい方に合わせた正方形にする
         float size = Mathf.Min(View.RectTransform.sizeDelta.x / columnCount, View.RectTransform.sizeDelta.y / rowCount);
         layoutGroup.cellSize = new Vector2(size, size);
+        // パネルの大きさ調整
         View.RectTransform.sizeDelta = new Vector2(size * columnCount, size * rowCount);
-
+        
+        // マスを作って対応するアイコンを設定
         for (int i = 0; i < rowCount; i++)
         {
             for (int j = 0; j < columnCount; j++)

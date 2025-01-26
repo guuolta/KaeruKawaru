@@ -105,7 +105,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// UIを押せるようにするか設定
+    /// UIを触れるようにするか設定
     /// </summary>
     /// <param name="isInteractive">押せるか</param>
     public virtual void ChangeInteractive(bool isInteractive)
@@ -181,7 +181,7 @@ public class UIBase : GameObjectBase,
     }
 
     /// <summary>
-    /// UIをアニメーショで表示
+    /// UIをアニメーションで表示
     /// </summary>
     /// <param name="canvasGroup"></param>
     /// <param name="ct"></param>

@@ -26,8 +26,13 @@ public class TitlePanelView : PanelViewBase
         SetTextAnimation(Ct);
     }
 
+    /// <summary>
+    /// テキストのアニメーション設定
+    /// </summary>
+    /// <param name="ct"></param>
     private void SetTextAnimation(CancellationToken ct)
     {
+        // タイトルの文字を左から順番に跳ねさせる(無限ループ)
         var tmpAnimator = new DOTweenTMPAnimator(_clickText);
         _sequence = DOTween.Sequence();
 

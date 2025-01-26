@@ -40,12 +40,21 @@ public class SliderBase : UIBase
         }
     }
 
-    public void SetSlider(float minValue, float maxValue)
+    /// <summary>
+    /// スライダーの初期設定
+    /// </summary>
+    /// <param name="minValue">最小値</param>
+    /// <param name="maxValue">最大値</param>
+    public void InitSlider(float minValue, float maxValue)
     {
         Slider.minValue = minValue;
         Slider.maxValue = maxValue;
     }
 
+    /// <summary>
+    /// 値を設定
+    /// </summary>
+    /// <param name="value">設定する値</param>
     public void SetValue(float value)
     {
         Slider.value = value;

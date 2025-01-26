@@ -3,10 +3,15 @@ using DG.Tweening;
 using System.Threading;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// ゲーム終了時のパネル
+/// </summary>
 public class FinishPanel : UIBase
 {
+    /// <summary>
+    /// アニメーションする数
+    /// </summary>
     private const int ANIMATION_COUNT = 4;
 
     [Header("終了時のSE")]
@@ -28,26 +33,34 @@ public class FinishPanel : UIBase
     protected override void Init()
     {
         base.Init();
+        // 初期位置に移動
         _finishtext.rectTransform.anchoredPosition = _iniPosition;
+        
+        //非表示
         Hide(CanvasGroup);
         ChangeInteractive(false);
     }
 
-    public async UniTask StartAnimation(CancellationToken ct)
+    // アニメーションする
+    public async UniTask StartAnimationAsync(CancellationToken ct)
     {
+        // 他のUIを触れなくする
         ChangeInteractive(true);
+        // SEを鳴らす
         AudioManager.Instance.PlayOneShotSE(_finishSE);
 
         var sequence = DOTween.Sequence();
         await sequence
-            .Append(CanvasGroup
+            // UI表示
+            .Append(CanvasGroup 
                 .DOFade(1, AnimationTime/ ANIMATION_COUNT))
                 .SetEase(Ease.InSine)
-            .Append(_finishtext.rectTransform
+            // 文字を右から左に表示
+            .Append(_finishtext.rectTransform 
                 .DOAnchorPosX(_showPositionX, AnimationTime/ ANIMATION_COUNT)
                 .SetEase(Ease.InSine))
             .AppendInterval(AnimationTime / ANIMATION_COUNT)
-            .Append(_finishtext.rectTransform
+            .Append(_finishtext.rectTransform 
                 .DOAnchorPosX(_hidePositionX, AnimationTime / ANIMATION_COUNT)
                 .SetEase(Ease.OutSine))
             .ToUniTask(cancellationToken: ct);

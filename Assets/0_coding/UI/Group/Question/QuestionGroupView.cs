@@ -13,11 +13,17 @@ public class QuestionGroupView : ViewBase
     [SerializeField]
     private float _padding;
 
+    // お題の表示数
     private int _questionMaxCount;
+    // お題のUIサイズ
     private float _size;
-    private float _topPos;
+    // 一番上のお題のY座標
+    private float _topPosY;
+    // お題の初期Y座標
     private float _panelIniPosY;
+    // お題の位置
     private List<float> _panelPosList = new List<float>();
+    // 表示しているお題
     private ReactiveCollection<QuestionPanelPresenter> _setPanelList = new ReactiveCollection<QuestionPanelPresenter>();
 
 
@@ -29,18 +35,22 @@ public class QuestionGroupView : ViewBase
     {
         _questionMaxCount = questionMaxCount;
 
+        // お題のサイズ(縦横の小さい方に合わせた正方形)
         float sizeX = RectTransform.rect.width - _margin * 2;
         float sizeY = (RectTransform.rect.height - (_margin * 2 + _padding * (questionMaxCount - 1))) / questionMaxCount;
         _size = Mathf.Min(sizeX, sizeY);
 
+        // お題とお題の間隔
         float interval = _padding + _size;
-        _topPos = RectTransform.rect.height / 2 - _margin - _size / 2;
-
+        
+        // お題の位置
+        _topPosY = RectTransform.rect.height / 2 - _margin - _size / 2;
         for (int i = 0; i < questionMaxCount; i++)
         {
-            _panelPosList.Add(_topPos - interval * i);
+            _panelPosList.Add(_topPosY - interval * i);
         }
 
+        // 最初のお題の位置
         _panelIniPosY = -(RectTransform.rect.height / 2 + _size);
     }
 
@@ -56,6 +66,7 @@ public class QuestionGroupView : ViewBase
     /// <param name="ct"></param>
     private void SetEventPanelList(CancellationToken ct)
     {
+        // 表示するお題が追加されたらパネルの位置を古いもの順に位置調整
         _setPanelList
             .ObserveAdd()
             .TakeUntilDestroy(this)
@@ -67,6 +78,7 @@ public class QuestionGroupView : ViewBase
                 }
             });
 
+        // お題が消えたら消すお題を非表示にする
         _setPanelList
             .ObserveRemove()
             .TakeUntilDestroy(this)
@@ -75,6 +87,7 @@ public class QuestionGroupView : ViewBase
                 value.Value.HideAsync(ct).Forget();
             });
 
+        // 初期のパネルを表示
         foreach (var panel in _setPanelList)
         {
             panel.ShowAsync(_panelPosList[_setPanelList.IndexOf(panel)], ct).Forget();
@@ -82,17 +95,18 @@ public class QuestionGroupView : ViewBase
     }
 
     /// <summary>
-    /// パネルを設定
+    /// パネルを追加
     /// </summary>
     /// <param name="panel"></param>
     /// <returns></returns>
-    public void SetPanel(QuestionPanelPresenter panel)
+    public void AddPanel(QuestionPanelPresenter panel)
     {
         if(_setPanelList.Count >= _questionMaxCount)
         {
             return;
         }
-
+        
+        // 初期位置に設定
         panel.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, _panelIniPosY, 0);
         _setPanelList.Add(panel);
     }
@@ -107,11 +121,23 @@ public class QuestionGroupView : ViewBase
         _setPanelList.Remove(panel);
     }
 
+    /// <summary>
+    /// 使用禁止
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public override UniTask ShowAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 使用禁止
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public override UniTask HideAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();

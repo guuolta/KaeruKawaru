@@ -20,8 +20,9 @@ public class PanelViewBase : ViewBase
             return;
         }
 
-
+        // アニメーションをしていたら停止
         Transform.DOComplete();
+        // 拡大表示
         await Transform
             .DOScale(Vector2.one, AnimationTime)
             .SetEase(Ease.InSine)
@@ -35,7 +36,9 @@ public class PanelViewBase : ViewBase
             return;
         }
 
+        // 再生中のアニメーションを停止
         Transform.DOComplete();
+        // 縮小して非表示
         await Transform
             .DOScale(Vector2.zero, AnimationTime)
             .SetEase(Ease.OutSine)

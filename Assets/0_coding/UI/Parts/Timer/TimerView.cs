@@ -21,23 +21,38 @@ public class TimerView : ViewBase
     [Header("タイマーの色")]
     [SerializeField]
     private List<TimerColorData> _timerColorList = new List<TimerColorData>();
-
+    
     private int _startTime;
+    /// <summary>
+    /// タイマーの色の辞書
+    /// </summary>
     private Dictionary<TimerState, Color> _timerColorDic = new Dictionary<TimerState, Color>();
+    /// <summary>
+    /// タイマーの状態
+    /// </summary>
     private ReactiveProperty<TimerState> _timeState = new ReactiveProperty<TimerState>(TimerState.Normal);
+    
     private Sequence _sequence;
 
     protected override void Init()
     {
         base.Init();
+        
+        // アニメーションの初期化
         _sequence = DOTween.Sequence();
         AddTween(_sequence);
+        
+        // タイマーの針とゲージの初期化
         _timerGauge.fillAmount = 0;
         _needle.rectTransform.localEulerAngles = new Vector3(0, 0, 0);
-        GetDictionary();
+        
+        InitColorDictionary();
     }
 
-    private void GetDictionary()
+    /// <summary>
+    /// タイマーの色の辞書の初期化
+    /// </summary>
+    private void InitColorDictionary()
     {
         foreach (var timerColor in _timerColorList)
             _timerColorDic.Add(timerColor.TimerState, timerColor.TimerColor);
@@ -55,6 +70,7 @@ public class TimerView : ViewBase
     /// <param name="ct"></param>
     private void SetEventState(CancellationToken ct)
     {
+        // タイマーの状態が変化したら対応する色に変える
         _timeState
             .TakeUntilDestroy(this)
             .DistinctUntilChanged()
@@ -102,6 +118,7 @@ public class TimerView : ViewBase
         var _timerColorSequence = DOTween.Sequence();
         AddTween(_timerColorSequence);
 
+        // ゲージとテキストの色を変える
         await _timerColorSequence
             .Append(_timerGauge
                 .DOColor(_timerColorDic[state], AnimationTime)
@@ -129,8 +146,10 @@ public class TimerView : ViewBase
     /// <returns></returns>
     public async UniTask SetTimerAsync(int time, int animationTime, CancellationToken ct)
     {
+        // ゲージの値
         float fillAmount = (float)(time-1) / _startTime;
 
+        // Danger状態ならテキストを拡大縮小するアニメーションをする
         if (_timeState.Value == TimerState.Danger)
         {
             var _textSequence = DOTween.Sequence();
@@ -150,6 +169,7 @@ public class TimerView : ViewBase
                 .ToUniTask(cancellationToken: ct).Forget();
         }
 
+        // ゲージと針を進める
         if (fillAmount >= 0)
         {
             _sequence.Complete();
@@ -164,14 +184,27 @@ public class TimerView : ViewBase
             .ToUniTask(cancellationToken: ct);
         }
         
+        // 時間のテキストを更新
         _timerText.text = time.ToString();
     }
 
+    /// <summary>
+    /// 使用禁止
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public override UniTask ShowAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();
     }
 
+    /// <summary>
+    /// 使用禁止
+    /// </summary>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public override UniTask HideAsync(CancellationToken ct)
     {
         throw new System.NotImplementedException();
@@ -179,7 +212,7 @@ public class TimerView : ViewBase
 }
 
 /// <summary>
-/// タイマーのデータ
+/// タイマーの色データ
 /// </summary>
 [System.Serializable]
 public class TimerColorData
@@ -200,6 +233,9 @@ public class TimerColorData
     public Color TimerColor => _timerColor;
 }
 
+/// <summary>
+/// タイマーの状態
+/// </summary>
 public enum TimerState
 {
     Normal,

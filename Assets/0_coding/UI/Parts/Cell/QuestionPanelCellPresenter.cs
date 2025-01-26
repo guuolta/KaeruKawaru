@@ -1,11 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestionPanelCellPresenter : PresenterBase<QuestionPanelCellView>
 {
+    /// <summary>
+    /// アイコンを設定
+    /// </summary>
+    /// <param name="icon">アイコンの画像</param>
     public void SetIcon(Sprite icon)
     {
-        View.IconImage.sprite = icon;
+        View.SetIcon(icon);
     }
 }

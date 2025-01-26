@@ -33,7 +33,7 @@ public class ButtonBase : AnimationPartBase
     }
 
     /// <summary>
-    /// SEを鳴らす
+    /// クリック時にSEを鳴らす
     /// </summary>
     protected void SetEventPlaySe()
     {

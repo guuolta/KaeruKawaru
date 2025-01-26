@@ -12,6 +12,10 @@ public class ScorePanelPresenter : SelectPanelPresenterBase<ScorePanelView>
         SetScore();
         await base.ShowAsync(ct);
     }
+    
+    /// <summary>
+    /// スコアの設定
+    /// </summary>
     private void SetScore()
     {
         View.SetEasyScore(ScoreManager.Instance.EasyHighScoreList);

@@ -13,6 +13,10 @@ public class ScorePanelView : SelectPanelViewBase
     [SerializeField]
     private List<TMP_Text> _hardScoreTextList = new List<TMP_Text>();
 
+    /// <summary>
+    /// イージモードのスコア設定
+    /// </summary>
+    /// <param name="scoreList"></param>
     public void SetEasyScore(List<int> scoreList)
     {
         for(int i=0;i<_easyScoreTextList.Count;i++)
@@ -20,6 +24,11 @@ public class ScorePanelView : SelectPanelViewBase
             _easyScoreTextList[i].text = scoreList[i].ToString();
         }
     }
+    
+    /// <summary>
+    /// ハードモードのスコア設定
+    /// </summary>
+    /// <param name="scoreList"></param>
     public void SetHardScore(List<int> scoreList)
     {
         for(int i=0;i<_hardScoreTextList.Count;i++)

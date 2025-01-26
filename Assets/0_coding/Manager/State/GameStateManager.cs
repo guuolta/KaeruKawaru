@@ -18,19 +18,6 @@ public static class GameStateManager
     public static IReadOnlyReactiveProperty<Level> StageLevel => _stageLevel;
 
     /// <summary>
-    /// ポーズ状態を反転する
-    /// </summary>
-    public static void TogglePauseState()
-    {
-        if(_status.Value != GameState.Play && _status.Value != GameState.Pause)
-        {
-            return;
-        }
-
-        _status.Value = _status.Value == GameState.Pause ? GameState.Play : GameState.Pause;
-    }
-
-    /// <summary>
     /// ステートを設定
     /// </summary>
     /// <param name="state"> ステート </param>
@@ -69,8 +56,6 @@ public enum GameState
 {
     None,
     Title,
-    Select,
-    Load,
     Start,
     Play,
     Pause,

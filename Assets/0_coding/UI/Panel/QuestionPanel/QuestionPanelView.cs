@@ -18,23 +18,31 @@ public class QuestionPanelView : PanelViewBase
     {
     }
 
+    /// <summary>
+    /// 表示
+    /// </summary>
+    /// <param name="posY">動かす位置</param>
+    /// <param name="ct"></param>
     public async UniTask ShowAsync(float posY, CancellationToken ct)
     {
+        // すでに目的地なら終了
         if(RectTransform.anchoredPosition.y == posY)
         {
             return;
         }
 
         RectTransform.DOComplete();
+        // 縦移動
         await RectTransform
             .DOAnchorPosY(posY, AnimationTime)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken: ct);
     }
-
+    
     public override async UniTask HideAsync(CancellationToken ct)
     {
         RectTransform.DOComplete();
+        // 画面外に横移動
         await RectTransform
             .DOAnchorPosX(RectTransform.anchoredPosition.x + _questionPosX, AnimationTime)
             .SetEase(Ease.OutSine)
@@ -53,6 +61,7 @@ public class QuestionPanelView : PanelViewBase
             return;
         }
 
+        // マスにアイコンを設定
         foreach(var icon in _icons)
         {
             if (icon.Type == type)
@@ -66,6 +75,9 @@ public class QuestionPanelView : PanelViewBase
     }
 }
 
+/// <summary>
+/// アイコンのデータ
+/// </summary>
 [System.Serializable]
 public class Icon
 {

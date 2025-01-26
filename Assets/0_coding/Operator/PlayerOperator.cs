@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+///プレイヤーの操作の管理
+/// </summary>
 public class PlayerOperator : SingletonObjectBase<PlayerOperator>
 {
     [Header("クリックのクールタイム")]
@@ -24,8 +25,12 @@ public class PlayerOperator : SingletonObjectBase<PlayerOperator>
         SetEventState();
     }
 
+    /// <summary>
+    /// ステートの変化時のイベント発行
+    /// </summary>
     private void SetEventState()
     {
+        // ゲーム状態ならクリックできるようにし、そうでないならクリックできなくする
         GameStateManager.Status
             .TakeUntilDestroy(this)
             .Select(value => value == GameState.Play)
@@ -48,16 +53,18 @@ public class PlayerOperator : SingletonObjectBase<PlayerOperator>
     /// </summary>
     private void SetEventClick()
     {
-        Observable.EveryUpdate() // 毎フレーム
-            .TakeUntilDestroy(this) // このクラスが破棄されるまで
-            .Where(_ => Input.GetMouseButtonDown(0) && QuestionManager.Instance.IsCheckedAnswer.Value) // マウスの左クリックがされて、ステージのチェックが終わったとき
-            .DistinctUntilChanged() // 直前の値と同じなら発行しない
-            .ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // クリックのクールタイム
+        Observable.EveryUpdate()
+            .TakeUntilDestroy(this)
+            .Where(_ => Input.GetMouseButtonDown(0) && QuestionManager.Instance.IsCheckedAnswer.Value) // お題のクリア判定が終わるまでは、クリックできないようにする
+            .DistinctUntilChanged()
+            .ThrottleFirst(TimeSpan.FromSeconds(_clickInterval)) // 連打防止
             .Subscribe(_ =>
             {
-                //レイキャストでFrogを取得
+                // レイを飛ばして、ヒットしたものがカエルのオブジェクトなら、進化させる
+                // クリック回数もカウント
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
+                
                 if (Physics.Raycast(ray, out hit))
                 {
                     var frog = hit.collider.GetComponent<Frog>();

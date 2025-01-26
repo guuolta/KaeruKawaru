@@ -55,10 +55,11 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     public int StepBonus => _stepBonus;
 
-
     protected override void Init()
     {
         base.Init();
+        
+        // セーブデータから前回までのハイスコア取得
         _easyHighScoreList = SaveManager.GetEasyHighScores().ToList();
         _hardHighScoreList = SaveManager.GetHardHighScores().ToList();
     }
@@ -82,11 +83,13 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
             {
                 switch(value)
                 {
+                    // ゲーム開始時にゲーム中のスコアをリセット
                     case GameState.Start:
                         ResetCount();
                         break;
+                    // リザルト時にハイスコアを更新
                     case GameState.Result:
-                        SetHighScore();
+                        UpdateHighScore();
                         UpdateScoreToUnityRoom();
                         break;
                     default:
@@ -108,21 +111,23 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     }
 
     /// <summary>
-    /// ハイスコアを設定
+    /// ハイスコアを更新
     /// </summary>
-    /// <returns> ポイントがハイスコアか </returns>
-    private void SetHighScore()
+    private void UpdateHighScore()
     {
+        // ハイスコアの最低値よりも低いなら終了
         if (_point.Value <= _highScoreList[_highScoreCount - 1])
         {
             return;
         }
 
+        // ハイスコアのランキングを更新
         _highScoreList.Add(_point.Value);
         _highScoreList.Sort();
         _highScoreList.Reverse();
         _highScoreList.RemoveAt(_highScoreList.Count - 1);
 
+        // 現在のレベルのハイスコアランキングに反映
         switch(GameStateManager.StageLevel.Value)
         {
             case Level.Easy:
@@ -139,6 +144,7 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
                 break;
         }
 
+        // ハイスコアの1位を更新したら、知らせる
         if(_highScoreList.IndexOf(_point.Value) == 0)
         {
             _highScoreIndex.Value = 0;
@@ -153,7 +159,7 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
         UnityroomApiClient.Instance.SendScore(GameStateManager.StageLevel.Value == Level.Hard ? 2 : 1,
             _point.Value, ScoreboardWriteMode.HighScoreDesc);
 
-        Debug.Log(GameStateManager.StageLevel.Value == Level.Hard ? 2 : 1);
+        //Debug.Log(GameStateManager.StageLevel.Value == Level.Hard ? 2 : 1);
     }
 
     /// <summary>
@@ -161,6 +167,7 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     private void SetEventLevel()
     {
+        // 現在のレベルのランキングを公開
         GameStateManager.StageLevel
             .TakeUntilDestroy(this)
             .DistinctUntilChanged()
@@ -193,27 +200,31 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// <summary>
     /// 手数ボーナス追加
     /// </summary>
-    public void AddStepBonus(int _stepDistance)
+    /// <param name="stepDistance">追加する手数ボーナス</param>
+    public void AddStepBonus(int stepDistance)
     {
-        int bounus = _stepBonusPoint * _stepDistance;
+        int bounus = _stepBonusPoint * stepDistance;
         _stepBonus += bounus;
         _point.Value += bounus;
     }
 
     /// <summary>
-    /// ポイントを計算
+    /// ポイントを計算(コンボボーナスも計算する)
     /// </summary>
     /// <param name="score"> スコア </param>
     /// <returns></returns>
     private int CalculatePoint(List<int> score)
     {
+        // 一度に加算するポイントが複数ある場合は、コンボボーナスを設定
         int point = score.Sum();
         int count = score.Count;
+        
         if (count > 1)
         {
             _comboBonus += point;
         }
 
+        // 獲得ポイントに一度にクリアしたお題数を乗算
         return point * count;
     }
 }

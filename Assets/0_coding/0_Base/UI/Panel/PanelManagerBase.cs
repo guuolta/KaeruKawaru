@@ -1,12 +1,13 @@
 using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 
 public class PanelManagerBase<T> : SingletonObjectBase<T>
     where T : ObjectBase
 {
+    /// <summary>
+    /// 最初に開くパネル
+    /// </summary>
     private IPresenter _firstPanel;
     private IPresenter _targetPanel;
     /// <summary>
@@ -34,7 +35,7 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     }
 
     /// <summary>
-    /// パネルを開く
+    /// パネルを開く(現在開いているパネルは閉じられる)
     /// </summary>
     /// <param name="panel"> 開くパネル </param>
     /// <param name="ct"></param>
@@ -43,11 +44,13 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     {
         var tasks = new List<UniTask>();
 
+        // 現在開いているパネルを閉じる
         if (_targetPanel != null)
         {
             tasks.Add(_targetPanel.HideAsync(ct));
         }
 
+        // これから開くパネルを設定
         _targetPanel = panel;
         tasks.Add(_targetPanel.ShowAsync(ct));
 
@@ -61,13 +64,16 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     /// <returns></returns>
     public virtual async UniTask ClosePanelAsync(CancellationToken ct)
     {
+        // 閉じるパネルがない場合は終了
         if (_targetPanel == null)
         {
             return;
         }
+        
         var tasks = new List<UniTask>();
         tasks.Add(_targetPanel.HideAsync(ct));
         
+        // 最初のパネルがあれば開く
         if (_targetPanel != _firstPanel)
         {
             tasks.Add(_firstPanel.ShowAsync(ct));
@@ -88,6 +94,7 @@ public class PanelManagerBase<T> : SingletonObjectBase<T>
     /// </param>
     public void SetEventCloseButton(ButtonBase closeButton, CancellationToken ct)
     {
+        // ボタンをクリックしたら、現在開いているパネルを閉じる
         closeButton.OnClickCallback += async () =>
         {
             await ClosePanelAsync(ct);

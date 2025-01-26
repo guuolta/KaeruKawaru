@@ -2,6 +2,9 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// ページめくりに使うボタン
+/// </summary>
 public class ArrowButton : ButtonBase
 {
     private bool _isHide;
@@ -21,7 +24,12 @@ public class ArrowButton : ButtonBase
             ChangeInteractive(true);
         };
     }
-    public void SetisHide(bool ishide)
+    
+    /// <summary>
+    /// 非表示か設定する
+    /// </summary>
+    /// <param name="ishide">非表示か</param>
+    public void SetIsHide(bool ishide)
     {
         _isHide =ishide;
         ChangeInteractive(ishide);
@@ -34,6 +42,7 @@ public class ArrowButton : ButtonBase
             return;
         }
 
+        // 縮小
         Transform
             .DOScale(0.8f, AnimationTime)
             .SetEase(Ease.InSine)
@@ -48,6 +57,7 @@ public class ArrowButton : ButtonBase
             return;
         }
 
+        // 元の大きさにする
         Transform.DOScale(1f, AnimationTime)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken: Ct)

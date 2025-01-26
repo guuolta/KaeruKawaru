@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine;
 
+/// <summary>
+/// 確認ダイアログ
+/// </summary>
 public class ConfirmPanelPresenter : PanelPresenterBase<ConfirmPanelView>
 {
     protected override void SetEvent()
@@ -16,11 +18,13 @@ public class ConfirmPanelPresenter : PanelPresenterBase<ConfirmPanelView>
     /// <param name="ct"></param>
     private void SetEventButton(CancellationToken ct)
     {
+        // イエスボタンでタイトルに戻る
         View.YesButton.OnClickCallback += () =>
         {
             GameSceneManager.LoadScene(SceneType.Title);
         };
 
+        // Noボタンでダイアログを非表示
         View.NoButton.OnClickCallback += () =>
         {
             PausePanelManager.Instance.ClosePanelAsync(ct).Forget();

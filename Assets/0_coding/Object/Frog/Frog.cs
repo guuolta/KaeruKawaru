@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// カエルのオブジェクトにする処理
+/// </summary>
 public class Frog : GameObjectBase
 {
     [Header("カエルオブジェクトリスト")]
@@ -20,24 +23,26 @@ public class Frog : GameObjectBase
 
     private ReactiveProperty<EvolutionaryType> _type = new ReactiveProperty<EvolutionaryType>(EvolutionaryType.Egg);
     /// <summary>
-    /// カエルの状態
+    /// カエルの進化状態
     /// </summary>
     public ReactiveProperty<EvolutionaryType> Type => _type;
 
+    // 現在表示中のカエルの進化系
     private GameObject _showObject;
+    // カエルの進化系とそれに対応したオブジェクト
     private Dictionary<EvolutionaryType, GameObject> _flogDict = new Dictionary<EvolutionaryType, GameObject>();
 
     protected override void Init()
     {
         base.Init();
-        SetFlogDictionary();
+        InitFlogDictionary();
         InitFrog();
     }
 
     /// <summary>
     /// カエルのオブジェクトを辞書に登録
     /// </summary>
-    private void SetFlogDictionary()
+    private void InitFlogDictionary()
     {
         foreach (var flog in _flogGameObjects)
         {
@@ -50,6 +55,7 @@ public class Frog : GameObjectBase
     /// </summary>
     private void InitFrog()
     {
+        // すべての進化系のオブジェクトを非表示にする
         foreach (var flog in _flogGameObjects)
         {
             flog.FrogObject.SetActive(false);
@@ -67,16 +73,19 @@ public class Frog : GameObjectBase
     /// </summary>
     private void SetEventEvolve()
     {
+        // 進化したら対応するオブジェクトを表示する
         _type
             .TakeUntilDestroy(this)
             .DistinctUntilChanged()
             .Subscribe(type =>
             {
+                // 表示しているオブジェクトを非表示
                 if(_showObject != null)
                 {
                     _showObject.SetActive(false);
                 }
 
+                // 次の進化が何もない状態の場合は終了
                 if(type == EvolutionaryType.None)
                 {
                     _showObject = null;
@@ -87,6 +96,7 @@ public class Frog : GameObjectBase
                 _showObject.SetActive(true);
             });
 
+        // 進化したときに対応したSEを鳴らす
         _type
             .Skip(1)
            .TakeUntilDestroy(this)
@@ -113,22 +123,27 @@ public class Frog : GameObjectBase
     /// </summary>
     public void Evolve()
     {
+        // 卵->オタマジャクシ->カエル->卵->・・・の順
         int value = (int)Type.Value + 1; 
         int nextType = value <= 0 || value > 3 ? 1 : value;
         _type.Value = (EvolutionaryType)nextType;
+        
+        // 進化のパーティクル再生
         _evoParticleSystem.Play();
     }
 
     /// <summary>
-    /// クリアアニメーションの再生
+    /// お題クリアアニメーションの再生
     /// </summary>
     public async UniTask StartClearAnimationAsync()
     {
+        // すでに再生中の場合はなにもしない
         if (_clearParticleSystem.isPlaying)
         {
             return;
         }
 
+        // 再生終了まで待つ
         _clearParticleSystem.Play();
         await UniTask.WaitForSeconds(_animationTime);
         _clearParticleSystem.Stop();
@@ -146,6 +161,9 @@ public enum EvolutionaryType
     Frog
 }
 
+/// <summary>
+/// カエルのオブジェクトデータ
+/// </summary>
 [System.Serializable]
 public class FlogData
 {

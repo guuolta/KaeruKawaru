@@ -3,6 +3,9 @@ using System.Threading;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// リザルトパネル
+/// </summary>
 public class ResultUIPresenter : PresenterBase<ResultUIView>
 {
     [Header("終了時のパネル")]
@@ -28,22 +31,28 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     /// <param name="ct"></param>
     private void SetEventPanel(CancellationToken ct)
     {
+        // リザルトステートになったら、UI表示
         GameStateManager.Status
             .TakeUntilDestroy(this)
             .Where(value => value == GameState.Result)
             .DistinctUntilChanged()
             .Subscribe(async _ =>
             {
-                await _finishPanel.StartAnimation(ct);
-                View.SetEventScoreAnimation();
+                // 終了のUI表示
+                await _finishPanel.StartAnimationAsync(ct);
+                // アニメーションをスキップできるようにする
+                SetEventSkipAnimation();
 
+                // リザルトパネル表示
                 await ShowAsync(ct);
 
+                // ハイスコアの時は専用のアニメーションを追加
                 if (ScoreManager.Instance.HighScoreIndex.Value >= 0)
                 {
                     await View.DoNewHighScoreTextAsync(ScoreManager.Instance.HighScoreIndex.Value, ct);
                 }
 
+                // ボタンを表示
                 await View.ShowButtonAsync(ct);
             });
     }
@@ -53,6 +62,7 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     /// </summary>
     private void SetEventButton()
     {
+        // 次(前)のレベルに遷移
         View.LevelChangeButton.OnClickCallback += () =>
         {
             AudioManager.Instance.KillSE();
@@ -67,17 +77,40 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
             }
         };
 
+        // リトライ
         View.RetryButton.OnClickCallback += () =>
         {
             AudioManager.Instance.KillSE();
             GameSceneManager.ReLoadSceneAsync().Forget();
         };
 
+        // タイトルへ
         View.TitleButton.OnClickCallback += () =>
         {
             AudioManager.Instance.KillSE();
             GameSceneManager.LoadScene(SceneType.Title);
         };
+    }
+
+    /// <summary>
+    /// アニメーションスキップのイベント
+    /// </summary>
+    private void SetEventSkipAnimation()
+    {
+        var disposable = new CompositeDisposable();
+
+        //クリックでスキップ
+        Observable.EveryUpdate()
+            .TakeUntilDestroy(this)
+            .Select(_ => Input.GetMouseButtonDown(0))
+            .SkipWhile(_ => !_)
+            .Where(_ => _)
+            .Subscribe(_ =>
+            {
+                View.SkipAnimation();                
+
+                DisposeEvent(disposable);
+            }).AddTo(disposable);
     }
 
     public override async UniTask ShowAsync(CancellationToken ct)
@@ -92,13 +125,13 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     /// <param name="ct"></param>
     private async UniTask SetTextAsync(CancellationToken ct)
     {
-        var _scoreManager = ScoreManager.Instance;
+        var scoreManager = ScoreManager.Instance;
 
-        View.SetHighScoreText(_scoreManager.HighScoreList[0]);
-        await View.SetScoreTextAsync(_scoreManager.Point.Value, ct);
-        await View.SetBounusScoreTextAsync(_scoreManager.ClearQuestionCount,
-            _scoreManager.ComboBonus,
-            _scoreManager.StepBonus,
+        View.SetHighScoreText(scoreManager.HighScoreList[0]);
+        await View.SetScoreTextAsync(scoreManager.Point.Value, ct);
+        await View.SetBounusScoreTextAsync(scoreManager.ClearQuestionCount,
+            scoreManager.ComboBonus,
+            scoreManager.StepBonus,
             ct);
     }
 }

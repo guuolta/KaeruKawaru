@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 文字だけのボタン
+/// </summary>
 public class TextButton : AnimationPartBase
 {
     [Header("SEの種類")]

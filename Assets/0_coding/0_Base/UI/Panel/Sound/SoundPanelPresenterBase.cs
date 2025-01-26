@@ -2,18 +2,21 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
 
+/// <summary>
+/// 音量調節パネル
+/// </summary>
 public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
 {
     protected override void SetEvent()
     {
-        SetValue();
+        InitializeVolume();
         SetEventValueUIPart();
         SetEventMuteButton();
     }
 
     public override async UniTask ShowAsync(CancellationToken ct)
     {
-        SetValue();
+        InitializeVolume();
         await base.ShowAsync(ct);
     }
 
@@ -24,9 +27,9 @@ public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
     }
 
     /// <summary>
-    /// 初期値設定
+    /// 初期音量設定
     /// </summary>
-    private void SetValue()
+    private void InitializeVolume()
     {
         int[] volumes = AudioManager.Instance.GetSoundVolumes();
 
@@ -43,6 +46,7 @@ public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
     {
         foreach (var soundUI in View.SoundUIList)
         {
+            // 音量調節のUIが変わったら、音量を更新
             soundUI.SoundUIPart.Value
                 .TakeUntilDestroy(this)
                 .DistinctUntilChanged()

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -14,32 +12,12 @@ public class TimerModel : ObjectBase
     float _leftTime;
     private CompositeDisposable _disposable = new CompositeDisposable();
 
-    protected override void SetEvent()
+    public void AddTime(int time)
     {
-        base.SetEvent();
-        SetEventDoTimer();
-    }
-    
-    private void SetEventDoTimer()
-    {
-        GameStateManager.Status
-            .TakeUntilDestroy(this)
-            .Select(value => value == GameState.Play)
-            .DistinctUntilChanged()
-            .Subscribe(value =>
-            {
-                if (value)
-                {
-                    SetEventTime();
-                }
-                else
-                {
-                    _disposable = DisposeEvent(_disposable);
-                }
-            });
+        _timeValue.Value += time;
     }
 
-    private void SetEventTime()
+    public void SetEventTime()
     {
         Observable.EveryUpdate()
             .TakeUntilDestroy(this)
@@ -55,5 +33,10 @@ public class TimerModel : ObjectBase
                     _leftTime -= 1;
                 }
             }).AddTo(_disposable);
+    }
+
+    public void DispoiseTimerEvent()
+    {
+        _disposable = DisposeEvent(_disposable);
     }
 }

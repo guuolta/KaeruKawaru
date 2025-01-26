@@ -10,19 +10,28 @@ using UnityEngine.Audio;
 /// </summary>
 public class AudioManager : DontDestroySingletonObject<AudioManager>
 {
+    // 音量の種類
     private const int SOUND_INDEX = 3;
+    
+    // オーディオミキサーの音量調節のパラメータ名
     private const string MASTER_VOLUME_NAME = "Master";
     private const string BGM_VOLUME_NAME = "BGM";
     private const string ENVIROMENTAL_VOLUME_NAME = "Environmental";
     private const string SE_VOLUME_NAME = "SE";
+    
+    // オーディオミキサーのピッチのパラメータ名
     private const string BGM_PITCH = "BGMPitch";
     private const string MAIN_PITCH = "MainPitch";
 
     private int[] _volumes = new int[SOUND_INDEX];
+    /// <summary>
+    /// オーディオミキサーに設定する音量
+    /// </summary>
     private List<int> _volumeChangerList = new List<int>
     {
         0,15,28,40,51,63,68,76,82,88,90
     };
+    
     [Header("オーディオミキサー")]
     [SerializeField]
     private AudioMixer _audioMixer;
@@ -49,21 +58,24 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     [SerializeField]
     private int _frogSoundProbability = 80;
 
+    // シーン上のSEオーディオソース
     private List<AudioSource> _seAudioSourceList = new List<AudioSource>();
+    
+    // enumで曲を検索できる辞書
     private Dictionary<BGMType, AudioClip> _bgmDic = new Dictionary<BGMType, AudioClip>();
     private Dictionary<SEType, AudioClip> _seDict = new Dictionary<SEType, AudioClip>();
 
     protected override void Init()
     {
         base.Init();
-        GetDictionary();
+        InitDictionary();
         SetInitVolume();
     }
 
     /// <summary>
-    /// オーディオの辞書を取得
+    /// オーディオの辞書を設定
     /// </summary>
-    private void GetDictionary()
+    private void InitDictionary()
     {
         foreach (var bgm in _bgmList)
             _bgmDic.Add(bgm.BGMType, bgm.Clip);
@@ -89,13 +101,17 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
         SetEventPlayFrog();
     }
 
+    /// <summary>
+    /// 環境音の設定
+    /// </summary>
     private void SetEventPlayFrog()
     {
+        // 定期的にカエルの声がする
         Observable
             .Interval(TimeSpan.FromSeconds(_frogSoundInterval))
             .TakeUntilDestroy(this)
-            .Where(_ => GameStateManager.Status.Value == GameState.Play || GameStateManager.Status.Value == GameState.Title)
-            .Select(_ => UnityEngine.Random.Range(0, 100))
+            .Where(_ => GameStateManager.Status.Value == GameState.Play || GameStateManager.Status.Value == GameState.Title) // タイトルとゲームプレイ中だけ鳴らす
+            .Select(_ => UnityEngine.Random.Range(0, 100)) // ランダム性を持たせてる
             .Where(value => value <= _frogSoundProbability)
             .Subscribe(_ =>
             {
@@ -111,6 +127,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// <returns></returns>
     private float GetAudioMixerVolume(int volume)
     {
+        // オーディオミキサの最低値は-80
         return -80 + _volumeChangerList[(int)volume];
     }
 
@@ -126,6 +143,9 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
         _bgmAudioSource.Play();
     }
 
+    /// <summary>
+    /// 環境音再生
+    /// </summary>
     public void PlayEnvironmental()
     {
         _enviromentalAudioSource.Play();
@@ -137,6 +157,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// <param name="clip"> 鳴らすSE </param>
     public void PlayOneShotSE(AudioClip clip)
     {
+        // シーン上の使っていないオーディオソースを検索
         foreach (AudioSource se in _seAudioSourceList)
         {
             if(!se.isPlaying)
@@ -145,7 +166,8 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
                 return;
             }
         }
-
+        
+        // シーン上に使っていないオーディオソースがない場合は、新しく作って鳴らす
         CreateSEAudioSource();
         PlayOneShotSE(clip);
     }
@@ -156,20 +178,11 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// <param name="type"> Seの種類 </param>
     public void PlayOneShotSE(SEType type)
     {
+        // SEがないときは終了
         if(type == SEType.None)
             return;
 
-        foreach (AudioSource se in _seAudioSourceList)
-        {
-            if (!se.isPlaying)
-            {
-                se.PlayOneShot(_seDict[type]);
-                return;
-            }
-        }
-
-        CreateSEAudioSource();
-        PlayOneShotSE(type);
+        PlayOneShotSE(_seDict[type]);
     }
 
     /// <summary>
@@ -177,8 +190,8 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// </summary>
     private void CreateSEAudioSource()
     {
-        var seSource = Instantiate(_seAudioSource, transform).GetComponent<AudioSource>();
-        _seAudioSourceList.Add(seSource);
+        var seSource = Instantiate(_seAudioSource, transform);
+        _seAudioSourceList.Add(seSource); // シーン上にあるオーディオソースを追加
     }
 
     /// <summary>
@@ -211,6 +224,7 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// ミュート設定
     /// </summary>
     /// <param name="isMute"> ミュートにするか </param>
+    /// <param name="type">オーディオの種類(BGMと環境音は同じ扱い)</param>
     public void SetMute(bool isMute, AudioType type)
     {
         switch (type)
@@ -255,15 +269,15 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     /// <param name="volume"> 音量 </param>
     public void SetVolume(AudioType type, int volume)
     {
+        // オーディオミキサに音量設定
         switch(type)
         {
             case AudioType.Master:
                 _audioMixer.SetFloat(MASTER_VOLUME_NAME, GetAudioMixerVolume(volume));
-                _volumes[(int)type] = volume;
-                return;
+                break;
             case AudioType.BGM:
                 _audioMixer.SetFloat(BGM_VOLUME_NAME, GetAudioMixerVolume(volume));
-                _audioMixer.SetFloat(ENVIROMENTAL_VOLUME_NAME, GetAudioMixerVolume(volume-1 > 0 ? volume-1 : 0));
+                _audioMixer.SetFloat(ENVIROMENTAL_VOLUME_NAME, GetAudioMixerVolume(volume-1 > 0 ? volume-1 : 0)); //環境音はBgmよりも小さくする
                 break;
             case AudioType.SE:
                 _audioMixer.SetFloat(SE_VOLUME_NAME, GetAudioMixerVolume(volume));
@@ -284,12 +298,12 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     }
 
     /// <summary>
-    /// ピッチ変更
+    /// BGMのピッチ変更
     /// </summary>
-    public void ChangePitch(float _pitch)
+    public void ChangeBGMPitch(float pitch)
     {
-        _audioMixer.SetFloat(BGM_PITCH,_pitch);
-        _audioMixer.SetFloat(MAIN_PITCH,1/_pitch);
+        _audioMixer.SetFloat(BGM_PITCH,pitch);
+        _audioMixer.SetFloat(MAIN_PITCH,1/pitch);
     }
 }
 

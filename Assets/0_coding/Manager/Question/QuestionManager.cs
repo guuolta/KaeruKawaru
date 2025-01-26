@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// お題の管理
+/// </summary>
 public class QuestionManager : SingletonObjectBase<QuestionManager>
 {
     [Header("お題の数")]
@@ -21,7 +24,13 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// </summary>
     public BoolReactiveProperty IsCheckedAnswer => _isCheckedAnswer;
 
+    /// <summary>
+    /// マスの横幅
+    /// </summary>
     private int _widthCount;
+    /// <summary>
+    /// 出題したお題
+    /// </summary>
     private List<Question> _questionList = new List<Question>();
 
     protected override void Init()
@@ -31,8 +40,12 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         SetWidthCount();
     }
 
+    /// <summary>
+    /// 横幅設定
+    /// </summary>
     private void SetWidthCount()
     {
+        // 現在のレベルのお題の横幅
         foreach(var questionWidth in _questionWidthList)
         {
             if (questionWidth.Level == GameStateManager.StageLevel.Value)
@@ -60,7 +73,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     {
         for (int i = 0; i < _questionCount; i++)
         {
-            SetQuestion(widthCount);
+            AddQuestion(widthCount);
         }
     }
 
@@ -69,6 +82,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// </summary>
     private void SetEventStart()
     {
+        // ゲームの最初から正解しているお題を確認する
         GameStateManager.Status
             .TakeUntilDestroy(this)
             .Where(status => status == GameState.Play)
@@ -80,14 +94,14 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     }
 
     /// <summary>
-    /// お題を設定
+    /// お題追加
     /// </summary>
     /// <param name="widthCount"> 幅数 </param>
     /// <returns></returns>
-    private void SetQuestion(int widthCount)
+    private void AddQuestion(int widthCount)
     {
         var question = CreateQuestion(widthCount);
-        _questionPanelParent.SetPanel(question);
+        _questionPanelParent.AddPanel(question);
         _questionList.Add(question);
     }
 
@@ -98,6 +112,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// <returns></returns>
     public Question CreateQuestion(int widthCount)
     {
+        // お題の配列初期化
         var trouts = new EvolutionaryType[widthCount][];
 
         for(int i= 0; i < widthCount; i++)
@@ -105,10 +120,13 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             trouts[i] = new EvolutionaryType[widthCount];
         }
 
+        // 必ず1つはお題にカエルの進化系があるようにする
         int randomRow = Random.Range(0, widthCount);
         int randomColumn = Random.Range(0, widthCount);
         trouts[randomRow][randomColumn] = (EvolutionaryType)Random.Range(1, 4);
 
+        
+        // ランダムにお題のマスにカエルの進化系を設定(空白の場合もある)
         for(int i=0; i<widthCount; i++)
         {
             for (int j=0; j< widthCount; j++)
@@ -123,23 +141,28 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     }
 
     /// <summary>
-    /// 解答確認
+    /// 正当判定
     /// </summary>
     /// <param name="troutFrogs"> ステージのマス </param>
     public async UniTask CheckQuestionAsync(Frog[][] troutFrogs)
     {
+        // 前回の正当判定が終わるまで待つ
         await UniTask.WaitUntil(() => _isCheckedAnswer.Value);
 
         _isCheckedAnswer.Value = false;
 
+        // 盤面がない場合は何もしない
         if(troutFrogs.Length == 0 || troutFrogs[0].Length == 0)
         {
             return;
         }
 
+        // 獲得ポイント
         var scoreList = new List<int>();
+        // 正解したお題
         var questionList = new List<Question>();
 
+        // 出題されているお題から正解しているものを探す
         foreach (var question in _questionList)
         {
             if (question.CheckAnswer(troutFrogs))
@@ -151,25 +174,31 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
             }
         }
 
+        // 正当
         if(scoreList.Count > 0)
         {
+            // ポイントを加算
             ScoreManager.Instance.AddPoint(scoreList);
-            int count = scoreList.Count;
 
+            // 正解したお題を削除
             foreach (var question in questionList)
             {
                 _questionPanelParent.RemovePanel(question);
                 _questionList.Remove(question);
                 question.Dispose();
             }
-
+            
+            // 正解した分のお題を補充
+            int count = scoreList.Count;
             for(int i=0; i<count; i++)
             {
-                SetQuestion(_widthCount);
+                AddQuestion(_widthCount);
+                // 追加のたびに正当確認
                 CheckQuestionAsync(StageManager.Instance.TroutFrogs).Forget();
             }
         }
 
+        // 正当判定終了をお知らせ
         _isCheckedAnswer.Value = true;
     }
 
@@ -177,6 +206,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     {
         base.Destroy();
 
+        // 出題中のお題を停止
         foreach (var question in _questionList)
         {
             question.Dispose();
@@ -233,16 +263,31 @@ public class Question
         }
     }
 
+    /// <summary>
+    /// 正解までに進化した回数(手数)
+    /// </summary>
     private int _step = 0;
+    /// <summary>
+    /// 手数ボーナスがもらえる進化回数
+    /// </summary>
     private int _stepBonusCount = 0;
     private int _point = 0;
     /// <summary>
-    /// ポイント
+    /// 正解したら獲得できるポイント
     /// </summary>
     public int Point => _point;
+    
+    /// <summary>
+    /// 正解のお題の盤面
+    /// </summary>
     private List<Frog> _clearTroutList = new List<Frog>();
+    
     private CompositeDisposable _disposable = new CompositeDisposable();
 
+    /// <summary>
+    /// お題
+    /// </summary>
+    /// <param name="trouts">正解のお題の盤面</param>
     public Question(EvolutionaryType[][] trouts)
     {
         if(trouts.Length == 0 || trouts[0].Length == 0)
@@ -258,14 +303,17 @@ public class Question
         }
 
         _trouts = trouts;
-        SetStepPoint();
+        SetPoint();
+        SetEventStep();
     }
 
     /// <summary>
-    /// ボーナスをもらえる手数を設定
+    /// 正解時にもらえるポイントの設定
     /// </summary>
-    private void SetStepPoint()
+    private void SetPoint()
     {
+        // マスにあるカエルの進化系*100ポイントがもらえる
+        // (マスにあるカエルの進化系の数 - 1)回がボーナスがもらえる手数
         for (int i = 0; i < _trouts.Length; i++)
         {
             for (int j = 0; j < _trouts[i].Length; j++)
@@ -280,7 +328,6 @@ public class Question
 
         _stepBonusCount = Mathf.Clamp(_stepBonusCount, 0, _stepBonusCount-1);
 
-        SetEventStep();
     }
 
     /// <summary>
@@ -288,6 +335,7 @@ public class Question
     /// </summary>
     private void SetEventStep()
     {
+        // プレイヤーが進化させたら手数を追加
         PlayerOperator.Instance.ClickCount
             .DistinctUntilChanged()
             .Subscribe(_ =>
@@ -305,24 +353,31 @@ public class Question
     {
         int rowCount = trouts.Length;
         int columnCount = trouts[0].Length;
+        // ステージのマス数よりお題のマス数の方が多い場合は終了
         if (rowCount < WidthCount || columnCount < WidthCount)
         {
             return false;
         }
-
+        
+        // お題がある範囲の設定
         int rowLoopCount = rowCount - WidthCount;
         int columnLoopCount = columnCount - WidthCount;
 
+        // 解答確認
         for (int i = 0; i <= rowLoopCount; i++)
         {
             for (int j = 0; j <= columnLoopCount; j++)
             {
+                // お題の左上のマスが一致するマスを探す
                 if (Trouts[0][0] == EvolutionaryType.None
                     || Trouts[0][0] == trouts[i][j].Type.Value)
                 {
                     bool isMatch = true;
+                    
+                    // お題の正当判定開始
                     for(int k = 0; k < WidthCount; k++)
                     {
+                        // 列ごとに解答の調査
                         if (!CheckRow(j, Trouts[k], trouts[i + k]))
                         {
                             isMatch = false;
@@ -330,6 +385,7 @@ public class Question
                         }
                     }
 
+                    // お題を正解していたら、ステージの正解したマスで正解アニメーション
                     if (isMatch)
                     {
                         foreach(var trout in _clearTroutList)
@@ -357,13 +413,15 @@ public class Question
     {
         for(int i=0; i<questionRows.Length; i++)
         {
+            // 調査対象のお題のマスが空白かステージのマスと一致するか確認
             if (questionRows[i] != EvolutionaryType.None
                 && questionRows[i] != stageRows[i+ startIndex].Type.Value)
             {
                 _clearTroutList.Clear();
                 return false;
             }
-
+            
+            // 一致しているマスを保存
             _clearTroutList.Add(stageRows[i + startIndex]);
         }
 
@@ -389,6 +447,9 @@ public class Question
         _disposable.Dispose();
     }
 
+    /// <summary>
+    /// お題の確認用
+    /// </summary>
     private void CheckTrout()
     {
         for(int i = 0; i < _trouts.Length; i++)

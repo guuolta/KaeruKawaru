@@ -1,8 +1,10 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// 基本的なUIのパーツのアニメーションを共通化
+/// </summary>
 public class AnimationPartBase : UIBase
 {
     public override void OnPointerDown(PointerEventData eventData)
@@ -12,11 +14,13 @@ public class AnimationPartBase : UIBase
             return;
         }
 
+        // 縮小
         Transform
             .DOScale(0.8f, AnimationTime)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken: Ct)
             .Forget();
+        // 半透明にする
         CanvasGroup
             .DOFade(0.8f, AnimationTime)
             .SetEase(Ease.InSine)
@@ -31,10 +35,12 @@ public class AnimationPartBase : UIBase
             return;
         }
 
+        // 元の大きさに戻す
         Transform.DOScale(1f, AnimationTime)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken: Ct)
             .Forget();
+        // 元の透明度にする
         CanvasGroup.DOFade(1f, AnimationTime)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken: Ct)
@@ -43,6 +49,7 @@ public class AnimationPartBase : UIBase
 
     public override void OnPointerEnter(PointerEventData eventData)
     {
+        // 拡大
         Transform
             .DOScale(1.05f, AnimationTime)
             .SetEase(Ease.InSine)
@@ -52,6 +59,7 @@ public class AnimationPartBase : UIBase
 
     public override void OnPointerExit(PointerEventData eventData)
     {
+        // 元の大きさにする
         Transform
             .DOScale(1f, AnimationTime)
             .SetEase(Ease.OutSine)

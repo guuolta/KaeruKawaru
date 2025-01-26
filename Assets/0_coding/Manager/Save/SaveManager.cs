@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -6,13 +5,18 @@ using UnityEngine;
 /// </summary>
 public static class SaveManager
 {
+    // オーディオ
     private const int SOUND_INDEX = 3;
     private const string MASTER_VOLUME_KEY = "Master";
     private const string BGM_VOLUME_KEY = "BGM";
     private const string SE_VOLUME_KEY = "SE";
+    
+    // イージモードのランキング
     private const string FIRST_EASY_HIGH_SCORE_KEY = "EasyHighScore1";
     private const string SECOND_EASY_HIGH_SCORE_KEY = "EasyHighScore2";
     private const string THIRD_EASY_HIGH_SCORE_KEY = "EasyHighScore3";
+    
+    // ハードモードのランキング
     private const string FIRST_HARD_HIGH_SCORE_KEY = "HardHighScore1";
     private const string SECOND_HARD_HIGH_SCORE_KEY = "HardHighScore2";
     private const string THIRD_HARD_HIGH_SCORE_KEY = "HardHighScore3";
@@ -20,7 +24,7 @@ public static class SaveManager
     /// <summary>
     /// 全音量取得
     /// </summary>
-    /// <returns>音量</returns>
+    /// <returns>音量(初期値は8)</returns>
     public static int[] GetSoundVolumes()
     {
         int[] soundVolumes = new int[SOUND_INDEX];
@@ -35,7 +39,7 @@ public static class SaveManager
     /// <summary>
     /// イージーモードのハイスコアを取得
     /// </summary>
-    /// <returns></returns>
+    /// <returns>ハイスコア(初期値は0)</returns>
     public static int[] GetEasyHighScores()
     {
         int[] highScores = new int[3];
@@ -50,7 +54,7 @@ public static class SaveManager
     /// <summary>
     /// ハードモードのハイスコアを取得
     /// </summary>
-    /// <returns></returns>
+    /// <returns>ハイスコア(初期値は0)</returns>
     public static int[] GetHardHighScores()
     {
         int[] highScores = new int[3];
@@ -63,9 +67,9 @@ public static class SaveManager
     }
 
     /// <summary>
-    /// セーブデータに音量をセット
+    /// 音量を設定(セーブはしていない)
     /// </summary>
-    /// <param name="volumes"> 音量 </param>
+    /// <param name="volumes"> 音量(Master, BGM, SEの順) </param>
     public static void SetSoundVolume(int[] volumes)
     {
         PlayerPrefs.SetInt(MASTER_VOLUME_KEY, volumes[(int)AudioType.Master]);
@@ -74,9 +78,9 @@ public static class SaveManager
     }
 
     /// <summary>
-    /// イージーモードのハイスコア設定
+    /// イージーモードのハイスコア設定(セーブはしていない)
     /// </summary>
-    /// <param name="highScores"></param>
+    /// <param name="highScores">セーブするスコア(1位、2位、3位の順)</param>
     public static void SetEasyHighScore(int[] highScores)
     {
         PlayerPrefs.SetInt(FIRST_EASY_HIGH_SCORE_KEY, highScores[0]);
@@ -85,9 +89,9 @@ public static class SaveManager
     }
 
     /// <summary>
-    /// ハードモードのハイスコア設定
+    /// ハードモードのハイスコア設定(セーブはしていない)
     /// </summary>
-    /// <param name="highScores"></param>
+    /// <param name="highScores">セーブするスコア(1位、2位、3位の順)</param>
     public static void SetHardHighScore(int[] highScores)
     {
         PlayerPrefs.SetInt(FIRST_HARD_HIGH_SCORE_KEY, highScores[0]);

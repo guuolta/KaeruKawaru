@@ -118,31 +118,7 @@ public class ResultUIView : ViewBase
                 _levelChangeText.text = level == Level.Easy ? EASY_LEVEL_TEXT : HARD_LEVEL_TEXT;
             });
     }
-
-    /// <summary>
-    /// スコアのアニメーション設定
-    /// </summary>
-    public void SetEventScoreAnimation()
-    {
-        var disposable = new CompositeDisposable();
-
-        Observable.EveryUpdate()
-            .TakeUntilDestroy(this)
-            .Select(_ => Input.GetMouseButtonDown(0))
-            .SkipWhile(_ => !_)
-            .Where(_ => _)
-            .Subscribe(_ =>
-            {
-                _doCompleate = true;
-                _scoreText.DOComplete();
-                _clearCountText.DOComplete();
-                _comboBonusText.DOComplete();
-                _stepBonusText.DOComplete();
-
-                DisposeEvent(disposable);
-            }).AddTo(disposable);
-    }
-
+    
     /// <summary>
     /// 現在のスコアのテキスト設定
     /// </summary>
@@ -151,7 +127,7 @@ public class ResultUIView : ViewBase
     /// <returns></returns>
     public async UniTask SetScoreTextAsync(int score, CancellationToken ct)
     {
-        await DOScoreText(_scoreText, score.ToString(), _textAnimationTime, ct);
+        await ShowScoreTextAsync(_scoreText, score.ToString(), _textAnimationTime, ct);
     }
 
     /// <summary>
@@ -162,10 +138,13 @@ public class ResultUIView : ViewBase
     /// <returns></returns>
     public async UniTask DoNewHighScoreTextAsync(int index, CancellationToken ct)
     {
+        // テキストを更新
         _newHighScoreText.text = _scoreText.text;
         _newHighScoreText.colorGradient = _highScoreColorList[index];
 
+        // SEを鳴らす
         AudioManager.Instance.PlayOneShotSE(SEType.Fanfare);
+        // 縮小してから拡大表示
         await _highScoreTextSequence
             .Append(_scoreText
                 .DOScale(0, _highScoreAnimationTime / 2)
@@ -173,21 +152,10 @@ public class ResultUIView : ViewBase
             .Append(_newHighScoreText
                 .DOScale(1, _highScoreAnimationTime / 2)
                 .SetEase(Ease.InSine))
-            .AppendCallback(async () =>
-            {
-                if (!_doCompleate)
-                    await _highScoreBubble.ShowAsync(ct);
-            })
-            .OnUpdate(() =>
-            {
-                if (_doCompleate)
-                {
-                    _highScoreTextSequence.Complete();
-                    _highScoreBubble.ShowAsync(ct).Forget();
-                    _highScoreBubble.DOComplete();
-                }
-            })
             .ToUniTask(cancellationToken: ct);
+        
+        // ハイスコアの吹き出し表示
+        _highScoreBubble.ShowAsync(ct).Forget();
     }
 
     /// <summary>
@@ -207,20 +175,23 @@ public class ResultUIView : ViewBase
     /// <param name="stepBonus"> 手数ボーナス </param>
     public async UniTask SetBounusScoreTextAsync(int clearCount, int comboBonus, int stepBonus, CancellationToken ct)
     {
-        await DOScoreText(_clearCountText, clearCount.ToString(), _bonusAnimationTime, ct);
-        await DOScoreText(_comboBonusText, comboBonus.ToString(), _bonusAnimationTime, ct);
-        await DOScoreText(_stepBonusText, stepBonus.ToString(), _bonusAnimationTime, ct);
+        // お題のクリア数
+        await ShowScoreTextAsync(_clearCountText, clearCount.ToString(), _bonusAnimationTime, ct);
+        // コンボボーナス
+        await ShowScoreTextAsync(_comboBonusText, comboBonus.ToString(), _bonusAnimationTime, ct);
+        // 手数ボーナス
+        await ShowScoreTextAsync(_stepBonusText, stepBonus.ToString(), _bonusAnimationTime, ct);
     }
 
     /// <summary>
-    /// スコアテキストのアニメーションを実行
+    /// スコアテキストを表示
     /// </summary>
     /// <param name="text"> 対象のテキスト </param>
     /// <param name="content"> 表示する内容 </param>
     /// <param name="animationTime"> アニメーションの時間 </param>
     /// <param name="ct"></param>
     /// <returns></returns>
-    private async UniTask DOScoreText(TMP_Text text, string content, float animationTime, CancellationToken ct)
+    private async UniTask ShowScoreTextAsync(TMP_Text text, string content, float animationTime, CancellationToken ct)
     {
         if(_doCompleate)
         {
@@ -229,12 +200,14 @@ public class ResultUIView : ViewBase
         }
 
         float timeValue = 0;
+        // SEを鳴らす間隔
         float interval = animationTime / content.Length * 0.8f;
 
+        // テキストを表示
         await text
             .DOText(content, animationTime, scrambleMode: ScrambleMode.Numerals)
             .SetEase(Ease.Linear)
-            .OnUpdate(() =>
+            .OnUpdate(() => // テキストのSE再生
             {
                 timeValue += Time.deltaTime;
                 if(timeValue < interval)
@@ -257,6 +230,7 @@ public class ResultUIView : ViewBase
     {
         _buttonGroup.DOComplete();
 
+        // 下から上に表示
         await _buttonGroup
                 .DOAnchorPosY(_targetPosY, AnimationTime)
                 .SetEase(Ease.InSine)
@@ -275,6 +249,18 @@ public class ResultUIView : ViewBase
         _titleButton.ChangeInteractive(isInteractive);
     }
 
+    /// <summary>
+    /// アニメーションをスキップ
+    /// </summary>
+    public void SkipAnimation()
+    {
+        _doCompleate = true;
+        _scoreText.DOComplete();
+        _clearCountText.DOComplete();
+        _comboBonusText.DOComplete();
+        _stepBonusText.DOComplete();
+    }
+
     public override async UniTask ShowAsync(CancellationToken ct)
     {
         await ShowAsync(CanvasGroup, ct);
@@ -284,5 +270,4 @@ public class ResultUIView : ViewBase
     {
         await HideAsync(CanvasGroup, ct);
     }
-
 }

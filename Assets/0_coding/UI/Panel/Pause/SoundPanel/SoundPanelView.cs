@@ -19,6 +19,9 @@ public class SoundPanelView : PanelViewBase
     public ButtonBase CloseButton => _closeButton;
 }
 
+/// <summary>
+/// 音量調節のUIデータ
+/// </summary>
 [System.Serializable]
 public class SoundUI
 {

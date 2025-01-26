@@ -8,11 +8,13 @@ using UnityEngine;
 /// <summary>
 /// 基底クラス
 /// </summary>
-public class ObjectBase : MonoBehaviour
+public class 
+    
+    ObjectBase : MonoBehaviour
 {
     private CancellationToken _ct;
     /// <summary>
-    /// キャンセレーショントークン
+    /// オブジェクト破壊時に発行されるキャンセレーショントークン
     /// </summary>
     public CancellationToken Ct
     {
@@ -93,11 +95,12 @@ public class ObjectBase : MonoBehaviour
     protected virtual CompositeDisposable DisposeEvent(CompositeDisposable disposable)
     {
         disposable.Dispose();
+        
         return new CompositeDisposable();
     }
 
     /// <summary>
-    /// DOTweenのアニメーションを追加
+    /// DOTweenのアニメーションを使う場合は、ここに追加する
     /// </summary>
     /// <param name="tween"></param>
     public void AddTween(Tween tween)

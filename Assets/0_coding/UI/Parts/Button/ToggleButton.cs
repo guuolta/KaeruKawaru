@@ -2,6 +2,9 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// on/offを切り替えるボタン
+/// </summary>
 public class ToggleButton : ButtonBase
 {
     [Header("Onの時の画像")]
@@ -12,6 +15,9 @@ public class ToggleButton : ButtonBase
     private Image _offImage;
 
     private BoolReactiveProperty _isOn = new BoolReactiveProperty(false);
+    /// <summary>
+    /// トグルがonの状態か
+    /// </summary>
     public IReadOnlyReactiveProperty<bool> IsOn => _isOn;
 
     protected override void SetEvent()

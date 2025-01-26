@@ -46,6 +46,10 @@ public class SelectPanelView : PanelViewBase
         await base.ShowAsync(ct);
         ShowButton();
     }
+    
+    /// <summary>
+    /// ボタンを全表示
+    /// </summary>
     private void ShowButton()
     {
         _stageSelectButton.ChangeInteractive(true);
@@ -54,11 +58,16 @@ public class SelectPanelView : PanelViewBase
         _creditButton.ChangeInteractive(true);
         _howPlayButton.ChangeInteractive(true);
     }
+    
     public override async UniTask HideAsync(CancellationToken ct)
     {
         await base.HideAsync(ct);
         HideButton();
     }
+    
+    /// <summary>
+    /// ボタンを全非表示
+    /// </summary>
     private void HideButton()
     {
         _stageSelectButton.ChangeInteractive(false);

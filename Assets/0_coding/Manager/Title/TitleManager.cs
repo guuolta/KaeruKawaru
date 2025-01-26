@@ -1,11 +1,13 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UniRx;
 using UnityEngine;
 
+/// <summary>
+/// タイトルでの処理
+/// </summary>
 public class TitleManager : SingletonObjectBase<TitleManager>
 {
     [Header("アニメーションの時間")]
@@ -30,6 +32,8 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     protected override void Init()
     {
         base.Init();
+        
+        // カメラを初期位置にする
         _camera = Camera.main;
         _camera.transform.position = _titleTargetPos;
         _camera.transform.eulerAngles = _titleTargetRot;
@@ -38,11 +42,12 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     protected override void SetEvent()
     {
         base.SetEvent();
+        // 曲を流し始める(音量のロードの関係でこの位置)
         AudioManager.Instance.PlayBGM(BGMType.Title);
     }
 
     /// <summary>
-    /// タイトルにターゲット
+    /// タイトル画面のカメラ遷移
     /// </summary>
     /// <param name="ct"></param>
     /// <returns></returns>
@@ -52,7 +57,7 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     }
 
     /// <summary>
-    /// セレクトにターゲット
+    /// セレクト画面のカメラ遷移
     /// </summary>
     /// <param name="ct"></param>
     /// <returns></returns>
@@ -62,7 +67,7 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     }
 
     /// <summary>
-    /// ターゲット
+    /// カメラを動かす
     /// </summary>
     /// <param name="pos"> 対象の位置 </param>
     /// <param name="rot"> 対象の角度 </param>

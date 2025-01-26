@@ -1,11 +1,11 @@
-using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
+/// <summary>
+/// 数値を設定するインプットフィールド
+/// </summary>
 public class ValueInputFieldBase : AnimationPartBase
 {
     private float _minValue;
@@ -30,7 +30,6 @@ public class ValueInputFieldBase : AnimationPartBase
     /// InputFieldの値
     /// </summary>
     public ReactiveProperty<float> InputValueAsObservable => _inputValueAsObservable;
-    public UnityAction<string> OnChangeEvent;
 
     protected override void SetFirstEvent()
     {
@@ -47,6 +46,7 @@ public class ValueInputFieldBase : AnimationPartBase
     /// </summary>
     private void SetEventClick()
     {
+        // クリックしたらSEを鳴らす
         OnClickCallback += () =>
         {
             AudioManager.Instance.PlayOneShotSE(SEType.Posi);
@@ -58,7 +58,7 @@ public class ValueInputFieldBase : AnimationPartBase
     /// </summary>
     /// <param name="minValue"> インプットフィールドの最小値 </param>
     /// <param name="maxValue"> インプットフィールドの最大値 </param>
-    public void SetInputField(float minValue, float maxValue)
+    public void InitInputField(float minValue, float maxValue)
     {
         _minValue = minValue;
         _maxValue = maxValue;
@@ -69,22 +69,22 @@ public class ValueInputFieldBase : AnimationPartBase
     /// </summary>
     private void SetEventInputValue()
     {
-        OnChangeEvent = (value) =>
+        UnityAction<string> onChangeEvent = (value) =>
         {
+            // 入力された数値を反映
             float volume;
             if (float.TryParse(value, out volume))
             {
                 InputValueAsObservable.Value = Mathf.Clamp(volume, _minValue, _maxValue);
             }
-            else
+            else //数字以外が入力された0にする
             {
                 InputValueAsObservable.Value = 0;
             }
         };
 
-        InputField.onValueChanged.AddListener(OnChangeEvent);
+        InputField.onValueChanged.AddListener(onChangeEvent);
     }
-
 
     /// <summary>
     /// インプットフィールドの値を設定
