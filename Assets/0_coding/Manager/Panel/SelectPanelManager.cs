@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UniRx;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
 {
@@ -35,10 +31,15 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
         SetFirstPanel();
         OpenFirstPanelAsync(Ct).Forget();
     }
+    
+    /// <summary>
+    /// 最初に開くパネルを設定
+    /// </summary>
     private void SetFirstPanel()
     {
         SetFirstPanel(_titlePanel);
     }
+    
     public override async UniTask OpenFirstPanelAsync(CancellationToken ct)
     {
         await base.OpenFirstPanelAsync(ct);
@@ -48,6 +49,7 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
     {
         IPresenter panel = null;
 
+        // 開くパネルをえらぶ(タイトルはその場で開いて、終了)
         switch(type)
         {
             case SelectPanelType.Title: await OpenFirstPanelAsync(ct); return;
@@ -61,10 +63,11 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
 
         await OpenPanelAsync(panel, ct);
     }
-
+    
     public override async UniTask ClosePanelAsync(CancellationToken ct)
     {
         await base.ClosePanelAsync(ct);
+        // すべてのパネルを閉じたらタイトル状態にする
         if(TargetPanel == null)
         {
             GameStateManager.SetGameState(GameState.Title);
@@ -72,6 +75,9 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
     }
 }
 
+/// <summary>
+/// セレクトパネル
+/// </summary>
 public enum SelectPanelType
 {
     None,

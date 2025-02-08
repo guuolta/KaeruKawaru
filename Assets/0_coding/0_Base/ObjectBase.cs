@@ -8,9 +8,7 @@ using UnityEngine;
 /// <summary>
 /// 基底クラス
 /// </summary>
-public class 
-    
-    ObjectBase : MonoBehaviour
+public class ObjectBase : MonoBehaviour
 {
     private CancellationToken _ct;
     /// <summary>

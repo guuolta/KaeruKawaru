@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PausePanelManager : PanelManagerBase<PausePanelManager>
 {
@@ -43,6 +42,7 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
     {
         _pauseButton.ChangeInteractive(false);
 
+        // ゲームが始まったらポーズボタンを押せるようにする
         GameStateManager.Status
             .TakeUntilDestroy(this)
             .Where(value => value == GameState.Play)
@@ -52,6 +52,7 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
                 _pauseButton.ChangeInteractive(true);
             });
 
+        // ポーズボタンを押したらポーズ状態にする
         _pauseButton.OnClickCallback += () =>
         {
             if(GameStateManager.Status.Value == GameState.Play)
@@ -67,6 +68,7 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
     /// <param name="ct"></param>
     private void SetEventPanel(CancellationToken ct)
     {
+        // ポーズ状態になったら最初のパネルを開く
         GameStateManager.Status
             .TakeUntilDestroy(this)
             .Where(value => value == GameState.Pause)
@@ -99,10 +101,15 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
         }
     }
 
+    /// <summary>
+    /// パネルを閉じる
+    /// </summary>
+    /// <param name="ct"></param>
     public override async UniTask ClosePanelAsync(CancellationToken ct)
     {
         await base.ClosePanelAsync(ct);
 
+        // すべてのパネルを閉じたらゲームに戻る
         if(TargetPanel == null)
         {
             _backgroundImage.ChangeInteractive(false);
