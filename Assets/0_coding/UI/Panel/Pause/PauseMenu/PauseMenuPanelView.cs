@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PauseMenuPanelView : PanelViewBase
@@ -20,4 +18,15 @@ public class PauseMenuPanelView : PanelViewBase
     [SerializeField]
     private ButtonBase _titleButton;
     public ButtonBase TitleButton => _titleButton;
+
+    public override void Init()
+    {
+        base.Init();
+        
+        // ボタン初期化
+        _returnButton.Init();
+        _soundSettingButton.Init();
+        retryButton.Init();
+        _titleButton.Init();
+    }
 }

@@ -1,25 +1,27 @@
+using System.Globalization;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
 /// お題のパネル
 /// </summary>
-public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
+public class QuestionPanelPresenter : PresenterBase<QuestionPanelView>
 {
     [Header("マス")]
     [SerializeField]
-    private QuestionPanelCellPresenter _cell;
+    private QuestionPanelCellPresenter cellPanel;
 
     public async UniTask ShowAsync(float posY ,CancellationToken ct)
     {
         await View.ShowAsync(posY, ct);
     }
 
-    public override async UniTask HideAsync(CancellationToken ct)
+    public async UniTask HideAsync(CancellationToken ct)
     {
-        await base.HideAsync(ct);
+        await View.HideAsync(ct);
         View.GameObject.SetActive(false);
     }
 
@@ -44,7 +46,8 @@ public class QuestionPanelPresenter : PanelPresenterBase<QuestionPanelView>
         {
             for (int j = 0; j < columnCount; j++)
             {
-                var cell = Instantiate(_cell, transform);
+                var cell = Instantiate(cellPanel, transform);
+                cell.Init();
                 View.SetIcon(cell, trouts[i][j]);
             }
         }

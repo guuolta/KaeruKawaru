@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -20,9 +21,10 @@ public class TextButton : AnimationPartBase
     /// </summary>
     private void SetEventPlaySE()
     {
-        OnClickCallback = () =>
-        {
-            AudioManager.Instance.PlayOneShotSE(_seType);
-        };
+        OnClickEvent
+            .Subscribe(_ =>
+            {
+                AudioManager.Instance.PlayOneShotSE(_seType);
+            });
     }
 }

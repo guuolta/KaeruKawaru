@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UniRx;
 
 /// <summary>
 /// セレクト画面のパネルプレゼンター
@@ -11,7 +12,7 @@ public class SelectPanelPresenterBase<TView> : PanelPresenterBase<TView>
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetCloseButton(Ct);
+        SetCloseButton(destroyCancellationToken);
     }
 
     /// <summary>
@@ -21,8 +22,9 @@ public class SelectPanelPresenterBase<TView> : PanelPresenterBase<TView>
     private void SetCloseButton(CancellationToken ct)
     {
         // 閉じるボタンが押されたらメニューセレクトパネルを表示
-        View.CloseButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect,ct).Forget();
-        };
+        View.CloseButton.OnClickEvent
+            .Subscribe(_ => {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect,ct).Forget();
+            });
     }
 }

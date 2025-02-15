@@ -7,9 +7,14 @@ using UniRx;
 /// </summary>
 public class SoundPanelPresenterBase : PanelPresenterBase<SoundPanelView>
 {
-    protected override void SetEvent()
+    public override void Init()
     {
         InitializeVolume();
+        base.Init();
+    }
+    
+    protected override void SetEvent()
+    {
         SetEventValueUIPart();
         SetEventMuteButton();
     }

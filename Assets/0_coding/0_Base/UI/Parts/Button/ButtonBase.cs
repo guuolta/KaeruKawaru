@@ -1,9 +1,15 @@
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class ButtonBase : AnimationPartBase
 {
+    [SerializeField, HideInInspector]
+    private Image _image;
+    public Image Image => _image;
+    
     [Header("押す前の画像")]
     [SerializeField]
     private Sprite _normalImage;
@@ -14,17 +20,13 @@ public class ButtonBase : AnimationPartBase
     [SerializeField]
     private SEType _seType = SEType.Posi;
 
-    private Image _image;
-    protected Image Image
+    #if UNITY_EDITOR
+    protected override void OnValidate()
     {
-        get
-        {
-            if (_image == null)
-                _image = GetComponent<Image>();
-
-            return _image;
-        }
+        base.OnValidate();
+        _image ??= GetComponent<Image>();
     }
+    #endif
 
     protected override void SetEvent()
     {
@@ -35,15 +37,16 @@ public class ButtonBase : AnimationPartBase
     /// <summary>
     /// クリック時にSEを鳴らす
     /// </summary>
-    protected void SetEventPlaySe()
+    private void SetEventPlaySe()
     {
         if (_seType == SEType.None)
             return;
 
-        OnClickCallback += () =>
-        {
-            AudioManager.Instance.PlayOneShotSE(_seType);
-        };
+        OnClickEvent
+            .Subscribe(_=>
+            {
+                AudioManager.Instance.PlayOneShotSE(_seType);
+            });
     }
 
     /// <summary>
@@ -51,27 +54,26 @@ public class ButtonBase : AnimationPartBase
     /// </summary>
     protected virtual void SetEventDobleClickPrevention()
     {
-        OnClickCallback += async () =>
-        {
-            ChangeInteractive(false);
-            await UniTask.WaitForSeconds(0.1f, cancellationToken: Ct);
-
-            if (Ct.IsCancellationRequested) return;
-            ChangeInteractive(true);
-        };
+        OnClickEvent
+            .Subscribe(async _ =>
+            {
+                ChangeInteractive(false);
+                await UniTask.WaitForSeconds(0.1f, cancellationToken: destroyCancellationToken);
+                ChangeInteractive(true);
+            });
     }
 
     public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData)
     {
         base.OnPointerDown(eventData);
-        if (_pushedImage!=null)
+        if (_pushedImage!=null) // 押しているときの画像にする
             Image.sprite = _pushedImage;
     }
 
     public override void OnPointerUp(UnityEngine.EventSystems.PointerEventData eventData)
     {
         base.OnPointerUp(eventData);
-        if (_pushedImage!=null)
+        if (_pushedImage!=null) // 通常の画像に戻す
             Image.sprite = _normalImage;
     }
 }

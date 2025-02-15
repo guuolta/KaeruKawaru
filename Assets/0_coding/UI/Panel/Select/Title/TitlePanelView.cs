@@ -16,14 +16,10 @@ public class TitlePanelView : PanelViewBase
 
     private Sequence _sequence;
 
-    protected override void Init()
-    {
-        
-    }
-
     protected override void SetEvent()
     {
-        SetTextAnimation(Ct);
+        base.SetEvent();
+        SetTextAnimation(destroyCancellationToken);
     }
 
     /// <summary>
@@ -45,7 +41,7 @@ public class TitlePanelView : PanelViewBase
         }
 
         _sequence
-            .SetLoops(-1, LoopType.Restart)
+            .SetLoops(-1, LoopType.Restart) // 無限ループ
             .ToUniTask(cancellationToken: ct)
             .Forget();
     }

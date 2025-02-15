@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -65,11 +64,15 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     private Dictionary<BGMType, AudioClip> _bgmDic = new Dictionary<BGMType, AudioClip>();
     private Dictionary<SEType, AudioClip> _seDict = new Dictionary<SEType, AudioClip>();
 
-    protected override void Init()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
     {
-        base.Init();
         InitDictionary();
         SetInitVolume();
+
+        SetEvent();
     }
 
     /// <summary>
@@ -90,14 +93,17 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     private void SetInitVolume()
     {
         _volumes = SaveManager.GetSoundVolumes();
+        
         _audioMixer.SetFloat(MASTER_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.Master]));
         _audioMixer.SetFloat(BGM_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.BGM]));
         _audioMixer.SetFloat(SE_VOLUME_NAME, GetAudioMixerVolume(_volumes[(int)AudioType.SE]));
     }
 
-    protected override void SetEvent()
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    private void SetEvent()
     {
-        base.SetEvent();
         SetEventPlayFrog();
     }
 
@@ -217,7 +223,14 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
     {
         _bgmAudioSource.mute = isMute;
         _enviromentalAudioSource.mute = isMute;
+        // これから流れるSEをミュート
         _seAudioSource.mute = isMute;
+        
+        // すでに流れているSEをミュート
+        foreach (var seAudioSource in _seAudioSourceList)
+        {
+            _seAudioSource.mute = isMute;
+        }
     }
 
     /// <summary>
@@ -238,6 +251,10 @@ public class AudioManager : DontDestroySingletonObject<AudioManager>
                 break;
             case AudioType.SE:
                 _seAudioSource.mute = isMute;
+                foreach (var seAudioSource in _seAudioSourceList)
+                {
+                    seAudioSource.mute = isMute;
+                }
                 break;
             default:
                 break;

@@ -4,6 +4,6 @@ public class PauseSoundPanelPresenter : SoundPanelPresenterBase
     {
         base.SetEvent();
         // 閉じるボタンの設定
-        PausePanelManager.Instance.SetEventCloseButton(View.CloseButton, Ct);
+        PausePanelManager.Instance.SetEventCloseButton(View.CloseButton, destroyCancellationToken);
     }
 }

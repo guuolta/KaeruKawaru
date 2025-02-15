@@ -10,7 +10,7 @@ public class ScoreAnimation : UIBase
 
     private TMP_Text scoretext;
 
-    protected override void Init()
+    public override void Init()
     {
         base.Init();
         scoretext = GetComponent<TextMeshProUGUI>();
@@ -19,7 +19,7 @@ public class ScoreAnimation : UIBase
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventScoreAnimation(Ct);
+        SetEventScoreAnimation(destroyCancellationToken);
     }
 
     private void SetEventScoreAnimation(CancellationToken ct)
@@ -41,12 +41,12 @@ public class ScoreAnimation : UIBase
         var sequence = DOTween.Sequence();
         await sequence
             .Append(scoretext
-                .DOText(score.ToString(), AnimationTime, scrambleMode: ScrambleMode.Numerals)
+                .DOText(score.ToString(), AnimationSec, scrambleMode: ScrambleMode.Numerals)
                 .SetEase(Ease.Linear))
             .Join(scoretext
-                .DOScale(0.5f, AnimationTime/ ANIMATION_COUNT)
+                .DOScale(0.5f, AnimationSec/ ANIMATION_COUNT)
                 .SetEase(Ease.OutBack))
-            .Append(scoretext.DOScale(1f, AnimationTime/ ANIMATION_COUNT)
+            .Append(scoretext.DOScale(1f, AnimationSec/ ANIMATION_COUNT)
                 .SetEase(Ease.InBack))
             .ToUniTask(cancellationToken: ct);
     }

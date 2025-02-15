@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 2348286276572138629}
   - component: {fileID: 3078065482397099803}
   - component: {fileID: 8062798354973543679}
-  - component: {fileID: 3605846446642651160}
+  - component: {fileID: 2842778736396545882}
+  - component: {fileID: 2590678035816731077}
   m_Layer: 5
   m_Name: QuestionPanel
   m_TagString: Untagged
@@ -31,7 +32,7 @@ RectTransform:
   m_GameObject: {fileID: 50343052425901513}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -130,8 +131,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5be8ba0350d2dd42b01b750e5e616f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObject: {fileID: 50343052425901513}
+  _transform: {fileID: 1357842152034062699}
+  _rectTransform: {fileID: 1357842152034062699}
+  _canvasGroup: {fileID: 2842778736396545882}
   _disInteractiveAlpha: 1
-  AnimationTime: 0.3
+  AnimationSec: 0.3
   _icons:
   - _type: 1
     _sprite: {fileID: 21300000, guid: b276ad8e6b84ec44da4110d44089ed2b, type: 3}
@@ -140,7 +145,19 @@ MonoBehaviour:
   - _type: 3
     _sprite: {fileID: 21300000, guid: 805885f9325db444e94df66fd48ebd92, type: 3}
   _questionPosX: 400
---- !u!114 &3605846446642651160
+--- !u!225 &2842778736396545882
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50343052425901513}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &2590678035816731077
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,7 +166,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 50343052425901513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8edd5f0af961f3343bc5d50d13da9f32, type: 3}
+  m_Script: {fileID: 11500000, guid: a6c37aee26952ab4bace45a2c456b3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cell: {fileID: 5480797634328109495, guid: 9f5e544f760e973498d443e2249c2bb7, type: 3}
+  _view: {fileID: 8062798354973543679}
+  cellPanel: {fileID: 3044194172849133531, guid: 9f5e544f760e973498d443e2249c2bb7,
+    type: 3}

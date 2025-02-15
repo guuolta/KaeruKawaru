@@ -32,10 +32,11 @@ public class ToggleButton : ButtonBase
     /// </summary>
     private void SetEventClick()
     {
-        OnClickCallback += () =>
-        {
-            _isOn.Value = !_isOn.Value;
-        };
+        OnClickEvent
+            .Subscribe(_ =>
+            {
+                _isOn.Value = !_isOn.Value;
+            });
     }
     
     /// <summary>

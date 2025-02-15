@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UniRx;
 
 /// <summary>
 /// 遊び方
@@ -9,18 +10,20 @@ public class HowToPlayPanelPresenter : SelectPanelPresenterBase<HowToPlayPanelVi
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetButton(Ct);
+        SetButton(destroyCancellationToken);
     }
     private void SetButton(CancellationToken ct)
     {
         // ページを戻す
-        View.LeftButton.OnClickCallback += () => {
-            View.SlideLeftAsync(ct).Forget();
-        };
+        View.LeftButton.OnClickEvent
+            .Subscribe(_ => {
+                View.SlideLeftAsync(ct).Forget();
+            });
         
         // ページを進める
-        View.RightButton.OnClickCallback += () => {
-            View.SlideRightAsync(ct).Forget();
-        };
+        View.RightButton.OnClickEvent
+            .Subscribe(_ => {
+                View.SlideRightAsync(ct).Forget();
+            });
     }
 }

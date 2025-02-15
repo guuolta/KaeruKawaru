@@ -147,9 +147,9 @@ GameObject:
   - component: {fileID: 2553279574469154884}
   - component: {fileID: 3056373990484868235}
   - component: {fileID: 2932668152673927119}
-  - component: {fileID: 4583192456235581651}
-  - component: {fileID: 4102598872501519321}
   - component: {fileID: 850852309050728958}
+  - component: {fileID: 6611846320002136143}
+  - component: {fileID: 5086672917806195867}
   m_Layer: 5
   m_Name: Timer
   m_TagString: Untagged
@@ -226,34 +226,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2666100076221641979}
   m_CullTransparentMesh: 1
---- !u!114 &4583192456235581651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2666100076221641979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6ea35c2249b5af45b77750a3420b17b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4102598872501519321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2666100076221641979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6812bd0113ea7ee46a59210a71dad1b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animationTime: 1
-  _timerPercentageList: 00000000320000004b000000
-  _hurryupSE: {fileID: 0}
-  _audioManager: {fileID: 0}
 --- !u!114 &850852309050728958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,8 +238,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881b0f099936ea24fba617d3ff1e9e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObject: {fileID: 2666100076221641979}
+  _transform: {fileID: 8147994337000828419}
+  _rectTransform: {fileID: 8147994337000828419}
+  _canvasGroup: {fileID: 6611846320002136143}
   _disInteractiveAlpha: 0.8
-  AnimationTime: 0.8
+  AnimationSec: 0.8
   _timerGauge: {fileID: 7559419416191702594}
   _needle: {fileID: 6908260591888415422}
   _timerText: {fileID: 4849918729591168037}
@@ -278,6 +254,34 @@ MonoBehaviour:
     _timerColor: {r: 1, g: 1, b: 0, a: 1}
   - _timerState: 2
     _timerColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!225 &6611846320002136143
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2666100076221641979}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &5086672917806195867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2666100076221641979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35322556a1d3ff64d91ec6c29153569d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 850852309050728958}
+  _animationTime: 1
+  _timerPercentageList: 00000000320000004b000000
+  _hurryupSE: {fileID: 8300000, guid: c10f5f0ba2a029343a7c187d9a7b9913, type: 3}
 --- !u!1 &2733582672916632685
 GameObject:
   m_ObjectHideFlags: 0

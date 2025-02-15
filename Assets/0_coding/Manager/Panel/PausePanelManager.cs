@@ -2,12 +2,14 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PausePanelManager : PanelManagerBase<PausePanelManager>
 {
+    [FormerlySerializedAs("_backgroundImage")]
     [Header("背景画像")]
     [SerializeField]
-    private UIBase _backgroundImage;
+    private CanvasGroup _background;
     [Header("ポーズボタン")]
     [SerializeField]
     private ButtonBase _pauseButton;
@@ -21,18 +23,30 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
     [SerializeField]
     private ConfirmPanelPresenter _confirmPanel;
 
-    protected override void Init()
+    public override void Init()
     {
-        base.Init();
-        _backgroundImage.ChangeInteractive(false);
+        // ボタン初期化
+        _pauseButton.Init();
+        
+        // パネル初期化
+        _pauseMenuPanel.Init();
+        _soundPanel.Init();
+        _confirmPanel.Init();
+        
+        // 背景初期化
+        ChangeIteactive(false);
+        
         SetFirstPanel(_pauseMenuPanel);
+
+        base.Init();
     }
 
     protected override void SetEvent()
     {
         base.SetEvent();
+        
         SetEventPauseButton();
-        SetEventPanel(Ct);
+        SetEventPanel(destroyCancellationToken);
     }
 
     /// <summary>
@@ -53,13 +67,14 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
             });
 
         // ポーズボタンを押したらポーズ状態にする
-        _pauseButton.OnClickCallback += () =>
-        {
-            if(GameStateManager.Status.Value == GameState.Play)
+        _pauseButton.OnClickEvent
+            .Subscribe(_ =>
             {
-                GameStateManager.SetGameState(GameState.Pause);
-            }
-        };
+                if(GameStateManager.Status.Value == GameState.Play)
+                {
+                    GameStateManager.SetGameState(GameState.Pause);
+                }
+            });
     }
 
     /// <summary>
@@ -75,7 +90,7 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
             .Subscribe(async value =>
             {
                 await OpenFirstPanelAsync(ct);
-                _backgroundImage.ChangeInteractive(true);
+                ChangeIteactive(true);
             });
     }
 
@@ -112,9 +127,15 @@ public class PausePanelManager : PanelManagerBase<PausePanelManager>
         // すべてのパネルを閉じたらゲームに戻る
         if(TargetPanel == null)
         {
-            _backgroundImage.ChangeInteractive(false);
+            ChangeIteactive(false);
             GameStateManager.SetGameState(GameState.Play);
         }
+    }
+    
+    private void ChangeIteactive(bool isInteractive)
+    {
+        _background.interactable = isInteractive;
+        _background.blocksRaycasts = isInteractive;
     }
 }
 

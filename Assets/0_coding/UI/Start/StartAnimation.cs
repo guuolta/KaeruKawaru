@@ -22,20 +22,19 @@ public class StartAnimation : UIBase
     private TextMeshProUGUI _readytext, _starttext;
     private CompositeDisposable _disposable = new CompositeDisposable();
 
-    protected override void Init()
+    public override void Init()
     {
-        base.Init();
-
         _readytext = Transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         _starttext = Transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         _starttext.text = _startText;
         _starttext.transform.localScale = Vector3.zero;
+        base.Init();
     }
 
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventStartAnimatin(Ct);
+        SetEventStartAnimatin(destroyCancellationToken);
     }
 
     private void SetEventStartAnimatin(CancellationToken ct)
@@ -48,34 +47,26 @@ public class StartAnimation : UIBase
             {
                 await DoStartAnimationAsync(ct);
                 GameStateManager.SetGameState(GameState.Play);
-                DisposeEvent(_disposable);
             }).AddTo(_disposable);
     }
 
     public async UniTask DoStartAnimationAsync(CancellationToken ct)
     {
-        var sequence = DOTween.Sequence();
+        var sequence = DOTween.Sequence().SetLink(GameObject);
 
         await sequence.Append(_readytext
-                .DOText(_readyText, AnimationTime/ ANIMATION_COUNT)
+                .DOText(_readyText, AnimationSec/ ANIMATION_COUNT)
                 .SetEase(Ease.Linear))
             .Append(_readytext
-                .DOFade(0, AnimationTime / ANIMATION_COUNT)
+                .DOFade(0, AnimationSec / ANIMATION_COUNT)
                 .SetEase(Ease.Linear))
             .AppendCallback(() => AudioManager.Instance.PlayOneShotSE(_startSE))
             .Append(_starttext
-                .DOScale(1.2f, AnimationTime / ANIMATION_COUNT)
+                .DOScale(1.2f, AnimationSec / ANIMATION_COUNT)
                 .SetEase(Ease.OutExpo))
             .Append(_starttext
-                .DOFade(0, AnimationTime / ANIMATION_COUNT))
+                .DOFade(0, AnimationSec / ANIMATION_COUNT))
             .ToUniTask(cancellationToken: ct);
         ChangeInteractive(false);
-    }
-
-
-    protected override void Destroy()
-    {
-        base.Destroy();
-        DisposeEvent(_disposable);
     }
 }

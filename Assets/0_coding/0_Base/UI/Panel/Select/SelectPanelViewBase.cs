@@ -9,4 +9,11 @@ public class SelectPanelViewBase : PanelViewBase
     /// 閉じるボタン
     /// </summary>
     public ButtonBase CloseButton => _closeButton;
+    
+    public override void Init()
+    {
+        base.Init();
+        
+        _closeButton.Init();
+    }
 }

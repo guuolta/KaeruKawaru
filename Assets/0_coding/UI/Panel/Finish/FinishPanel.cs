@@ -30,14 +30,14 @@ public class FinishPanel : UIBase
     [SerializeField]
     private float _hidePositionX;
 
-    protected override void Init()
+    public override void Init()
     {
         base.Init();
         // 初期位置に移動
         _finishtext.rectTransform.anchoredPosition = _iniPosition;
         
         //非表示
-        Hide(CanvasGroup);
+        CanvasGroup.alpha = 0;
         ChangeInteractive(false);
     }
 
@@ -53,15 +53,15 @@ public class FinishPanel : UIBase
         await sequence
             // UI表示
             .Append(CanvasGroup 
-                .DOFade(1, AnimationTime/ ANIMATION_COUNT))
+                .DOFade(1, AnimationSec/ ANIMATION_COUNT))
                 .SetEase(Ease.InSine)
             // 文字を右から左に表示
             .Append(_finishtext.rectTransform 
-                .DOAnchorPosX(_showPositionX, AnimationTime/ ANIMATION_COUNT)
+                .DOAnchorPosX(_showPositionX, AnimationSec/ ANIMATION_COUNT)
                 .SetEase(Ease.InSine))
-            .AppendInterval(AnimationTime / ANIMATION_COUNT)
+            .AppendInterval(AnimationSec / ANIMATION_COUNT)
             .Append(_finishtext.rectTransform 
-                .DOAnchorPosX(_hidePositionX, AnimationTime / ANIMATION_COUNT)
+                .DOAnchorPosX(_hidePositionX, AnimationSec / ANIMATION_COUNT)
                 .SetEase(Ease.OutSine))
             .ToUniTask(cancellationToken: ct);
     }

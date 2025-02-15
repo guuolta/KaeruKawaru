@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UniRx;
 
 /// <summary>
 /// 確認ダイアログ
@@ -9,7 +10,7 @@ public class ConfirmPanelPresenter : PanelPresenterBase<ConfirmPanelView>
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventButton(Ct);
+        SetEventButton(destroyCancellationToken);
     }
 
     /// <summary>
@@ -19,15 +20,17 @@ public class ConfirmPanelPresenter : PanelPresenterBase<ConfirmPanelView>
     private void SetEventButton(CancellationToken ct)
     {
         // イエスボタンでタイトルに戻る
-        View.YesButton.OnClickCallback += () =>
-        {
-            GameSceneManager.LoadScene(SceneType.Title);
-        };
+        View.YesButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                GameSceneManager.LoadScene(SceneType.Title);
+            });
 
         // Noボタンでダイアログを非表示
-        View.NoButton.OnClickCallback += () =>
-        {
-            PausePanelManager.Instance.ClosePanelAsync(ct).Forget();
-        };
+        View.NoButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                PausePanelManager.Instance.ClosePanelAsync(ct).Forget();
+            });
     }
 }

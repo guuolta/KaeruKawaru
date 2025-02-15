@@ -25,10 +25,15 @@ public class ValueUIPart : UIBase
     /// </summary>
     public ReactiveProperty<int> Value => _value;
 
-    protected override void SetFirstEvent()
+    public override void Init()
     {
         _slider.InitSlider(_minValue, _maxValue);
         _inputField.InitInputField(_minValue, _maxValue);
+        base.Init();
+    }
+    
+    protected override void SetEvent()
+    {
         SetEventChangeValue();
     }
 

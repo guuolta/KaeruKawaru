@@ -30,7 +30,7 @@ public class SlidePanel : UIBase
 
         // 横移動で表示
         await RectTransform
-            .DOAnchorPosX(posX,AnimationTime)
+            .DOAnchorPosX(posX,AnimationSec)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken : ct);
     }
@@ -46,7 +46,7 @@ public class SlidePanel : UIBase
 
         // 横移動で非表示
         await RectTransform
-            .DOAnchorPosX(posX,AnimationTime)
+            .DOAnchorPosX(posX,AnimationSec)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken : ct);
 

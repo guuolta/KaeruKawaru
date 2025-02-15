@@ -6,14 +6,15 @@ using UnityEngine;
 /// <summary>
 /// リザルトパネル
 /// </summary>
-public class ResultUIPresenter : PresenterBase<ResultUIView>
+public class ResultUIPanelPresenter : PanelPresenterBase<ResultUIView>
 {
     [Header("終了時のパネル")]
     [SerializeField]
     private FinishPanel _finishPanel;
 
-    protected override void Init()
+    public override void Init()
     {
+        _finishPanel.Init();
         base.Init();
         View.ChangeInteractive(false);
     }
@@ -21,7 +22,7 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventPanel(Ct);
+        SetEventPanel(destroyCancellationToken);
         SetEventButton();
     }
 
@@ -63,33 +64,36 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
     private void SetEventButton()
     {
         // 次(前)のレベルに遷移
-        View.LevelChangeButton.OnClickCallback += () =>
-        {
-            AudioManager.Instance.KillSE();
-            switch (GameStateManager.StageLevel.Value)
+        View.LevelChangeButton.OnClickEvent 
+            .Subscribe(_ =>
             {
-                case Level.Easy:
-                    GameSceneManager.LoadScene(SceneType.HardGame);
-                    break;
-                case Level.Hard:
-                    GameSceneManager.LoadScene(SceneType.EasyGame);
-                    break;
-            }
-        };
+                AudioManager.Instance.KillSE();
+                switch (GameStateManager.StageLevel.Value)
+                {
+                    case Level.Easy:
+                        GameSceneManager.LoadScene(SceneType.HardGame);
+                        break;
+                    case Level.Hard:
+                        GameSceneManager.LoadScene(SceneType.EasyGame);
+                        break;
+                }
+            });
 
         // リトライ
-        View.RetryButton.OnClickCallback += () =>
-        {
-            AudioManager.Instance.KillSE();
-            GameSceneManager.ReLoadSceneAsync().Forget();
-        };
+        View.RetryButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                AudioManager.Instance.KillSE();
+                GameSceneManager.ReLoadSceneAsync().Forget();
+            });
 
         // タイトルへ
-        View.TitleButton.OnClickCallback += () =>
-        {
-            AudioManager.Instance.KillSE();
-            GameSceneManager.LoadScene(SceneType.Title);
-        };
+        View.TitleButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                AudioManager.Instance.KillSE();
+                GameSceneManager.LoadScene(SceneType.Title);
+            });
     }
 
     /// <summary>
@@ -109,7 +113,7 @@ public class ResultUIPresenter : PresenterBase<ResultUIView>
             {
                 View.SkipAnimation();                
 
-                DisposeEvent(disposable);
+                disposable.Dispose();
             }).AddTo(disposable);
     }
 

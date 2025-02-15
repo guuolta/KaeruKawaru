@@ -3,8 +3,11 @@ using UnityEngine;
 /// <summary>
 /// 盤面
 /// </summary>
-public class Board : GameObjectBase
+public class Board : MonoBehaviour
 {
+    [SerializeField, HideInInspector]
+    private Transform _transform;
+    
     [Header("マスオブジェクト")]
     [SerializeField]
     private GameObject _cell;
@@ -21,6 +24,13 @@ public class Board : GameObjectBase
     /// </summary>
     public Frog[][] TroutFrogs => _troutFrogs;
 
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        _transform ??= transform;
+    }
+    #endif
+    
     /// <summary>
     /// 盤面を作成
     /// </summary>
@@ -31,9 +41,9 @@ public class Board : GameObjectBase
         // 行数と列数が一致しない時は、盤面を長方形にする
         if(rowCount != columnCount)
         {
-            Transform.localScale = rowCount < columnCount
-                ? new Vector3(Transform.localScale.x, Transform.localScale.y, Transform.localScale.z * rowCount / columnCount)
-                : new Vector3(Transform.localScale.x * columnCount / rowCount, Transform.localScale.y, Transform.localScale.z);
+            _transform.localScale = rowCount < columnCount
+                ? new Vector3(_transform.localScale.x, _transform.localScale.y, _transform.localScale.z * rowCount / columnCount)
+                : new Vector3(_transform.localScale.x * columnCount / rowCount, _transform.localScale.y, _transform.localScale.z);
         }
 
         // マスのサイズ
@@ -45,6 +55,7 @@ public class Board : GameObjectBase
         float iniPosZ = 0.5f - sizeZ / 2;
 
         // カエルのオブジェクトサイズ(縦、横のうち短い方に合わせた正方形にする)
+        Debug.Log(_frog.Transform);
         float frogSizeX = (1 - _margin) / _frog.Transform.localScale.x;
         float frogSizeZ = (1 - _margin) / _frog.Transform.localScale.z;
         float minSize = Mathf.Min(frogSizeX, frogSizeZ);
@@ -59,12 +70,13 @@ public class Board : GameObjectBase
                 _troutFrogs[i][j] = new Frog();
                 
                 // 盤面のマス目を作成
-                var cell = Instantiate(_cell, Transform);
+                var cell = Instantiate(_cell, _transform);
                 cell.transform.localPosition = new Vector3(iniPosX + j * sizeX, 0, iniPosZ - i * sizeZ);
                 cell.transform.localScale = new Vector3(sizeX, 1, sizeZ);
                 
                 // マスの上のカエルを作成
                 var frog = Instantiate(_frog, cell.transform);
+                frog.Init();
                 frog.Transform.localScale = new Vector3(frog.Transform.localScale.x * minSize, 10f, frog.Transform.localScale.z * minSize);
                 frog.Transform.localPosition = new Vector3(0, frog.Transform.localScale.y/2, 0);
 

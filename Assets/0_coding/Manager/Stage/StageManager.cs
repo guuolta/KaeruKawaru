@@ -25,10 +25,11 @@ public class StageManager : SingletonObjectBase<StageManager>
     /// </summary>
     public Frog[][] TroutFrogs => _troutFrogs;
 
-    protected override void Init()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
     {
-        base.Init();
-
         // 現在のレベルのステージデータから盤面を作成し、時間制限の設定をする
         foreach(var stageData in _stageDataList)
         {
@@ -42,11 +43,15 @@ public class StageManager : SingletonObjectBase<StageManager>
         // ゲームを開始する
         GameStateManager.SetGameState(GameState.Start);
         AudioManager.Instance.PlayBGM(BGMType.Main);
+        
+        SetEvent();
     }
 
-    protected override void SetEvent()
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    private void SetEvent()
     {
-        base.SetEvent();
         SetEventTrouts();
     }
 

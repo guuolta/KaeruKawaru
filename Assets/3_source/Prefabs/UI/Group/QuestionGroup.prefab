@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1121100501171324831}
   - component: {fileID: 7013088840503553445}
   - component: {fileID: 6145890309833284837}
-  - component: {fileID: 2844038177133425850}
   - component: {fileID: 6544282855348559582}
+  - component: {fileID: 2823999016318578833}
+  - component: {fileID: 6021736878859766310}
   m_Layer: 5
   m_Name: QuestionGroup
   m_TagString: Untagged
@@ -77,20 +78,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2844038177133425850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6025647111829516355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542aba799bd8314488ae5d67f1e608d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _questionPanelBase: {fileID: 3605846446642651160, guid: b1aa6fd2df62e9f4d9549cf7782d7b6c,
-    type: 3}
 --- !u!114 &6544282855348559582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +90,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f00e51e86baadf4086a476df35cb63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObject: {fileID: 6025647111829516355}
+  _transform: {fileID: 1121100501171324831}
+  _rectTransform: {fileID: 1121100501171324831}
+  _canvasGroup: {fileID: 2823999016318578833}
   _disInteractiveAlpha: 1
-  AnimationTime: 0.1
+  AnimationSec: 0.1
   _margin: 20
   _padding: 50
+--- !u!225 &2823999016318578833
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025647111829516355}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6021736878859766310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6025647111829516355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8c3bfc785a4ea42a8cf4acce2cfeb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 6544282855348559582}
+  questionPanelBase: {fileID: 2590678035816731077, guid: b1aa6fd2df62e9f4d9549cf7782d7b6c,
+    type: 3}

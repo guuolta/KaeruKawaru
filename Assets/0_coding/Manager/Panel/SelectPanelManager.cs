@@ -25,19 +25,21 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
     [Header("遊び方パネル")]
     [SerializeField]
     private HowToPlayPanelPresenter _howToPlayPanel;
-    protected override void Init()
+    
+    public override void Init()
     {
         base.Init();
-        SetFirstPanel();
-        OpenFirstPanelAsync(Ct).Forget();
-    }
-    
-    /// <summary>
-    /// 最初に開くパネルを設定
-    /// </summary>
-    private void SetFirstPanel()
-    {
+        
+        _titlePanel.Init();
+        _selectPanel.Init();
+        _stageSelectPanel.Init();
+        _soundPanel.Init();
+        _scorePanel.Init();
+        _creditPanel.Init();
+        _howToPlayPanel.Init();
+        
         SetFirstPanel(_titlePanel);
+        OpenFirstPanelAsync(destroyCancellationToken).Forget();
     }
     
     public override async UniTask OpenFirstPanelAsync(CancellationToken ct)
@@ -45,9 +47,15 @@ public class SelectPanelManager : PanelManagerBase<SelectPanelManager>
         await base.OpenFirstPanelAsync(ct);
         await TitleManager.Instance.TargetTitleAsync(ct);
     }
+    
+    /// <summary>
+    /// 指定したパネルを開く
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="ct"></param>
     public async UniTask OpenPanelAsync(SelectPanelType type, CancellationToken ct)
     {
-        IPresenter panel = null;
+        IPanelPresenter panel = null;
 
         // 開くパネルをえらぶ(タイトルはその場で開いて、終了)
         switch(type)

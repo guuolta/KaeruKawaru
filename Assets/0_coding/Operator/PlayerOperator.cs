@@ -19,9 +19,19 @@ public class PlayerOperator : SingletonObjectBase<PlayerOperator>
 
     CompositeDisposable _disposable = new CompositeDisposable();
 
-    protected override void SetEvent()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
     {
-        base.SetEvent();
+        SetEvent();
+    }
+    
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    private void SetEvent()
+    {
         SetEventState();
     }
 
@@ -43,7 +53,8 @@ public class PlayerOperator : SingletonObjectBase<PlayerOperator>
                 }
                 else
                 {
-                    _disposable = DisposeEvent(_disposable);
+                    _disposable.Dispose();
+                    _disposable = new CompositeDisposable();
                 }
             });
     }

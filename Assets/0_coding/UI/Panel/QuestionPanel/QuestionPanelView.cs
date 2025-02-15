@@ -1,11 +1,10 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class QuestionPanelView : PanelViewBase
+public class QuestionPanelView : ViewBase
 {
     [Header("アイコンのリスト")]
     [SerializeField]
@@ -13,10 +12,6 @@ public class QuestionPanelView : PanelViewBase
     [Header("お題の消えるときの追加の位置")]
     [SerializeField]
     private float _questionPosX = 300;
-
-    protected override void Init()
-    {
-    }
 
     /// <summary>
     /// 表示
@@ -34,17 +29,17 @@ public class QuestionPanelView : PanelViewBase
         RectTransform.DOComplete();
         // 縦移動
         await RectTransform
-            .DOAnchorPosY(posY, AnimationTime)
+            .DOAnchorPosY(posY, AnimationSec)
             .SetEase(Ease.InSine)
             .ToUniTask(cancellationToken: ct);
     }
     
-    public override async UniTask HideAsync(CancellationToken ct)
+    public async UniTask HideAsync(CancellationToken ct)
     {
         RectTransform.DOComplete();
         // 画面外に横移動
         await RectTransform
-            .DOAnchorPosX(RectTransform.anchoredPosition.x + _questionPosX, AnimationTime)
+            .DOAnchorPosX(RectTransform.anchoredPosition.x + _questionPosX, AnimationSec)
             .SetEase(Ease.OutSine)
             .ToUniTask(cancellationToken: ct);
     }
@@ -54,7 +49,7 @@ public class QuestionPanelView : PanelViewBase
     /// </summary>
     /// <param name="type"> 進化の状態 </param>
     /// <returns></returns>
-    public void SetIcon(QuestionPanelCellPresenter cell, EvolutionaryType type)
+    public void SetIcon(QuestionPanelCellPresenter cellPanel, EvolutionaryType type)
     {
         if(type == EvolutionaryType.None)
         {
@@ -66,7 +61,7 @@ public class QuestionPanelView : PanelViewBase
         {
             if (icon.Type == type)
             {
-                cell.SetIcon(icon.Sprite);
+                cellPanel.SetIcon(icon.Sprite);
                 return;
             }
         }

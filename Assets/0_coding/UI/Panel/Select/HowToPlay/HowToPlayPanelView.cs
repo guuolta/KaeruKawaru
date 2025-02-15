@@ -41,11 +41,16 @@ public class HowToPlayPanelView : SelectPanelViewBase
 
     private List<SlidePanel> _slidePanelList = new List<SlidePanel>();
 
-    protected override void Init()
+    public override void Init()
     {
-        base.Init();
         SetList();
-        SetIniPos(Ct);
+        SetIniPos(destroyCancellationToken);
+        
+        // ボタン初期化
+        _leftButton.Init();
+        _rightButton.Init();
+        
+        base.Init();
     }
 
     /// <summary>
@@ -140,6 +145,6 @@ public class HowToPlayPanelView : SelectPanelViewBase
     {
         await base.HideAsync(ct);
         // 初期状態に戻す
-        SetIniPos(Ct);
+        SetIniPos(destroyCancellationToken);
     }
 }

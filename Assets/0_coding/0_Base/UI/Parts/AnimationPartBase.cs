@@ -1,69 +1,57 @@
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UniRx;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 基本的なUIのパーツのアニメーションを共通化
 /// </summary>
-public class AnimationPartBase : UIBase
+public class AnimationPartBase : UIBase,
+    IPointerDownHandler,
+    IPointerUpHandler,
+    IPointerEnterHandler,
+    IPointerExitHandler,
+    IPointerClickHandler
 {
-    public override void OnPointerDown(PointerEventData eventData)
+    private Subject<Unit> _onClickEvent = new Subject<Unit>();
+    /// <summary>
+    /// クリック時に実行する処理
+    /// </summary>
+    public IObservable<Unit> OnClickEvent => _onClickEvent;
+    
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
-        if(Transform == null || CanvasGroup == null)
-        {
-            return;
-        }
-
         // 縮小
-        Transform
-            .DOScale(0.8f, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(0.8f, Ease.InSine).Forget();
         // 半透明にする
-        CanvasGroup
-            .DOFade(0.8f, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoFadeAsync(0.8f, Ease.InSine).Forget();
     }
 
-    public override void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
-        if (Transform == null || CanvasGroup == null)
-        {
-            return;
-        }
-
         // 元の大きさに戻す
-        Transform.DOScale(1f, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(1f, Ease.OutSine).Forget();
         // 元の透明度にする
-        CanvasGroup.DOFade(1f, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoFadeAsync(1, Ease.OutSine).Forget();
     }
 
-    public override void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         // 拡大
-        Transform
-            .DOScale(1.05f, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(1.05f, Ease.InSine).Forget();
     }
 
-    public override void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         // 元の大きさにする
-        Transform
-            .DOScale(1f, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(1f, Ease.OutSine).Forget();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        _onClickEvent.OnNext(Unit.Default);
     }
 }

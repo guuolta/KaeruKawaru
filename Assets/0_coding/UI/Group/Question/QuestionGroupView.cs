@@ -31,7 +31,7 @@ public class QuestionGroupView : ViewBase
     /// お題パネルの初期設定
     /// </summary>
     /// <param name="questionMaxCount"> お題の最大数 </param>
-    public void SetInit(int questionMaxCount)
+    public void Init(int questionMaxCount)
     {
         _questionMaxCount = questionMaxCount;
 
@@ -52,12 +52,14 @@ public class QuestionGroupView : ViewBase
 
         // 最初のお題の位置
         _panelIniPosY = -(RectTransform.rect.height / 2 + _size);
+        
+        base.Init();
     }
 
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventPanelList(Ct);
+        SetEventPanelList(destroyCancellationToken);
     }
 
     /// <summary>
@@ -97,7 +99,7 @@ public class QuestionGroupView : ViewBase
     /// <summary>
     /// パネルを追加
     /// </summary>
-    /// <param name="panel"></param>
+    /// <param name="panelPanelaram>
     /// <returns></returns>
     public void AddPanel(QuestionPanelPresenter panel)
     {
@@ -114,32 +116,10 @@ public class QuestionGroupView : ViewBase
     /// <summary>
     /// パネルを削除
     /// </summary>
-    /// <param name="panel"></param>
+    /// <param name="panelPanelaram>
     /// <returns></returns>
     public void RemovePanel(QuestionPanelPresenter panel)
     {
         _setPanelList.Remove(panel);
-    }
-
-    /// <summary>
-    /// 使用禁止
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public override UniTask ShowAsync(CancellationToken ct)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// 使用禁止
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public override UniTask HideAsync(CancellationToken ct)
-    {
-        throw new System.NotImplementedException();
     }
 }

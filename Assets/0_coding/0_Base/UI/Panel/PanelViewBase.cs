@@ -8,40 +8,35 @@ using UnityEngine;
 /// </summary>
 public class PanelViewBase : ViewBase
 {
-    protected override void Init()
-    {
-        Transform.localScale = Vector3.zero;
-    }
-
-    public override async UniTask ShowAsync(CancellationToken ct)
+    public virtual async UniTask ShowAsync(CancellationToken ct)
     {
         if(Transform.localScale != Vector3.zero)
         {
             return;
         }
 
-        // アニメーションをしていたら停止
-        Transform.DOComplete();
         // 拡大表示
-        await Transform
-            .DOScale(Vector2.one, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: ct);
+        await DoScaleAsync(1f, Ease.InSine);
+    }
+
+    public virtual void Show()
+    {
+        Transform.localScale = Vector2.one;
     }
     
-    public override async UniTask HideAsync(CancellationToken ct)
+    public virtual async UniTask HideAsync(CancellationToken ct)
     {
         if(Transform.localScale == Vector3.zero)
         {
             return;
         }
 
-        // 再生中のアニメーションを停止
-        Transform.DOComplete();
         // 縮小して非表示
-        await Transform
-            .DOScale(Vector2.zero, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: ct);
+        await DoScaleAsync(0f, Ease.OutSine);
+    }
+    
+    public virtual void Hide()
+    {
+        Transform.localScale = Vector2.zero;
     }
 }

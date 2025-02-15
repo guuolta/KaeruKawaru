@@ -10,48 +10,26 @@ public class ValueInputFieldBase : AnimationPartBase
 {
     private float _minValue;
     private float _maxValue;
+    
     private TMP_InputField _inputField;
     /// <summary>
     /// インプットフィールド
     /// </summary>
-    public TMP_InputField InputField
-    { 
-        get 
-        { 
-            if(_inputField == null)
-            {
-                _inputField = GetComponent<TMP_InputField>();
-            }
-            return _inputField; 
-        } 
-    }
+    public TMP_InputField InputField => _inputField;
+    
     private ReactiveProperty<float> _inputValueAsObservable = new ReactiveProperty<float>();
     /// <summary>
     /// InputFieldの値
     /// </summary>
     public ReactiveProperty<float> InputValueAsObservable => _inputValueAsObservable;
 
-    protected override void SetFirstEvent()
+    #if UNITY_EDITOR
+    protected override void OnValidate()
     {
-        SetEventInputValue();
+        base.OnValidate();
+        _inputField ??= GetComponent<TMP_InputField>();
     }
-
-    protected override void SetEvent()
-    {
-        SetEventClick();
-    }
-
-    /// <summary>
-    /// クリックしたときのイベント設定
-    /// </summary>
-    private void SetEventClick()
-    {
-        // クリックしたらSEを鳴らす
-        OnClickCallback += () =>
-        {
-            AudioManager.Instance.PlayOneShotSE(SEType.Posi);
-        };
-    }
+    #endif
 
     /// <summary>
     /// インプットフィールドの初期値設定
@@ -62,6 +40,14 @@ public class ValueInputFieldBase : AnimationPartBase
     {
         _minValue = minValue;
         _maxValue = maxValue;
+        
+        SetEvent();
+    }
+    
+    protected override void SetEvent()
+    {
+        SetEventInputValue();
+        SetEventClick();
     }
     
     /// <summary>
@@ -84,6 +70,19 @@ public class ValueInputFieldBase : AnimationPartBase
         };
 
         InputField.onValueChanged.AddListener(onChangeEvent);
+    }
+    
+    /// <summary>
+    /// クリックしたときのイベント設定
+    /// </summary>
+    private void SetEventClick()
+    {
+        // クリックしたらSEを鳴らす
+        OnClickEvent
+            .Subscribe(_ =>
+            {
+                AudioManager.Instance.PlayOneShotSE(SEType.Posi);
+            });
     }
 
     /// <summary>

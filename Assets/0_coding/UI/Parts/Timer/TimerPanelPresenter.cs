@@ -7,8 +7,11 @@ using UnityEngine;
 /// <summary>
 /// タイマー
 /// </summary>
-public class TimerPresenter : PresenterBase<TimerView>
+[RequireComponent(typeof(TimerView))]
+public class TimerPanelPresenter : PresenterBase<TimerView>
 {
+    private TimerModel _model;
+    
     [Header("タイマーのアニメーションの時間")]
     [SerializeField]
     private int _animationTime = 1;
@@ -25,29 +28,22 @@ public class TimerPresenter : PresenterBase<TimerView>
     [Header("加速SE")]
     [SerializeField]
     private AudioClip _hurryupSE;
-    private TimerModel _model;
     private int _startTime => _model.MaxTime;
 
     private List<int> _changeTimeList = new List<int>();
     private CompositeDisposable _disposable = new CompositeDisposable();
-    
 
-    protected override void Init()
+    public override void Init()
     {
+        _model = new TimerModel();
         base.Init();
-        _model = GetComponent<TimerModel>();
-
-        if(_model == null)
-        {
-            _model = GameObject.AddComponent<TimerModel>();
-        }
     }
-
+    
     protected override void SetEvent()
     {
         base.SetEvent();
         View.SetMaxTime(_startTime);
-        SetEventTimer(Ct);
+        SetEventTimer(destroyCancellationToken);
         SetEventDoTimer();
     }
     
@@ -103,7 +99,9 @@ public class TimerPresenter : PresenterBase<TimerView>
                 {
                     AudioManager.Instance.ChangeBGMPitch(1f);
                     GameStateManager.SetGameState(GameState.Result);
-                    DisposeEvent(_disposable);
+                    
+                    _disposable.Dispose();
+                    _disposable = new CompositeDisposable();
                 }
                 // タイマーの色を変える時間になったら対応する色にする
                 else if (value == _changeTimeList[2])
@@ -133,5 +131,10 @@ public class TimerPresenter : PresenterBase<TimerView>
         {
             _changeTimeList.Add(_startTime - _startTime * percentage / 100);
         }
+    }
+
+    protected override void OnDestroy()
+    {
+        _model.DispoiseTimerEvent();
     }
 }

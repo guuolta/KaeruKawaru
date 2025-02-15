@@ -1,14 +1,12 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using TMPro;
 using UniRx;
-using UnityEditor;
 using UnityEngine;
 
-public class ResultUIView : ViewBase
+public class ResultUIView : PanelViewBase
 {
     private const string EASY_LEVEL_TEXT = "次のレベルへ";
     private const string HARD_LEVEL_TEXT = "前のレベルへ";
@@ -85,17 +83,26 @@ public class ResultUIView : ViewBase
     private float _targetPosY;
     private Sequence _highScoreTextSequence;
 
-    protected override void Init()
+    public override void Init()
     {
-        base.Init();
+        // ボタン初期化
+        _levelChangeButton.Init();
+        _retryButton.Init();
+        _titleButton.Init();
+        
+        // ボタンの位置初期化
         _targetPosY = _buttonGroup.anchoredPosition.y;
         _iniPosY = _targetPosY - _buttonGroup.rect.size.y;
         _buttonGroup.anchoredPosition = new Vector2(_buttonGroup.anchoredPosition.x, _iniPosY);
         ChangeButtonInteractive(false);
 
+        // ハイスコアの演出
+        _highScoreBubble.Init();
         _highScoreTextSequence = DOTween.Sequence();
         _newHighScoreText.text = string.Empty;
         _newHighScoreText.transform.localScale = Vector3.zero;
+        
+        base.Init();
     }
 
     protected override void SetEvent()
@@ -232,7 +239,7 @@ public class ResultUIView : ViewBase
 
         // 下から上に表示
         await _buttonGroup
-                .DOAnchorPosY(_targetPosY, AnimationTime)
+                .DOAnchorPosY(_targetPosY, AnimationSec)
                 .SetEase(Ease.InSine)
                 .ToUniTask(cancellationToken: ct);
         ChangeButtonInteractive(true);
@@ -263,11 +270,21 @@ public class ResultUIView : ViewBase
 
     public override async UniTask ShowAsync(CancellationToken ct)
     {
-        await ShowAsync(CanvasGroup, ct);
+        await DoFadeAsync(1f, Ease.InSine);
+    }
+
+    public override void Show()
+    {
+        CanvasGroup.alpha = 1f;
     }
 
     public override async UniTask HideAsync(CancellationToken ct)
     {
-        await HideAsync(CanvasGroup, ct);
+        await DoFadeAsync(0f, Ease.OutSine);
+    }
+
+    public override void Hide()
+    {
+        CanvasGroup.alpha = 0f;
     }
 }

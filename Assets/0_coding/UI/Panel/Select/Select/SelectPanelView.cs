@@ -36,10 +36,19 @@ public class SelectPanelView : PanelViewBase
     private ButtonBase _closeButton;
     public ButtonBase CloseButton => _closeButton;
 
-    protected override void Init()
+    public override void Init()
     {
-        Hide(CanvasGroup);
+        // ボタン初期化
+        _stageSelectButton.Init();
+        _soundButton.Init();
+        _rankButton.Init();
+        _creditButton.Init();
+        _howPlayButton.Init();
+        _closeButton.Init();
+        
         HideButton();
+        
+        base.Init();
     }
     public override async UniTask ShowAsync(CancellationToken ct)
     {

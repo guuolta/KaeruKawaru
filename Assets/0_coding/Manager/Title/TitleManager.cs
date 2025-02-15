@@ -29,19 +29,15 @@ public class TitleManager : SingletonObjectBase<TitleManager>
     private Camera _camera;
     private CompositeDisposable _disposable = new CompositeDisposable();
 
-    protected override void Init()
+    private void Start()
     {
-        base.Init();
-        
         // カメラを初期位置にする
         _camera = Camera.main;
         _camera.transform.position = _titleTargetPos;
         _camera.transform.eulerAngles = _titleTargetRot;
-    }
-
-    protected override void SetEvent()
-    {
-        base.SetEvent();
+        
+        SelectPanelManager.Instance.Init();
+        
         // 曲を流し始める(音量のロードの関係でこの位置)
         AudioManager.Instance.PlayBGM(BGMType.Title);
     }

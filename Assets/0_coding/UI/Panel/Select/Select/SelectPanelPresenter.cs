@@ -1,12 +1,13 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UniRx;
 
 public class SelectPanelPresenter : PanelPresenterBase<SelectPanelView>
 {
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventButton(Ct);
+        SetEventButton(destroyCancellationToken);
     }
     
     /// <summary>
@@ -16,33 +17,41 @@ public class SelectPanelPresenter : PanelPresenterBase<SelectPanelView>
     private void SetEventButton(CancellationToken ct)
     {
         // ステージセレクト
-        View.StageSelectButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.StageSelect,ct).Forget();
-        };
+        View.StageSelectButton.OnClickEvent
+            .Subscribe(_ => 
+            {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.StageSelect,ct).Forget();
+            });
         
         // 音量調節
-        View.SoundButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Sound,ct).Forget();
-        };
+        View.SoundButton.OnClickEvent
+            .Subscribe(_ => 
+            {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Sound,ct).Forget();
+            });
         
         // ランキング
-        View.RankButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Score,ct).Forget();
-        };
+        View.RankButton.OnClickEvent
+            .Subscribe(_ => {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Score,ct).Forget();
+            });
         
         // クレジット
-        View.CreditButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Credit,ct).Forget();
-        };
+        View.CreditButton.OnClickEvent
+            .Subscribe(_ => {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Credit,ct).Forget();
+            });
         
         // 遊び方
-        View.HowPlayButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.HowToPlay,ct).Forget();
-        };
+        View.HowPlayButton.OnClickEvent
+            .Subscribe(_ => {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.HowToPlay,ct).Forget();
+            });
         
         // 閉じるボタン
-        View.CloseButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Title,ct).Forget();
-        };
+        View.CloseButton.OnClickEvent
+            .Subscribe(_ => {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Title,ct).Forget();
+            });
     }
 }

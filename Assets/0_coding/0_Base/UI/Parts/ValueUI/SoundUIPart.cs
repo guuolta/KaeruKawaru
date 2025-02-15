@@ -7,6 +7,12 @@ public class SoundUIPart : ValueUIPart
     [SerializeField]
     private ToggleButton _muteButton;
 
+    public override void Init()
+    {
+        _muteButton.Init();
+        base.Init();
+    }
+
     /// <summary>
     /// ミュートボタンのイベント設定
     /// </summary>

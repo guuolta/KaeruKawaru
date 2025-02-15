@@ -1,19 +1,32 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
+
 /// <summary>
-/// UI系のベース
+/// UIの基底クラス
 /// </summary>
-public class UIBase : GameObjectBase,
-    IPointerClickHandler,
-    IPointerDownHandler,
-    IPointerUpHandler,
-    IPointerEnterHandler,
-    IPointerExitHandler
+[RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
+public class UIBase: UIBehaviour
 {
+    /* コンポーネント */
+    [SerializeField, HideInInspector]
+    private GameObject _gameObject;
+    public GameObject GameObject => _gameObject;
+    [SerializeField, HideInInspector]
+    private Transform _transform;
+    public Transform Transform => _transform;
+    
+    [SerializeField, HideInInspector]
+    private RectTransform _rectTransform;
+    public RectTransform RectTransform => _rectTransform;
+
+    [SerializeField, HideInInspector]
+    private CanvasGroup _canvasGroup;
+    public CanvasGroup CanvasGroup => _canvasGroup;
+
+    /* 数値 */
     [Header("押せないときの透明度")]
     [Range(0f, 1f)]
     [SerializeField]
@@ -21,222 +34,77 @@ public class UIBase : GameObjectBase,
     /// <summary>
     /// アニメーションの時間
     /// </summary>
-    [Header("アニメーションの時間")]
+    [FormerlySerializedAs("AnimationTime")]
+    [Header("アニメーションの時間(秒)")]
     [Range(0f, 10f)]
     [SerializeField]
-    protected float AnimationTime = 0.1f;
-
-    private RectTransform _rectTransform;
-    public RectTransform RectTransform
+    protected float AnimationSec = 0.1f;
+    
+#if UNITY_EDITOR
+    protected virtual void OnValidate()
     {
-        get
-        {
-            if(_rectTransform == null)
-                _rectTransform = GetComponent<RectTransform>();
-
-            return _rectTransform;
-        }
+        _gameObject ??= gameObject;
+        _transform ??= transform;
+        _rectTransform ??= GetComponent<RectTransform>();
+        _canvasGroup ??= GetComponent<CanvasGroup>();
     }
+#endif
 
-    private CanvasGroup _canvasGroup;
-    public CanvasGroup CanvasGroup
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public virtual void Init()
     {
-        get
-        {
-            if (_canvasGroup == null)
-            {
-                _canvasGroup = GetComponent<CanvasGroup>();
-                if (_canvasGroup == null)
-                    _canvasGroup = gameObject.AddComponent<CanvasGroup>();
-            }
-
-            return _canvasGroup;
-        }
+        SetEvent();
     }
 
     /// <summary>
-    /// UIが押されたときのイベント
+    /// イベント設定
     /// </summary>
-    public System.Action OnClickCallback;
-
-    /// <summary>
-    /// UIが押されたとき処理を実行
-    /// </summary>
-    /// <param name="eventData"></param>
-    public void OnPointerClick(PointerEventData eventData)
+    protected virtual void SetEvent()
     {
-        OnClickCallback?.Invoke();
+        
     }
 
     /// <summary>
-    /// UIが押し込まれたときの処理
+    /// サイズを徐々に変える
     /// </summary>
-    /// <param name="eventData"></param>
-    public virtual void OnPointerDown(PointerEventData eventData)
+    /// <param name="size">最終サイズ</param>
+    /// <param name="ease"></param>
+    protected async UniTask DoScaleAsync(float size, Ease ease)
     {
-
+        // アニメーションをしていたら即座に最終状態に
+        Transform.DOComplete();
+        
+        await Transform
+            .DOScale(size, AnimationSec)
+            .SetEase(ease)
+            .ToUniTask(cancellationToken: destroyCancellationToken);
     }
 
     /// <summary>
-    /// UIから押し離されたときの処理
+    /// 透明度を徐々に変える
     /// </summary>
-    /// <param name="eventData"></param>
-    public virtual void OnPointerUp(PointerEventData eventData)
+    /// <param name="alpha">最終透明度</param>
+    /// <param name="ease"></param>
+    protected async UniTask DoFadeAsync(float alpha, Ease ease)
     {
-
+        // アニメーションをしていたら即座に最終状態に
+        CanvasGroup.DOComplete();
+        
+        await CanvasGroup.DOFade(alpha, AnimationSec)
+            .SetEase(ease)
+            .ToUniTask(cancellationToken: destroyCancellationToken);
     }
-
-    /// <summary>
-    /// UIにカーソルが入った時の処理
-    /// </summary>
-    /// <param name="eventData"></param>
-    public virtual void OnPointerEnter(PointerEventData eventData)
-    {
-
-    }
-
-    /// <summary>
-    /// UIからカーソルが離れた時の処理
-    /// </summary>
-    /// <param name="eventData"></param>
-    public virtual void OnPointerExit(PointerEventData eventData)
-    {
-
-    }
-
+    
     /// <summary>
     /// UIを触れるようにするか設定
     /// </summary>
     /// <param name="isInteractive">押せるか</param>
-    public virtual void ChangeInteractive(bool isInteractive)
+    public void ChangeInteractive(bool isInteractive)
     {
-        if(CanvasGroup == null)
-            return;
-
         CanvasGroup.interactable = isInteractive;
         CanvasGroup.blocksRaycasts = isInteractive;
         CanvasGroup.alpha = isInteractive ? 1f : _disInteractiveAlpha;
-    }
-
-    /// <summary>
-    /// 画像を表示
-    /// </summary>
-    /// <param name="image"></param>
-    public virtual void Show(Image image)
-    {
-        Color newColor = image.color;
-        newColor.a = 1;
-        image.color = newColor;
-    }
-    
-    /// <summary>
-    /// UI表示
-    /// </summary>
-    /// <param name="canvasGroup"></param>
-    public virtual void Show(CanvasGroup canvasGroup)
-    {
-        canvasGroup.alpha = 1f;
-    }
-
-    /// <summary>
-    /// 画像を消す
-    /// </summary>
-    /// <param name="image"></param>
-    public virtual void Hide(Image image)
-    {
-        Color newColor = image.color;
-        newColor.a = 0;
-        image.color = newColor;
-    }
-
-    /// <summary>
-    /// UIを消す
-    /// </summary>
-    /// <param name="canvasGroup"></param>
-    public virtual void Hide(CanvasGroup canvasGroup)
-    {
-        canvasGroup.alpha = 0;
-    }
-
-    /// <summary>
-    /// 画像をアニメーションで表示
-    /// </summary>
-    /// <param name="image">画像</param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    public virtual async UniTask ShowAsync(Image image, CancellationToken ct)
-    {
-        image.DOComplete();
-        if (image.color.a == 1)
-        {
-            return;
-        }
-
-        var tween = image.DOFade(1, AnimationTime)
-            .SetEase(Ease.InSine);
-        AddTween(tween);
-
-        await tween
-            .ToUniTask(cancellationToken: ct);
-    }
-
-    /// <summary>
-    /// UIをアニメーションで表示
-    /// </summary>
-    /// <param name="canvasGroup"></param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    public virtual async UniTask ShowAsync(CanvasGroup canvasGroup, CancellationToken ct)
-    {
-        canvasGroup.DOComplete();
-        if (canvasGroup.alpha == 1)
-        {
-            return;
-        }
-
-        await canvasGroup.DOFade(1, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: ct);
-        ChangeInteractive(true);
-    }
-
-    /// <summary>
-    /// 画像をアニメーショで消す
-    /// </summary>
-    /// <param name="image"> 画像 </param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    public virtual async UniTask HideAsync(Image image, CancellationToken ct)
-    {
-        image.DOComplete();
-        if (image.color.a == 0)
-        {
-            return;
-        }
-
-        await image.DOFade(0, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: ct);
-    }
-
-    /// <summary>
-    /// UIをアニメーショで消す
-    /// </summary>
-    /// <param name="canvasGroup"></param>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    public virtual async UniTask HideAsync(CanvasGroup canvasGroup, CancellationToken ct)
-    {
-        canvasGroup.DOComplete();
-        if (canvasGroup.alpha == 0)
-        {
-            return;
-        }
-
-        await canvasGroup.DOFade(0, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: ct);
-
-        ChangeInteractive(false);
     }
 }

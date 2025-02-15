@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class HighScoreBubble : UIBase
 {
-    protected override void Init()
+    public override void Init()
     {
         base.Init();
         
@@ -27,10 +27,6 @@ public class HighScoreBubble : UIBase
         ChangeInteractive(true);
 
         // 拡大表示
-        RectTransform.DOComplete();
-        await RectTransform
-            .DOScale(Vector3.one, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: ct);
+        await DoScaleAsync(1, Ease.InSine);
     }
 }

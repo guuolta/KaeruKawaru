@@ -17,6 +17,18 @@ public class SoundPanelView : PanelViewBase
     /// 閉じるボタン
     /// </summary>
     public ButtonBase CloseButton => _closeButton;
+
+    public override void Init()
+    {
+        base.Init();
+        
+        foreach (var soundUI in _soundUIList)
+        {
+            soundUI.SoundUIPart.Init();
+        }
+        
+        _closeButton.Init();
+    }
 }
 
 /// <summary>

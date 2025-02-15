@@ -1,13 +1,13 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UnityEngine;
+using UniRx;
 
 public class PauseMenuPanelPresenter : PanelPresenterBase<PauseMenuPanelView>
 {
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventButton(Ct);
+        SetEventButton(destroyCancellationToken);
     }
 
     /// <summary>
@@ -16,27 +16,31 @@ public class PauseMenuPanelPresenter : PanelPresenterBase<PauseMenuPanelView>
     private void SetEventButton(CancellationToken ct)
     {
         // ゲームに戻る
-        View.ReturnButton.OnClickCallback += () =>
-        {
-            PausePanelManager.Instance.ClosePanelAsync(ct).Forget();
-        };
+        View.ReturnButton.OnClickEvent
+            .Subscribe( _ =>
+            {
+                PausePanelManager.Instance.ClosePanelAsync(ct).Forget();
+            });
         
         // 音量調節
-        View.SoundSettingButton.OnClickCallback += () =>
-        {
-            PausePanelManager.Instance.OpenPanelAsync(PausePanelType.Sound, ct).Forget();
-        };
+        View.SoundSettingButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                PausePanelManager.Instance.OpenPanelAsync(PausePanelType.Sound, ct).Forget();
+            });
         
         // リトライ
-        View.RetryButton.OnClickCallback += () =>
-        {
-            GameSceneManager.ReLoadSceneAsync().Forget();
-        };
+        View.RetryButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                GameSceneManager.ReLoadSceneAsync().Forget();
+            });
         
         // タイトルへ
-        View.TitleButton.OnClickCallback += () =>
-        {
-            PausePanelManager.Instance.OpenPanelAsync(PausePanelType.Confirm, ct).Forget();
-        };
+        View.TitleButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                PausePanelManager.Instance.OpenPanelAsync(PausePanelType.Confirm, ct).Forget();
+            });
     }
 }

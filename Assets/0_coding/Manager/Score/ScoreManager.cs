@@ -55,18 +55,23 @@ public class ScoreManager : DontDestroySingletonObject<ScoreManager>
     /// </summary>
     public int StepBonus => _stepBonus;
 
-    protected override void Init()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
     {
-        base.Init();
-        
         // セーブデータから前回までのハイスコア取得
         _easyHighScoreList = SaveManager.GetEasyHighScores().ToList();
         _hardHighScoreList = SaveManager.GetHardHighScores().ToList();
+        
+        SetEvent();
     }
 
-    protected override void SetEvent()
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    private void SetEvent()
     {
-        base.SetEvent();
         SetEventState();
         SetEventLevel();
     }

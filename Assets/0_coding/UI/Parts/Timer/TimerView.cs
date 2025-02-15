@@ -34,19 +34,18 @@ public class TimerView : ViewBase
     
     private Sequence _sequence;
 
-    protected override void Init()
+    public override void Init()
     {
-        base.Init();
-        
         // アニメーションの初期化
         _sequence = DOTween.Sequence();
-        AddTween(_sequence);
         
         // タイマーの針とゲージの初期化
         _timerGauge.fillAmount = 0;
         _needle.rectTransform.localEulerAngles = new Vector3(0, 0, 0);
         
         InitColorDictionary();
+        
+        base.Init();
     }
 
     /// <summary>
@@ -61,7 +60,7 @@ public class TimerView : ViewBase
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetEventState(Ct);
+        SetEventState(destroyCancellationToken);
     }
 
     /// <summary>
@@ -115,15 +114,14 @@ public class TimerView : ViewBase
     /// <returns></returns>
     private async UniTask SetTimerColorAsync(TimerState state, CancellationToken ct)
     {
-        var _timerColorSequence = DOTween.Sequence();
-        AddTween(_timerColorSequence);
+        var timerColorSequence = DOTween.Sequence();
 
         // ゲージとテキストの色を変える
-        await _timerColorSequence
+        await timerColorSequence
             .Append(_timerGauge
-                .DOColor(_timerColorDic[state], AnimationTime)
+                .DOColor(_timerColorDic[state], AnimationSec)
                 .SetEase(Ease.InSine))
-            .Join(_timerText.DOColor(_timerColorDic[state], AnimationTime)
+            .Join(_timerText.DOColor(_timerColorDic[state], AnimationSec)
                 .SetEase(Ease.InSine))
             .ToUniTask(cancellationToken: ct);
     }
@@ -141,10 +139,10 @@ public class TimerView : ViewBase
     /// タイマーを設定
     /// </summary>
     /// <param name="time"> 設定する時間 </param>
-    /// <param name="animationTime"></param>
+    /// <param name="animationSec"></param>
     /// <param name="ct"></param>
     /// <returns></returns>
-    public async UniTask SetTimerAsync(int time, int animationTime, CancellationToken ct)
+    public async UniTask SetTimerAsync(int time, int animationSec, CancellationToken ct)
     {
         // ゲージの値
         float fillAmount = (float)(time-1) / _startTime;
@@ -152,19 +150,18 @@ public class TimerView : ViewBase
         // Danger状態ならテキストを拡大縮小するアニメーションをする
         if (_timeState.Value == TimerState.Danger)
         {
-            var _textSequence = DOTween.Sequence();
-            AddTween(_textSequence);
+            var textSequence = DOTween.Sequence().SetLink(GameObject);
             _timerText.rectTransform.DOComplete();
 
-            _textSequence
+            textSequence
                 .Append(_timerText.rectTransform
-                    .DOScale(Vector3.zero, AnimationTime / 3)
+                    .DOScale(Vector3.zero, animationSec / 3)
                     .SetEase(Ease.OutSine))
                 .Append(_timerText.rectTransform
-                    .DOScale(Vector3.one * 1.2f, AnimationTime / 3)
+                    .DOScale(Vector3.one * 1.2f, animationSec / 3)
                     .SetEase(Ease.InSine))
                 .Append(_timerText.rectTransform
-                    .DOScale(Vector3.one, AnimationTime / 3)
+                    .DOScale(Vector3.one, animationSec / 3)
                     .SetEase(Ease.OutSine))
                 .ToUniTask(cancellationToken: ct).Forget();
         }
@@ -173,41 +170,20 @@ public class TimerView : ViewBase
         if (fillAmount >= 0)
         {
             _sequence.Complete();
+            _sequence = DOTween.Sequence();
 
             await _sequence
             .Append(_timerGauge
-                .DOFillAmount(1 - fillAmount, animationTime)
+                .DOFillAmount(1 - fillAmount, animationSec)
                 .SetEase(Ease.Linear))
             .Join(_needle.rectTransform
-                .DORotate(new Vector3(0, 0, fillAmount * 360), animationTime)
+                .DORotate(new Vector3(0, 0, fillAmount * 360), animationSec)
                 .SetEase(Ease.Linear))
             .ToUniTask(cancellationToken: ct);
         }
         
         // 時間のテキストを更新
         _timerText.text = time.ToString();
-    }
-
-    /// <summary>
-    /// 使用禁止
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public override UniTask ShowAsync(CancellationToken ct)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// 使用禁止
-    /// </summary>
-    /// <param name="ct"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public override UniTask HideAsync(CancellationToken ct)
-    {
-        throw new System.NotImplementedException();
     }
 }
 

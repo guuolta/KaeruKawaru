@@ -2,47 +2,43 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// プレゼンターベース
 /// </summary>
 /// <typeparam name="TView"> ビュー </typeparam>
-public class PresenterBase<TView> : GameObjectBase, IPresenter
+public class PresenterBase<TView> : UIBehaviour
     where TView : ViewBase
 {
+    [SerializeField, HideInInspector]
     private TView _view;
     /// <summary>
     /// ビュー
     /// </summary>
-    protected TView View
-    {
-        get
-        {
-            if (_view == null)
-            {
-                _view = GetComponent<TView>();
-            }
+    protected TView View => _view;
 
-            return _view;
-        }
+    #if UNITY_EDITOR
+    protected virtual void OnValidate()
+    {
+        _view ??= GetComponent<TView>();
     }
-    private BoolReactiveProperty _isOpen = new BoolReactiveProperty(false);
+    #endif
+    
     /// <summary>
-    /// パネルを開いているか
+    /// 初期化
     /// </summary>
-    public BoolReactiveProperty IsOpen => _isOpen;
-
-    public virtual async UniTask ShowAsync(CancellationToken ct)
+    public virtual void Init()
     {
-        await View.ShowAsync(ct);
-        _isOpen.Value = true;
-        View.ChangeInteractive(true);
+        View.Init();
+        SetEvent();
     }
 
-    public virtual async UniTask HideAsync(CancellationToken ct)
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    protected virtual void SetEvent()
     {
-        View.ChangeInteractive(false);
-        _isOpen.Value = false;
-        await View.HideAsync(ct);
+        
     }
 }

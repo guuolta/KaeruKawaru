@@ -6,8 +6,12 @@ using UnityEngine;
 /// <summary>
 /// カエルのオブジェクトにする処理
 /// </summary>
-public class Frog : GameObjectBase
+public class Frog : MonoBehaviour
 {
+    [SerializeField,HideInInspector]
+    private Transform _transform;
+    public Transform Transform => _transform;
+    
     [Header("カエルオブジェクトリスト")]
     [SerializeField]
     private List<FlogData> _flogGameObjects = new List<FlogData>();
@@ -32,11 +36,19 @@ public class Frog : GameObjectBase
     // カエルの進化系とそれに対応したオブジェクト
     private Dictionary<EvolutionaryType, GameObject> _flogDict = new Dictionary<EvolutionaryType, GameObject>();
 
-    protected override void Init()
+#if UNITY_EDITOR
+    private void OnValidate()
     {
-        base.Init();
+        _transform ??= transform;
+    }
+#endif
+    
+    public void Init()
+    {
         InitFlogDictionary();
         InitFrog();
+        
+        SetEvent();
     }
 
     /// <summary>
@@ -62,9 +74,8 @@ public class Frog : GameObjectBase
         }
     }
 
-    protected override void SetEvent()
+    private void SetEvent()
     {
-        base.SetEvent();
         SetEventEvolve();
     }
 

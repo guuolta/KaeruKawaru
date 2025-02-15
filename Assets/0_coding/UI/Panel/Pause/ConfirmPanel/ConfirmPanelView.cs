@@ -16,4 +16,13 @@ public class ConfirmPanelView : PanelViewBase
     /// いいえボタン
     /// </summary>
     public ButtonBase NoButton => _noButton;
+
+    public override void Init()
+    {
+        base.Init();
+        
+        // ボタン初期化
+        _yesButton.Init();
+        _noButton.Init();
+    }
 }

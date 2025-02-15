@@ -146,8 +146,9 @@ GameObject:
   - component: {fileID: 8146494840467578419}
   - component: {fileID: 4552462311039603528}
   - component: {fileID: 1594223103598226241}
-  - component: {fileID: 400194218169680303}
   - component: {fileID: 1141574908923427212}
+  - component: {fileID: 4056150044560808546}
+  - component: {fileID: 6230746351835190164}
   m_Layer: 5
   m_Name: ResultUI
   m_TagString: Untagged
@@ -214,19 +215,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &400194218169680303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 684994424864755377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b243cfdde4422774f8956421e9d12428, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _finishPanel: {fileID: 0}
 --- !u!114 &1141574908923427212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,8 +227,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf2ef0c236703541bf217cfe5ef9796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObject: {fileID: 684994424864755377}
+  _transform: {fileID: 8146494840467578419}
+  _rectTransform: {fileID: 8146494840467578419}
+  _canvasGroup: {fileID: 4056150044560808546}
   _disInteractiveAlpha: 0
-  AnimationTime: 0.1
+  AnimationSec: 0.1
   _textAnimationTime: 3
   _scoreText: {fileID: 8591102392080442813}
   _newHighScoreText: {fileID: 6083258516713716191}
@@ -269,6 +261,32 @@ MonoBehaviour:
     bottomRight: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
   _highScoreBubble: {fileID: 1243781592559472556}
   _bonusAnimationTime: 0.3
+--- !u!225 &4056150044560808546
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684994424864755377}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6230746351835190164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684994424864755377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ece075783ce21419692a3dd575f335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 1141574908923427212}
+  _finishPanel: {fileID: 0}
 --- !u!1 &700992797867233497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,6 +1546,7 @@ GameObject:
   - component: {fileID: 6846890155768994237}
   - component: {fileID: 7946738225895296682}
   - component: {fileID: 1243781592559472556}
+  - component: {fileID: 3834283495086682743}
   m_Layer: 5
   m_Name: HighScoreBubble
   m_TagString: Untagged
@@ -1605,8 +1624,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb44c2b978853a42878f4f467c378b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObject: {fileID: 6066900731383547482}
+  _transform: {fileID: 1918894502053932462}
+  _rectTransform: {fileID: 1918894502053932462}
+  _canvasGroup: {fileID: 3834283495086682743}
   _disInteractiveAlpha: 0
-  AnimationTime: 0.1
+  AnimationSec: 0.1
+--- !u!225 &3834283495086682743
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6066900731383547482}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6086391258311679343
 GameObject:
   m_ObjectHideFlags: 0

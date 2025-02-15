@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-public interface IPresenter
+public interface IPanelPresenter
 {
     /// <summary>
     /// UIを表示

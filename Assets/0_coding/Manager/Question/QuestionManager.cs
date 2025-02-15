@@ -16,7 +16,7 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     private List<QuestionWidthData> _questionWidthList = new List<QuestionWidthData>();
     [Header("お題パネルの親オブジェクト")]
     [SerializeField]
-    private QuestionGroupPresenter _questionPanelParent;
+    private QuestionGroupPanelPresenter _questionPanelParent;
 
     private BoolReactiveProperty _isCheckedAnswer = new BoolReactiveProperty(true);
     /// <summary>
@@ -33,11 +33,15 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
     /// </summary>
     private List<Question> _questionList = new List<Question>();
 
-    protected override void Init()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
     {
-        base.Init();
-        _questionPanelParent.SetInit(_questionCount);
+        _questionPanelParent.Init(_questionCount);
         SetWidthCount();
+
+        SetEvent();
     }
 
     /// <summary>
@@ -56,9 +60,11 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         }
     }
 
-    protected override void SetEvent()
+    /// <summary>
+    /// イベント発行
+    /// </summary>
+    private void SetEvent()
     {
-        base.SetEvent();
         SetInitPanel(_widthCount);
         SetEventStart();
     }
@@ -202,10 +208,10 @@ public class QuestionManager : SingletonObjectBase<QuestionManager>
         _isCheckedAnswer.Value = true;
     }
 
-    protected override void Destroy()
+    protected override void OnDestroy()
     {
-        base.Destroy();
-
+        base.OnDestroy();
+        
         // 出題中のお題を停止
         foreach (var question in _questionList)
         {

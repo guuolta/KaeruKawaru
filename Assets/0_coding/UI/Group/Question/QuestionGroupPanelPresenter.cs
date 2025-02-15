@@ -1,29 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// お題パネルをまとめたUI
 /// </summary>
-public class QuestionGroupPresenter : PresenterBase<QuestionGroupView>
+public class QuestionGroupPanelPresenter : PresenterBase<QuestionGroupView>
 {
+    [FormerlySerializedAs("questionPanelPanelBase")]
+    [FormerlySerializedAs("_questionPanelBase")]
     [Header("お題パネル")]
     [SerializeField]
-    private QuestionPanelPresenter _questionPanelBase;
+    private QuestionPanelPresenter questionPanelBase;
 
     private int _questionCount;
     private Dictionary<Question, QuestionPanelPresenter> _questionDict = new Dictionary<Question, QuestionPanelPresenter>();
 
-    protected override void Init()
-    {
-    }
-
     /// <summary>
     /// 初期設定
     /// </summary>
-    public void SetInit(int questCount)
+    public void Init(int questCount)
     {
-        View.SetInit(questCount);
+        View.Init(questCount);
         _questionCount = questCount;
+        
+        SetEvent();
     }
     
     /// <summary>
@@ -39,7 +40,8 @@ public class QuestionGroupPresenter : PresenterBase<QuestionGroupView>
         }
 
         // お題作成
-        var panel = Instantiate(_questionPanelBase, transform);
+        var panel = Instantiate(questionPanelBase, transform);
+        questionPanelBase.Init();
         panel.CreateQuestionPanel(question.Trouts);
         _questionDict.Add(question, panel);
         

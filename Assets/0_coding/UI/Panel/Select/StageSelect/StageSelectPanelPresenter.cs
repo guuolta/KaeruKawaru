@@ -1,3 +1,5 @@
+using UniRx;
+
 /// <summary>
 /// ステージ選択パネル
 /// </summary>
@@ -15,11 +17,15 @@ public class StageSelectPanelPresenter : SelectPanelPresenterBase<StageSelectPan
     private void SetButton()
     {
         // レベル選択
-        View.EasyButton.OnClickCallback += () => {
-            GameSceneManager.LoadScene(SceneType.EasyGame);
-        };
-        View.HardButton.OnClickCallback += () => {
-            GameSceneManager.LoadScene(SceneType.HardGame);
-        };
+        View.EasyButton.OnClickEvent
+            .Subscribe(_ => 
+            {
+                GameSceneManager.LoadScene(SceneType.EasyGame);
+            });
+        View.HardButton.OnClickEvent
+            .Subscribe(_ =>
+            {
+                GameSceneManager.LoadScene(SceneType.HardGame);
+            });
     }
 }

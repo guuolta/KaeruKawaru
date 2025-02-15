@@ -1,5 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UniRx;
 
 /// <summary>
 /// セレクトメニューの音量調節パネル
@@ -9,7 +10,7 @@ public class SelectSoundPanelPresenter : SoundPanelPresenterBase
     protected override void SetEvent()
     {
         base.SetEvent();
-        SetButton(Ct);
+        SetButton(destroyCancellationToken);
     }
 
     /// <summary>
@@ -18,8 +19,10 @@ public class SelectSoundPanelPresenter : SoundPanelPresenterBase
     /// <param name="ct"></param>
     private void SetButton(CancellationToken ct)
     {
-        View.CloseButton.OnClickCallback += () => {
-            SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect,ct).Forget();
-        };
+        View.CloseButton.OnClickEvent
+            .Subscribe(_ => 
+            {
+                SelectPanelManager.Instance.OpenPanelAsync(SelectPanelType.Slect,ct).Forget();
+            });
     }
 }

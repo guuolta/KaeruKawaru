@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UniRx;
 using UnityEngine.EventSystems;
 
 /// <summary>
@@ -10,19 +11,20 @@ public class ArrowButton : ButtonBase
     private bool _isHide;
     protected override void SetEventDobleClickPrevention()
     {
-        OnClickCallback += async () =>
-        {
-            if(_isHide)
+        OnClickEvent
+            .Subscribe(async _ =>
             {
-                return;
-            }
+                if(_isHide)
+                {
+                    return;
+                }
 
-            ChangeInteractive(false);
-            await UniTask.WaitForSeconds(0.1f, cancellationToken: Ct);
+                ChangeInteractive(false);
+                await UniTask.WaitForSeconds(0.1f, cancellationToken: destroyCancellationToken);
 
-            if (Ct.IsCancellationRequested || _isHide) return;
-            ChangeInteractive(true);
-        };
+                if (destroyCancellationToken.IsCancellationRequested || _isHide) return;
+                ChangeInteractive(true);
+            });
     }
     
     /// <summary>
@@ -43,11 +45,7 @@ public class ArrowButton : ButtonBase
         }
 
         // 縮小
-        Transform
-            .DOScale(0.8f, AnimationTime)
-            .SetEase(Ease.InSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(0.8f, Ease.InSine).Forget();
     }
 
     public override void OnPointerUp(PointerEventData eventData)
@@ -58,9 +56,6 @@ public class ArrowButton : ButtonBase
         }
 
         // 元の大きさにする
-        Transform.DOScale(1f, AnimationTime)
-            .SetEase(Ease.OutSine)
-            .ToUniTask(cancellationToken: Ct)
-            .Forget();
+        DoScaleAsync(1f, Ease.OutSine).Forget();
     }
 }

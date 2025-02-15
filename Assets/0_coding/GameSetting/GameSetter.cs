@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ゲームの設定
 /// </summary>
-public class GameSeter : DontDestroySingletonObject<GameSeter>
+public class GameSetter : DontDestroySingletonObject<GameSetter>
 {
     [Header("セーブデータをリセットするか")]
     [SerializeField]
@@ -12,11 +12,14 @@ public class GameSeter : DontDestroySingletonObject<GameSeter>
     [SerializeField]
     private int _fps = 60;
 
-    protected override void Init()
+    protected override void Awake()
     {
+        base.Awake();
+        
         // fps設定
         Application.targetFrameRate = _fps;
-        //GameStateManager.SetStageLevel(Level.Easy);
+        AudioManager.Instance.Init();
+        ScoreManager.Instance.Init();
         
         if(_isResetSaveData)
         {
@@ -26,8 +29,9 @@ public class GameSeter : DontDestroySingletonObject<GameSeter>
     }
 
     // ゲーム終了時にセーブする
-    protected override void Destroy()
+    private void OnDestroy()
     {
+        base.OnDestroy();
        SaveManager.Save();
     }
 }

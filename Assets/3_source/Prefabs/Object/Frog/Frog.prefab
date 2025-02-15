@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 572eb99c77f85d44c8676c1de604d53b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _transform: {fileID: 693795005190519092}
   _flogGameObjects:
   - _type: 1
     _frogObject: {fileID: 7240080362651345120}

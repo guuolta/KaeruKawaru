@@ -1,5 +1,6 @@
 using System;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -7,22 +8,13 @@ using UnityEngine.UI;
 /// </summary>
 public class SliderBase : UIBase
 {
+    [SerializeField, HideInInspector]
     private Slider _slider;
     /// <summary>
     /// スライダー
     /// </summary>
-    public Slider Slider
-    {
-        get
-        {
-            if(_slider == null)
-            {
-                _slider = GetComponent<Slider>();
-            }
-
-            return _slider;
-        }
-    }
+    public Slider Slider => _slider;
+    
     private IObservable<float> _sliderValueAsObservable;
     /// <summary>
     /// スライダーの値
@@ -39,6 +31,14 @@ public class SliderBase : UIBase
             return _sliderValueAsObservable;
         }
     }
+
+    #if UNITY_EDITOR
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+        _slider ??= GetComponent<Slider>();
+    }
+    #endif
 
     /// <summary>
     /// スライダーの初期設定

@@ -1,26 +1,28 @@
 using UniRx;
 using UnityEngine;
 
-public class TimerModel : ObjectBase
+public class TimerModel
 {
-    private ReactiveProperty<int> _timeValue = new ReactiveProperty<int>(0);
+    private ReactiveProperty<int> _timeValue;
     /// <summary>
     /// 経過時間
     /// </summary>
     public IReadOnlyReactiveProperty<int> TimeValue => _timeValue;
     public int MaxTime => StageManager.Instance.TimeLimit;
     float _leftTime;
-    private CompositeDisposable _disposable = new CompositeDisposable();
+    private CompositeDisposable _disposable;
 
-    public void AddTime(int time)
+    public TimerModel()
     {
-        _timeValue.Value += time;
+        _timeValue = new ReactiveProperty<int>(0);
+        _disposable = new CompositeDisposable();
+        
+        SetEventTime();
     }
-
+    
     public void SetEventTime()
     {
         Observable.EveryUpdate()
-            .TakeUntilDestroy(this)
             .Select(_ => Time.deltaTime)
             .DistinctUntilChanged()
             .Subscribe(value =>
@@ -37,6 +39,7 @@ public class TimerModel : ObjectBase
 
     public void DispoiseTimerEvent()
     {
-        _disposable = DisposeEvent(_disposable);
+        _disposable.Dispose();
+        _disposable = new CompositeDisposable();
     }
 }

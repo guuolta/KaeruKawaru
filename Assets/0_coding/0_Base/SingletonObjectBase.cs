@@ -1,34 +1,45 @@
 using System;
+using UnityEngine;
 
 /// <summary>
-/// シングルトンパターンのオブジェクトベース
+/// シングルトンパターンの基底クラス
 /// </summary>
 /// <typeparam name="T"> 対象のクラス </typeparam>
-public class SingletonObjectBase<T> : ObjectBase
-    where T : ObjectBase
+public class SingletonObjectBase<T> : MonoBehaviour
+    where T : MonoBehaviour
 {
     private static T _instance;
     public static T Instance
     {
         get
         {
-            if (_instance == null)
+            if (_instance is null)
             {
-                Type type = typeof(T);
+                _instance = FindObjectOfType<T>();
 
-                _instance = (T)FindObjectOfType(type);
+                if (_instance is null)
+                {
+                    Debug.LogError(typeof(T) + "is nothing");
+                }
             }
 
             return _instance;
         }
     }
 
-    protected override void Init()
+    protected virtual void Awake()
     {
-        if (_instance != null)
+        if (this != Instance)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(this);
+        }
+    }
+        
+    protected virtual void OnDestroy()
+    {
+        if (this == Instance)
+        {
+            _instance = null;
         }
     }
 }
